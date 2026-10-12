@@ -1,3 +1,6 @@
+<!-- This is the upstream Claude Code Game Studios changelog, kept for history.
+     For the OpenCode port, see PORTING.md. -->
+
 # Changelog
 
 What's new in Claude Code Game Studios, written for the people using it.

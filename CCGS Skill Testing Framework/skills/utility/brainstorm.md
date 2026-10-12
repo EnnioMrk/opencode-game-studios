@@ -29,7 +29,7 @@ Both flows end with `Verdict: **COMPLETE**`.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE (in both the Lean Brief flow and the full flow)
 - [ ] Contains "May I write" language for both `design/game-brief.md` and `design/gdd/game-concept.md`
@@ -69,10 +69,10 @@ Full flow only (`workflow: standard` or `full`):
 **Expected behavior:**
 1. Tier branch: `full` → full flow
 2. Phase 1 asks discovery questions (favourite games as plain text; the
-   Experience / Timeline / Dev level multi-tab `AskUserQuestion`)
-3. Phase 2 presents 3 concepts, then a plain-list `AskUserQuestion` (no tabs) to pick
+   Experience / Timeline / Dev level multi-tab `question`)
+3. Phase 2 presents 3 concepts, then a plain-list `question` (no tabs) to pick
 4. After pillars are locked, CD-PILLARS and AD-CONCEPT-VISUAL are spawned in
-   parallel; their results are presented in a two-tab (Pillars / Visual anchor) `AskUserQuestion`
+   parallel; their results are presented in a two-tab (Pillars / Visual anchor) `question`
 5. Phase 6 asks for platform and engine (the engine question always prompts);
    TD-FEASIBILITY spawns after risks are identified, before scope tiers
 6. PR-SCOPE spawns after scope tiers are defined
@@ -154,7 +154,7 @@ Full flow only (`workflow: standard` or `full`):
 
 **Expected behavior:**
 1. Tier branch: `minimal` → Lean Brief flow; Phases 1–5 are skipped
-2. From the hint, proposes 2–3 one-line concepts and asks one `AskUserQuestion` to pick or combine
+2. From the hint, proposes 2–3 one-line concepts and asks one `question` to pick or combine
 3. Fills the brief fields conversationally (pitch, core loop, player goal & fail
    state, MVP, out of scope, build order) and presents the brief for one confirmation
 4. Asks "Brief is ready. May I write it to `design/game-brief.md`?" with

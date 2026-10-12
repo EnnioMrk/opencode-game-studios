@@ -10,10 +10,10 @@
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Frontmatter has all required fields (`name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`)
+- [ ] Frontmatter has the required fields (`name`, `description`)
 - [ ] 2+ phase headings found
 - [ ] Contains the skill's verdict keywords — any that `/skill-test static` Check 3 accepts (gate or review verdicts, go/no-go verdicts, or a severity scale), plus `NOT ASSESSED` when anything depends on the verdict; none needed when the skill outputs an artifact rather than a judgement
-- [ ] If `allowed-tools` includes Write/Edit: `"May I write"` language present
+- [ ] If the skill writes files: `"May I write"` language present
 - [ ] Next-step handoff section present at end
 
 ---

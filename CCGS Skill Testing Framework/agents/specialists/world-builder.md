@@ -10,8 +10,8 @@
 ## Static Assertions (Structural)
 
 - [ ] `description:` field is present and domain-specific (references world lore, factions, history, world rules, ecology)
-- [ ] `tools:` reads Read, Glob, Grep, Write, Edit and `disallowedTools:` lists Bash — document authoring only, no shell or code execution
-- [ ] Model tier is `inherit` — frontmatter `model:` reads exactly `inherit` (tiers: `.claude/docs/model-tiers.md`)
+- [ ] Toolset (ported to `permissions:` — see PORTING.md): reads Read, Glob, Grep, Write, Edit and the port denies `shell` for this agent — document authoring only, no shell or code execution
+- [ ] Model tier is `inherit` — recorded in `PORTING.md` (OpenCode agents inherit the session model unless `model:` is pinned; tiers: `.opencode/docs/model-tiers.md`)
 - [ ] Agent definition does not claim authority over dialogue writing, mechanic design, or narrative arc structure
 
 ---

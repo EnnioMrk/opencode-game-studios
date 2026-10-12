@@ -34,7 +34,7 @@ COMPLETE, or CONCERNS when BLOCKING items were found.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: ADEQUATE, INCOMPLETE, MISSING, NOT ASSESSED, and the run-level COMPLETE / CONCERNS
 - [ ] Contains "May I write" language for the optional `production/qa/evidence-review-[date].md`

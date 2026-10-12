@@ -9,9 +9,8 @@
 Thumbs.db
 Desktop.ini
 
-# === Claude Code Local ===
-.claude/settings.local.json
-CLAUDE.local.md
+# === OpenCode Local ===
+# Personal OpenCode config belongs in ~/.config/opencode/, not here.
 project.local.yaml
 production/session-logs/
 # Ephemeral per-session checkpoint. directory-structure.md documents this as
@@ -19,7 +18,7 @@ production/session-logs/
 production/session-state/
 .scratch/
 # Per-agent working memory written at runtime — not release material
-.claude/agent-memory/
+.opencode/agent-memory/
 
 
 # === Local sandboxes and scratch work ===

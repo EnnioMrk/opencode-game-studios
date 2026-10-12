@@ -15,7 +15,7 @@ file. At `qa.level: minimal` with no game tests, the automated row is WAIVED
 and Phase 2 runs a build check instead — `commands.smoke`, else
 `commands.build`, when set. Phase 3 scans test coverage against the QA plan or
 sprint stories; Phase 4 batch-verifies manual smoke checks with
-`AskUserQuestion`, and Batch 1 first asks whether the build was launched this
+`question`, and Batch 1 first asks whether the build was launched this
 session — "not launched" makes the manual checks NOT ASSESSED. The report is written
 to `production/qa/smoke-[date].md` after explicit approval.
 
@@ -40,7 +40,7 @@ No director gates apply. The skill does NOT invoke any director agents.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: PASS, PASS WITH WARNINGS, NOT ASSESSED, FAIL
 - [ ] Contains "May I write" collaborative protocol language before writing the report
@@ -76,14 +76,14 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
    under `timeout 900`; the report says `commands.test` was the command run
 3. Exit 0 with tests found → automated tests PASS (12/12)
 4. Coverage scan: all stories COVERED or EXPECTED
-5. `AskUserQuestion` for Batch 1, Batch 2 and Batch 3 — nothing selected
+5. `question` for Batch 1, Batch 2 and Batch 3 — nothing selected
 6. Report names its checklist source (the QA plan's Smoke Test Scope)
 7. Asks "May I write this smoke check report to `production/qa/smoke-[date].md`?"
 8. Writes after approval; delivers "Smoke check passed cleanly. The build is ready for manual QA."
 
 **Assertions:**
 - [ ] Automated test runner is invoked via Bash, after the Godot import
-- [ ] `AskUserQuestion` is used for manual smoke check batches
+- [ ] `question` is used for manual smoke check batches
 - [ ] "May I write" is asked before writing the report file
 - [ ] Report is written to `production/qa/smoke-[date].md`
 - [ ] Verdict is PASS
@@ -131,7 +131,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 **Expected behavior:**
 1. Automated tests PASS
 2. Coverage scan finds 1 MISSING entry for a Logic story
-3. `AskUserQuestion` is used for Batches 1–3 — nothing selected
+3. `question` is used for Batches 1–3 — nothing selected
 4. Report shows automated tests PASS, manual checks PASS, and the MISSING entry
    under "Missing Test Evidence" with its expected test path
 5. Verdict is PASS WITH WARNINGS; the message says the build is ready for manual
@@ -140,7 +140,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 6. Asks to write the report; writes after approval
 
 **Assertions:**
-- [ ] `AskUserQuestion` is used for manual smoke check batches (not inline text prompts)
+- [ ] `question` is used for manual smoke check batches (not inline text prompts)
 - [ ] MISSING test coverage entry appears in the report
 - [ ] Verdict is PASS WITH WARNINGS (not PASS, not FAIL)
 - [ ] Advisory note says the MISSING entry must be resolved before `/story-done`
@@ -317,7 +317,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 ## Protocol Compliance
 
-- [ ] Uses `AskUserQuestion` for all manual smoke check batches (Batch 1, Batch 2, Batch 3), and Batch 1 asks whether the build was launched this session; "not launched" yields NOT ASSESSED
+- [ ] Uses `question` for all manual smoke check batches (Batch 1, Batch 2, Batch 3), and Batch 1 asks whether the build was launched this session; "not launched" yields NOT ASSESSED
 - [ ] Resolves the editor executable from `commands.test`, then `engine.path`, then `PATH` before reporting the runner unavailable; a bare `godot` that does not resolve is never read as "no engine installed"
 - [ ] Never edits `project.yaml`: a `commands.test` missing flags or using a relative path is adjusted for the run and reported to the user
 - [ ] Runs automated tests via Bash before asking any manual questions
@@ -335,7 +335,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 - The `quick` argument (skips the Phase 3 coverage scan and Batch 3) is not
   separately fixture-tested.
-- The `--platform` argument adds platform-specific `AskUserQuestion` batches and
+- The `--platform` argument adds platform-specific `question` batches and
   a per-platform verdict table; not separately tested here.
 - The runner-not-available path (NOT RUN, then NOT ASSESSED until the developer
   confirms a result from their IDE or CI) is covered by the protocol compliance

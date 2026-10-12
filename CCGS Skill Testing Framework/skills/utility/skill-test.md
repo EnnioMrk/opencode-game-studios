@@ -2,8 +2,8 @@
 
 ## Skill Summary
 
-`/skill-test` validates skills (`.claude/skills/*/SKILL.md`) and agents
-(`.claude/agents/*.md`). It has four modes:
+`/skill-test` validates skills (`.opencode/skills/*/SKILL.md`) and agents
+(`.opencode/agents/*.md`). It has four modes:
 
 - **static** `[name | all]`: skills only. Runs 7 structural checks (frontmatter,
   phases, verdict keywords, ask-before-write language, next-step handoff, fork
@@ -11,7 +11,7 @@
   results are COMPLIANT, WARNINGS, NON-COMPLIANT or NOT ASSESSED. Writes nothing.
 - **spec** `[skill-or-agent-name]`: resolves the name through
   `CCGS Skill Testing Framework/catalog.yaml`, reads the file and the spec at the
-  entry's `spec:` path, plus `CLAUDE.md` and every file it imports with `@path`,
+  entry's `spec:` path, plus `AGENTS.md` and every file it imports with `@path`,
   and marks each assertion — the spec's Static Assertions included, for a skill
   as for an agent — PASS / PARTIAL / FAIL / NOT ASSESSED. Case and Overall
   Verdicts are the worst result beneath them (FAIL, PARTIAL, NOT ASSESSED,
@@ -31,7 +31,7 @@ No director gates apply.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdicts: COMPLIANT, WARNINGS, NON-COMPLIANT, NOT ASSESSED (static mode); PASS, PARTIAL, FAIL, NOT ASSESSED (spec mode)
 - [ ] Contains "May I write" before writing spec results, and "May I update" before recording a category check in `catalog.yaml`
@@ -50,19 +50,19 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 ### Case 1: Static Mode — Well-formed skill, all 7 checks pass, COMPLIANT
 
 **Fixture:**
-- `.claude/skills/brainstorm/SKILL.md` exists and satisfies all 7 checks:
-  - Has all 5 required frontmatter fields
+- `.opencode/skills/brainstorm/SKILL.md` exists and satisfies all 7 checks:
+  - Has both required frontmatter fields (`name`, `description`)
   - Has ≥2 phase headings
   - Has verdict keywords
   - Has "May I write" language
   - Ends with a next-step handoff
-  - Does not set `context: fork`
-  - `argument-hint` matches the modes its Parse Arguments phase documents
+  - Has a matching loader in `.opencode/commands/brainstorm.md`
+  - All `references/` and script paths it names exist
 
 **Input:** `/skill-test static brainstorm`
 
 **Expected behavior:**
-1. Skill reads `.claude/skills/brainstorm/SKILL.md` fully
+1. Skill reads `.opencode/skills/brainstorm/SKILL.md` fully
 2. Skill runs all 7 structural checks
 3. Output is the single-skill block `=== Skill Static Check: /brainstorm ===`
    listing Check 1 – Check 7, each PASS
@@ -77,10 +77,10 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 
 ---
 
-### Case 2: Static Mode — Skill Missing Ask-Before-Write Despite Write Tool in allowed-tools
+### Case 2: Static Mode — Skill Missing Ask-Before-Write Despite Writing Files
 
 **Fixture:**
-- `.claude/skills/some-skill/SKILL.md` has `Write` in `allowed-tools` frontmatter
+- `.opencode/skills/some-skill/SKILL.md` instructs the agent to write files
 - The body has no ask-before-write language in any form Check 4 accepts:
   no "May I write", no "before writing"/"approval" near a write instruction,
   no "ask" and "write" in the same section
@@ -89,14 +89,14 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 
 **Expected behavior:**
 1. Skill reads `some-skill/SKILL.md`
-2. Check 4 (collaborative protocol) is FAIL — `Write` is in `allowed-tools` and
+2. Check 4 (collaborative protocol) is FAIL — the skill writes files and
    no ask-before-write language is found
 3. The other six checks are listed with their own results
 4. Verdict is NON-COMPLIANT, with a Recommended line naming the fix
 
 **Assertions:**
-- [ ] Check 4 is marked FAIL (not WARN — Write is in allowed-tools)
-- [ ] The Check 4 line or the Recommended line names the mismatch (Write tool without ask-before-write language)
+- [ ] Check 4 is marked FAIL (not WARN — the skill writes files)
+- [ ] The Check 4 line or the Recommended line names the mismatch (write instructions without ask-before-write language)
 - [ ] Verdict is NON-COMPLIANT
 - [ ] Other checks are shown (not only the failure)
 
@@ -108,10 +108,10 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 - `catalog.yaml` lists `gate-check` under `skills:` with
   `spec: CCGS Skill Testing Framework/skills/gate/gate-check.md`
 - That spec has 5 test cases and a Static Assertions list;
-  `.claude/skills/gate-check/SKILL.md` exists
+  `.opencode/skills/gate-check/SKILL.md` exists
 - Suppose one of the spec's assertions reads "Balance values link to their
-  source formula or rationale" — met only by `.claude/docs/coding-standards.md`
-  (imported by `CLAUDE.md`), not by the skill or its gate files themselves
+  source formula or rationale" — met only by `.opencode/docs/coding-standards.md`
+  (imported by `AGENTS.md`), not by the skill or its gate files themselves
 - The user declines the results write
 
 **Input:** `/skill-test spec gate-check`
@@ -119,7 +119,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 **Expected behavior:**
 1. Skill resolves `gate-check` as a skill via the catalog and takes the spec
    path from its `spec:` field
-2. Skill reads the skill, the spec, `CLAUDE.md` and its `@`-imported files
+2. Skill reads the skill, the spec, `AGENTS.md` and its `@`-imported files
 3. The spec's Static Assertions are checked against the SKILL.md in a
    `Static Assertions:` block before Case 1
 4. Each assertion is marked PASS / PARTIAL / FAIL / NOT ASSESSED, with a Reason
@@ -144,7 +144,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 ### Case 4: Audit Mode — Coverage Table of All Skills and Agents
 
 **Fixture:**
-- `.claude/skills/` contains 74 skill directories; 73 have a spec at the path
+- `.opencode/skills/` contains 74 skill directories; 73 have a spec at the path
   their catalog entry names
 - `catalog.yaml` has an `agents:` section with 49 entries, all with specs
 
@@ -153,7 +153,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 **Expected behavior:**
 1. Both inputs run audit mode — no argument is the audit default, not a usage
    message
-2. Skill globs `.claude/skills/*/SKILL.md` for skills and reads the catalog's
+2. Skill globs `.opencode/skills/*/SKILL.md` for skills and reads the catalog's
    `agents:` section for agents
 3. For each skill: Has Spec (from the catalog `spec:` path, or a glob under
    `CCGS Skill Testing Framework/skills/`), last static/category dates and
@@ -178,7 +178,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 - `CCGS Skill Testing Framework/quality-rubric.md` has a `### gate` section with
   metrics G1–G5
 - `catalog.yaml` gives `gate-check` `category: gate`
-- `.claude/skills/gate-check/SKILL.md` meets every metric except G2 — Director
+- `.opencode/skills/gate-check/SKILL.md` meets every metric except G2 — Director
   panel width (only CD-PHASE-GATE is spawned at `workflow: full`)
 - The user approves the catalog update
 
@@ -186,7 +186,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 
 **Expected behavior:**
 1. Skill reads the `category:` from the catalog, then the `### gate` section of the rubric
-2. Skill reads the skill and the `CLAUDE.md` context, and evaluates G1–G5
+2. Skill reads the skill and the `AGENTS.md` context, and evaluates G1–G5
 3. Each metric is marked PASS, FAIL or WARN; G2 is FAIL with a quoted Gap line
 4. Report ends `Verdict: FAIL (1 failure, 0 warnings)` and a Fix line
 5. Skill asks "May I update `CCGS Skill Testing Framework/catalog.yaml` to record
@@ -205,8 +205,8 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 **Fixture:**
 - `catalog.yaml` lists `creative-director` under `agents:` with
   `spec: CCGS Skill Testing Framework/agents/directors/creative-director.md`
-- `.claude/agents/creative-director.md` declares `model: opus`; there is no
-  `.claude/skills/creative-director/`
+- `.opencode/agents/creative-director.md` declares `model: opus`; there is no
+  `.opencode/skills/creative-director/`
 - The spec asserts "Model tier is `opus`"
 - Suppose one spec case is a redirect: the agent is asked to pick the project's
   engine. The agent's "What This Agent Must NOT Do" list says "Make engine or
@@ -241,7 +241,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 ### Case 7: Static All — an unreadable skill is NOT ASSESSED and counted
 
 **Fixture:**
-- `.claude/skills/` holds 74 skill directories; one `SKILL.md` cannot be
+- `.opencode/skills/` holds 74 skill directories; one `SKILL.md` cannot be
   read (the Read call fails — permission denied), so none of its checks can
   start. (A file that is read but whose frontmatter does not parse is a
   different case: Check 1 fails and it is NON-COMPLIANT.)
@@ -265,7 +265,7 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 ### Case 8: Spec Mode — an unevaluable assertion makes the run NOT ASSESSED
 
 **Fixture:**
-- `.claude/skills/brainstorm/SKILL.md` and its spec exist
+- `.opencode/skills/brainstorm/SKILL.md` and its spec exist
 - Every assertion in the spec passes except one, which names a fixture file
   the spec never defines
 - The user approves the results write
@@ -332,4 +332,4 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 - Audit mode counts are approximate — the exact number of skills and agents will
   change as the system grows; the fixture's numbers are illustrative.
 - A spec case that names a director gate ID has the agent evaluated against
-  `.claude/docs/director-gates/[gate-id].md`; not separately fixture-tested.
+  `.opencode/docs/director-gates/[gate-id].md`; not separately fixture-tested.

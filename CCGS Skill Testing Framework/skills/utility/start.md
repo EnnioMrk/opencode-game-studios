@@ -6,7 +6,7 @@
 state (engine from `project.yaml` or `technical-preferences.md`, concept or
 brief, source code under the engine's code root, prototypes, GDDs, production
 artifacts, and whether `.git/config`'s `origin` still points at the template
-repo). Phase 2 asks where the user is with four `AskUserQuestion` options
+repo). Phase 2 asks where the user is with four `question` options
 (A No idea yet, B Vague idea, C Clear concept, D Existing work); engine choice
 is not asked here — it is deferred to `/setup-engine`.
 
@@ -30,7 +30,7 @@ onboarding. No director gates apply. Verdict: COMPLETE.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keyword: COMPLETE
 - [ ] States the write rule for every write it makes: "May I write" before the `project.yaml` write, the same ask naming the `production/stage.txt` legacy mirror; `modes.rigor` and `modes.automation` written as a direct consequence of the user's selection, under that approval
@@ -60,7 +60,7 @@ point this skill runs.
 
 **Expected behavior:**
 1. Phase 1 detection runs without printing its findings
-2. Phase 2 `AskUserQuestion` offers exactly A–D; no engine question is asked
+2. Phase 2 `question` offers exactly A–D; no engine question is asked
 3. Path A: explains `/brainstorm` tier-neutrally and names only `/brainstorm open`
    as the next step ("I'll lay out the full path once I know how much process you want")
 4. Phase 3c asks "May I write `project.stage: Concept` to `project.yaml` (and the
@@ -152,7 +152,7 @@ point this skill runs.
 **Fixture:**
 - Fresh project as in Case 1
 - `.git/config` has `[remote "origin"]` with url
-  `https://github.com/Donchitos/Claude-Code-Game-Studios.git`
+  `https://github.com/example-owner/opencode-game-studios.git`
 - The user picks `B) Vague idea` with the hint "a small weekend puzzler"
 
 **Input:** `/start`
@@ -162,7 +162,7 @@ point this skill runs.
 2. Path B recommends `/brainstorm a small weekend puzzler` as the immediate step
 3. Phase 3d recommends `Jam / prototype / first game` for the described scope
 4. After the Phase 4 path, the skill adds once: the clone's `origin` still points
-   at the Claude Code Game Studios repo, and suggests
+   at the OpenCode Game Studios repo, and suggests
    `git remote rename origin template` then `git remote add origin <your repo URL>`
 5. The commands are suggested only — no git command is run
 
@@ -227,7 +227,7 @@ point this skill runs.
 ## Protocol Compliance
 
 - [ ] Detects project state silently before the first question
-- [ ] Asks the starting-point question via `AskUserQuestion` with options A–D; defers engine choice to `/setup-engine`
+- [ ] Asks the starting-point question via `question` with options A–D; defers engine choice to `/setup-engine`
 - [ ] Never writes any of the six rigor-fronted knobs (`modes.review_mode`, `modes.workflow`, `docs.density`, `qa.level`, `modes.story_granularity`, `team.size`) or `production/review-mode.txt`
 - [ ] Skips the rigor and automation questions when those keys are already set
 - [ ] Asks "May I write" before the `project.yaml` write, naming `production/stage.txt` in the same ask; announces the stage it wrote; writes rigor/automation only from the user's selection

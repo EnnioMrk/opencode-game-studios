@@ -9,7 +9,7 @@ config block injected at its top (Phase 0), and reads the committed budgets
 with `get_effective_yaml_key` for `performance.target_framerate`,
 `performance.frame_budget_ms`, `performance.draw_call_limit` and
 `performance.memory_ceiling_mb` before falling back to design docs or
-`CLAUDE.md` (Phase 2). It analyses source code for CPU, memory, rendering and
+`AGENTS.md` (Phase 2). It analyses source code for CPU, memory, rendering and
 I/O hotspot candidates (Phase 3) — it does not ingest runtime profiler exports.
 The report rates each budgeted row `OK` / `WARNING` / `OVER`; a metric with no
 committed budget is `NOT ASSESSED`, and the summary gives headroom only against a
@@ -26,7 +26,7 @@ COMPLETE, or NOT ASSESSED — NO DATA when every required input is absent.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, NOT ASSESSED — NO DATA, and the per-metric statuses OK / WARNING / OVER
 - [ ] Contains "May I write" language naming `production/polish/[scope]-report-[date].md`
@@ -50,7 +50,7 @@ in any review mode.
   `performance.frame_budget_ms: 16.6`, `performance.draw_call_limit: 200`,
   `performance.memory_ceiling_mb: 2048`; `performance.enforce` unset (resolves
   to `warn`); `modes.automation` unset (collaborative)
-- No config key, design doc or `CLAUDE.md` section states a load-time target
+- No config key, design doc or `AGENTS.md` section states a load-time target
 - `src/gameplay/combat/enemy_manager.gd` has a `_process()` that loops over every
   enemy and, inside that loop, over every active projectile, and casts a ray per
   enemy every frame
@@ -85,13 +85,13 @@ in any review mode.
 
 **Fixture:**
 - `project.yaml` has `engine.name: godot` and no `performance` block
-- No design doc and no `CLAUDE.md` section states a frame-rate, memory, load-time or draw-call target
+- No design doc and no `AGENTS.md` section states a frame-rate, memory, load-time or draw-call target
 - `src/` contains gameplay scripts with `_process()` functions
 
 **Input:** `/perf-profile full`
 
 **Expected behavior:**
-1. `get_effective_yaml_key` returns nothing for the four budget keys; the design-doc and `CLAUDE.md` fallback finds no target either
+1. `get_effective_yaml_key` returns nothing for the four budget keys; the design-doc and `AGENTS.md` fallback finds no target either
 2. Source code is FOUND, so Phase 3 analysis still runs and hotspots are reported
 3. Every row of the Performance Budgets table is `NOT ASSESSED` — none is measured against the template's `[16.67ms]` placeholder
 4. The summary does not claim headroom against a budget nobody set: it says `no budget set — headroom not assessed`
@@ -180,7 +180,7 @@ in any review mode.
 ## Protocol Compliance
 
 - [ ] Records each input as FOUND or ABSENT before producing any report
-- [ ] Reads the four `performance.*` budget keys with `get_effective_yaml_key` before falling back to design docs or `CLAUDE.md`
+- [ ] Reads the four `performance.*` budget keys with `get_effective_yaml_key` before falling back to design docs or `AGENTS.md`
 - [ ] A metric with no committed budget is `NOT ASSESSED` — never measured against the `[16.67ms]` placeholder — and the summary claims headroom only against a budget that is set
 - [ ] Applies `performance.enforce` from the resolved block: `warn` → findings, `block` → blockers, `off` → informational
 - [ ] Asks "May I write" naming `production/polish/[scope]-report-[date].md` before writing, and keeps `NOT ASSESSED` sections in the written file

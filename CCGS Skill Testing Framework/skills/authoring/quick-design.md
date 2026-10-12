@@ -5,7 +5,7 @@
 `/quick-design [brief description of the change]` produces a lightweight Quick
 Design Spec for a change too small for a full GDD. It first classifies the
 change as **Tuning**, **Tweak**, **Addition** or **New Small System** and
-confirms the classification with an `AskUserQuestion` whose option `[F]`
+confirms the classification with an `question` whose option `[F]`
 redirects to `/design-system`. A change that introduces a system with
 significant cross-system dependencies, needs more than about a week of work, or
 alters a system's core rules is redirected to `/design-system` instead (verdict
@@ -29,7 +29,7 @@ bypass `/design-review` and `/review-all-gdds` by design.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: `COMPLETE`, `REDIRECTED`
 - [ ] Contains "May I write" collaborative protocol language (for the quick spec file, and separately for any GDD update)
@@ -42,8 +42,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 ## Director Gate Checks
 
 None. The skill resolves only `automation` and `workflow` (not `review_mode`),
-has no `Agent` tool in `allowed-tools`, and spawns no director or specialist
-agent. The review mode setting has no effect on it.
+spawns no subagent, and no director or specialist agent. The review mode setting has no effect on it.
 
 ---
 
@@ -68,7 +67,7 @@ agent. The review mode setting has no effect on it.
 7. It prints the handoff block (path, type, system, GDD update status) and "Verdict: **COMPLETE**"
 
 **Assertions:**
-- [ ] The classification is confirmed via `AskUserQuestion` before any context scan or drafting
+- [ ] The classification is confirmed via `question` before any context scan or drafting
 - [ ] The prior dash-cooldown spec is named in the context report even though it does not conflict
 - [ ] The draft uses the Tweak/Addition format, and its Design Delta quotes the current GDD text
 - [ ] The full draft is shown before the write approval is asked
@@ -158,7 +157,7 @@ agent. The review mode setting has no effect on it.
 
 **Expected behavior:**
 1. The skill runs its normal flow; `review_mode` is not among the keys it resolves, and nothing branches on it
-2. No agent of any kind is spawned (the skill has no `Agent` tool)
+2. No agent of any kind is spawned (the skill has no `subagent` allow-list)
 3. The spec is drafted, approved and written after "May I write"
 4. The Pipeline Notes state that quick specs bypass `/design-review` and `/review-all-gdds` by design, and list when to redirect to `/design-system`
 5. At `workflow: minimal`, the handoff says to go straight to `/dev-story` rather than `/story-readiness`

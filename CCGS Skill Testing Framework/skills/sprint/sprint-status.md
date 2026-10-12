@@ -25,7 +25,7 @@ recommendation.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings or numbered check sections
 - [ ] Contains burndown verdict keywords: On Track, At Risk, Behind
 - [ ] Does NOT require "May I write" language (read-only skill)
@@ -248,7 +248,7 @@ None. `/sprint-status` is a read-only reporting skill; no gates are invoked.
 - [ ] Presents the story status table before the Burndown verdict
 - [ ] Does not ask for approval
 - [ ] Ends with at most one recommended next step
-- [ ] Declares `model: haiku` (when a declared tier is used: `.claude/docs/model-tiers.md`)
+- [ ] No `model:` is set in the port; the original tier was `haiku` (`.opencode/docs/model-tiers.md`)
 
 ---
 

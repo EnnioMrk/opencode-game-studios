@@ -25,7 +25,7 @@ declined the write).
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "May I write" collaborative protocol language before writing the doc
@@ -201,7 +201,7 @@ None. `/reverse-document` is a documentation utility. No director gates apply.
 **Expected behavior:**
 1. The tier resolves to `minimal` from the config block, not assumed
 2. Findings are presented and answered before any draft
-3. The draft is a one-page game brief in the `.claude/docs/templates/game-brief.md`
+3. The draft is a one-page game brief in the `.opencode/docs/templates/game-brief.md`
    format — not a GDD — for this one system
 4. The provenance banner sits directly under the title
 5. Skill asks "May I write this to `design/health-system-brief.md`?" — not

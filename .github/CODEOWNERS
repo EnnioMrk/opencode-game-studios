@@ -2,15 +2,15 @@
 # Format: <pattern> <@github-username or @org/team>
 # Last match wins. Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Default owner for everything
-*                           @Donchitos
+# Default owner for everything (fork owner; upstream template by @Donchitos)
+*                           @EnnioMrk
 
 # Core configuration — owner review required
-CLAUDE.md                   @Donchitos
-.claude/                    @Donchitos
-settings.json               @Donchitos
+AGENTS.md                   @EnnioMrk
+.opencode/                    @EnnioMrk
+opencode.jsonc              @EnnioMrk
 
 # Skills and agents — high-impact, review carefully
-.claude/skills/             @Donchitos
-.claude/agents/             @Donchitos
-.claude/hooks/              @Donchitos
+.opencode/skills/             @EnnioMrk
+.opencode/agents/             @EnnioMrk
+.opencode/hooks/              @EnnioMrk

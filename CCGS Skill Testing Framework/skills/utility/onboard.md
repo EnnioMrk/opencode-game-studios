@@ -3,7 +3,7 @@
 ## Skill Summary
 
 `/onboard [role|area]` generates an onboarding document for a new contributor or
-agent. It reads `CLAUDE.md`, the matching agent definition in `.claude/agents/`
+agent. It reads `AGENTS.md`, the matching agent definition in `.opencode/agents/`
 when a role is given, scans the area that role works in (the code root for
 programmers, `design/` for designers, `design/narrative/` for narrative, `tests/`
 for QA, `production/` for production) and reads recent git history.
@@ -25,7 +25,7 @@ director gates apply.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, NOT ASSESSED
 - [ ] Contains "May I write" language before saving the onboarding document
@@ -45,16 +45,16 @@ in its allowed tools) and no director gates apply.
 ### Case 1: Happy Path — Programmer Role on a Godot Project
 
 **Fixture:**
-- `CLAUDE.md` exists
+- `AGENTS.md` exists
 - `project.yaml` has `engine.name: Godot`, so the code root is `src/`
-- `src/` holds game code; `.claude/agents/gameplay-programmer.md` exists
+- `src/` holds game code; `.opencode/agents/gameplay-programmer.md` exists
 - `production/sprints/sprint-005.md` exists; git log has recent commits
 - `modes.automation` is unset (defaults to `collaborative`)
 
 **Input:** `/onboard gameplay-programmer`
 
 **Expected behavior:**
-1. Skill reads `CLAUDE.md` and `.claude/agents/gameplay-programmer.md`
+1. Skill reads `AGENTS.md` and `.opencode/agents/gameplay-programmer.md`
 2. Skill scans the code root `src/` for architecture, patterns and key files, and
    reads recent git history
 3. Skill generates a document headed `# Onboarding: gameplay-programmer` with the
@@ -78,14 +78,14 @@ in its allowed tools) and no director gates apply.
 ### Case 2: Designer Role — Scans design/, Not the Code Root
 
 **Fixture:**
-- `CLAUDE.md` exists; `.claude/agents/game-designer.md` exists
+- `AGENTS.md` exists; `.opencode/agents/game-designer.md` exists
 - `design/gdd/` holds three system GDDs
 - `src/` also holds code
 
 **Input:** `/onboard game-designer`
 
 **Expected behavior:**
-1. Skill reads `CLAUDE.md` and `.claude/agents/game-designer.md`
+1. Skill reads `AGENTS.md` and `.opencode/agents/game-designer.md`
 2. Phase 2 takes the designers branch and scans `design/` for existing design
    documents
 3. "Current State of Your Area" reflects the three GDDs found
@@ -103,8 +103,8 @@ in its allowed tools) and no director gates apply.
 ### Case 3: Every Input Absent — NOT ASSESSED, No Document
 
 **Fixture:**
-- `CLAUDE.md` does not exist
-- `.claude/agents/` does not exist, so no agent definition can be read
+- `AGENTS.md` does not exist
+- `.opencode/agents/` does not exist, so no agent definition can be read
 - `tests/` does not exist; the directory is not a git repository
 
 **Input:** `/onboard qa-tester`
@@ -114,7 +114,7 @@ in its allowed tools) and no director gates apply.
 2. Because every required input is ABSENT, it stops and reports
    `NOT ASSESSED — NO DATA` as the whole verdict
 3. The report names what was missing and what produces it: `/test-setup` for
-   `tests/`; `CLAUDE.md` and `.claude/agents/` come with the framework itself —
+   `tests/`; `AGENTS.md` and `.opencode/agents/` come with the framework itself —
    no skill creates them — so they are reported as missing from the install,
    not attributed to a skill
 4. No onboarding document is generated and no file is written
@@ -123,7 +123,7 @@ in its allowed tools) and no director gates apply.
 - [ ] Inputs are recorded as FOUND or ABSENT before any report is produced
 - [ ] Verdict is `NOT ASSESSED — NO DATA`, not COMPLETE
 - [ ] The missing inputs are named; `tests/` points to `/test-setup`
-- [ ] No skill is named as the producer of `CLAUDE.md` or `.claude/agents/` — none creates them
+- [ ] No skill is named as the producer of `AGENTS.md` or `.opencode/agents/` — none creates them
 - [ ] No template is filled in and no "May I write" ask appears
 
 ---
@@ -131,7 +131,7 @@ in its allowed tools) and no director gates apply.
 ### Case 4: Edge Case — Programmer Role With an Unresolved Code Root
 
 **Fixture:**
-- `CLAUDE.md` exists; `.claude/agents/gameplay-programmer.md` exists
+- `AGENTS.md` exists; `.opencode/agents/gameplay-programmer.md` exists
 - `project.yaml` has no `engine.name`, technical-preferences has
   `[TO BE CONFIGURED]`, and both `src/` and `Assets/` exist (ambiguous tree)
 
@@ -159,7 +159,7 @@ in its allowed tools) and no director gates apply.
 ### Case 5: Director Gate Check — None; No Agents Spawned
 
 **Fixture:**
-- Any project state with `CLAUDE.md` present
+- Any project state with `AGENTS.md` present
 - Any review mode
 
 **Input:** `/onboard producer`
@@ -181,7 +181,7 @@ in its allowed tools) and no director gates apply.
 
 ## Protocol Compliance
 
-- [ ] Reads `CLAUDE.md` and, when a role is given, its agent definition before generating
+- [ ] Reads `AGENTS.md` and, when a role is given, its agent definition before generating
 - [ ] Scans only the area that matches the role
 - [ ] Records each input as FOUND or ABSENT; ABSENT-backed sections read `NOT ASSESSED — NO DATA`
 - [ ] Presents the document before asking "May I write" to `production/onboarding/onboard-[role]-[date].md`

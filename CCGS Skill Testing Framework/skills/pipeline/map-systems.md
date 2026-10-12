@@ -7,8 +7,8 @@
 enumerates explicit and implicit systems, maps dependencies into layers
 (Foundation → Core → Feature → Presentation → Polish), assigns priority tiers
 (MVP / Vertical Slice / Alpha / Full Vision), derives a design order, and writes
-`design/gdd/systems-index.md` from `.claude/docs/templates/systems-index.md` after
-approval. Each collaborative phase ends with an `AskUserQuestion`.
+`design/gdd/systems-index.md` from `.opencode/docs/templates/systems-index.md` after
+approval. Each collaborative phase ends with an `question`.
 
 Three director gates run in sequence, each in its own phase:
 TD-SYSTEM-BOUNDARY (technical-director) after the dependency map is approved,
@@ -24,7 +24,7 @@ BLOCKED (user declined the write).
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "May I write" collaborative protocol language (for `design/gdd/systems-index.md`)
@@ -46,7 +46,7 @@ In `full` mode, sequentially:
    the index path, the pillars and core fantasy (the brief's pitch and "what they
    feel" line at `minimal`), every tier's assignments and the high-risk and
    bottleneck systems. REJECT → revise the system set before GDD authoring;
-   CONCERNS → `AskUserQuestion` (`Revise the system set` / `Accept — record them
+   CONCERNS → `question` (`Revise the system set` / `Accept — record them
    in the index` / `Discuss further`); on Accept they are recorded as a
    `> **Creative Director Note** (<tier>): …` directly beneath the
    `## Priority Tiers` table.
@@ -145,7 +145,7 @@ In `solo` mode the same three notes appear with "Solo mode."
 **Expected behavior:**
 1. The index is written after "May I write" approval
 2. CD-SYSTEMS is spawned and returns CONCERNS
-3. The concerns are shown with `AskUserQuestion`: `Revise the system set` /
+3. The concerns are shown with `question`: `Revise the system set` /
    `Accept — record them in the index` / `Discuss further`
 4. On Accept, the concern is recorded in the index as
    `> **Creative Director Note** (MVP): …` directly beneath the `## Priority Tiers`
@@ -274,7 +274,7 @@ In `solo` mode the same three notes appear with "Solo mode."
 ## Protocol Compliance
 
 - [ ] Reads the game concept (or brief at `minimal`) and pillars before any decomposition
-- [ ] `AskUserQuestion` at enumeration, dependencies, priorities and the write
+- [ ] `question` at enumeration, dependencies, priorities and the write
 - [ ] "May I write the systems index to `design/gdd/systems-index.md`?" asked before writing — at `collaborative`, and at `guided` for a new index
 - [ ] CD-SYSTEMS's CONCERNS reach the written index only through the user's choice; TD-SYSTEM-BOUNDARY's CONCERNS are noted inline in the index
 - [ ] Gates run sequentially at their own phases in full mode, never before their inputs exist

@@ -24,10 +24,10 @@ GDDs), so every fixture below sets `modes.workflow: full`.
 
 Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
-- [ ] Has required frontmatter fields: `name`, `description`, `argument-hint`, `user-invocable`, `allowed-tools`
+- [ ] Has required frontmatter fields: `name` and `description` (plus `disable-model-invocation: true` when the skill must not be model-invoked)
 - [ ] Has ≥5 phase headings (complex multi-phase skill)
 - [ ] Contains verdict keywords: PASS, NOT ASSESSED, CONCERNS, FAIL
-- [ ] `allowed-tools` includes Write, so "May I write" language is present (Phase 6 report write)
+- [ ] the skill writes files, so "May I write" language is present (Phase 6 report write)
 - [ ] Has a next-step handoff at the end
 - [ ] Documents parallel spawning of Phase 2 (Consistency) and Phase 3 (Design Theory)
 
@@ -67,7 +67,7 @@ review mode. It IS the holistic review; its only agents are the two
    given the pasted GDD content for its slice (not file paths) and its checklist (2a–2f / 3a–3g)
 5. Phase 4 walks 3–5 multi-system scenarios
 6. Report shows no blocking issues and no warnings; verdict PASS
-7. `AskUserQuestion`: "May I write this review to `design/gdd/gdd-cross-review-[date].md`?"
+7. `question`: "May I write this review to `design/gdd/gdd-cross-review-[date].md`?"
 8. Closing widget built from project state
 
 **Assertions:**
@@ -97,7 +97,7 @@ review mode. It IS the holistic review; its only agents are the two
 2. Report prints a `🔴 Rule Contradiction` entry quoting both rules and asking which GDD is authoritative
 3. The issue sits under Consistency Issues → Blocking; both GDDs appear in "GDDs Flagged for Revision"
 4. Verdict: FAIL, with "If FAIL — required actions before re-running"
-5. After the report write question, a second `AskUserQuestion` offers to mark the flagged GDDs `Needs Revision` in `systems-index.md`
+5. After the report write question, a second `question` offers to mark the flagged GDDs `Needs Revision` in `systems-index.md`
 
 **Assertions:**
 - [ ] Verdict is FAIL (not PASS, CONCERNS or NOT ASSESSED)
@@ -226,10 +226,10 @@ review mode. It IS the holistic review; its only agents are the two
 
 - [ ] Phase 2 (Consistency) and Phase 3 (Design Theory) spawned in parallel — not sequentially
 - [ ] The full analysis is shown before any write is requested
-- [ ] Does NOT write the report or update `systems-index.md` without `AskUserQuestion` approval
+- [ ] Does NOT write the report or update `systems-index.md` without `question` approval
 - [ ] Verdict is one of exactly: PASS, NOT ASSESSED, CONCERNS, FAIL
 - [ ] Every issue cites the GDD, section and text involved
-- [ ] Ends with an `AskUserQuestion` handoff built from the verdict: FAIL or NOT ASSESSED → neither `/create-architecture` nor `/gate-check`; CONCERNS → `/create-architecture` only; PASS → both
+- [ ] Ends with an `question` handoff built from the verdict: FAIL or NOT ASSESSED → neither `/create-architecture` nor `/gate-check`; CONCERNS → `/create-architecture` only; PASS → both
 
 ---
 
@@ -243,5 +243,5 @@ review mode. It IS the holistic review; its only agents are the two
 - Case 6 covers the fewer-than-two-readable-GDDs trigger, through a
   present-but-empty GDD. The NOT ASSESSED triggers for undefined pillars and for
   a sub-agent that returns no report are not fixture-tested.
-- The `since-last-review` mode (`.claude/scripts/review-scope.sh`) and the
+- The `since-last-review` mode (`.opencode/scripts/review-scope.sh`) and the
   `consistency` / `design-theory` focus modes are not tested here.

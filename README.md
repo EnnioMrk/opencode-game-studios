@@ -11,6 +11,16 @@ wrappers, hooks as one plugin, and path-scoped rules through that plugin.
 
 See [`PORTING.md`](PORTING.md) for the full mapping and what changed.
 
+## Branches
+
+- **`main`** — the published port, with the full engine dimension: the Godot,
+  Unity and Unreal agent sets, `/setup-engine`, and `docs/engine-reference/`.
+- **`engineless`** — the same toolkit with the whole engine dimension removed,
+  for a project that has no game engine: no engine agents, no `/setup-engine`,
+  no engine reference docs, no `engine.*` config keys, and no per-engine
+  branches in the skills or in the QA specs. Use it for browser, web and
+  desktop games that bring their own runtime.
+
 ---
 
 ## Why This Exists

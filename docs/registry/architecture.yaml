@@ -124,7 +124,7 @@ performance_budgets: []
 
 
 # ─── API DECISIONS ───────────────────────────────────────────────────────────
-# Which engine APIs are chosen for which purpose across the project.
+# Which APIs are chosen for which purpose across the project.
 # Conflicts: two ADRs using different APIs for the same purpose = inconsistent
 # implementation that breaks when one system expects the other's API.
 #
@@ -138,10 +138,10 @@ api_decisions: []
 # api_decisions:
 #   - purpose: physics_raycast
 #     status: active
-#     api: PhysicsServer3D.space_get_direct_state()
-#     not: RayCast3D node     # explicitly banned for this purpose
+#     api: "Direct physics query"
+#     not: "Per-frame wrapper object"     # explicitly banned for this purpose
 #     adr: docs/architecture/adr-0002-physics-architecture.md
-#     reason: "Direct server calls avoid per-frame node overhead; 3× faster in profiling"
+#     reason: "Direct queries avoid per-frame overhead; 3× faster in profiling"
 #     referenced_by:
 #       - docs/architecture/adr-0002-physics-architecture.md
 #       - docs/architecture/adr-0003-combat-system.md
@@ -162,12 +162,12 @@ forbidden_patterns: []
 # Example:
 #
 # forbidden_patterns:
-#   - pattern: autoload_singleton_coupling
+#   - pattern: global_singleton_coupling
 #     status: active
-#     description: "Systems must not directly reference Autoload singletons by name.
+#     description: "Systems must not directly reference global singletons by name.
 #       Use dependency injection or signals instead."
-#     why: "Tight coupling to Autoloads makes systems untestable in isolation and
-#       creates hidden dependencies that break when Autoload load order changes."
+#     why: "Tight coupling to globals makes systems untestable in isolation and
+#       creates hidden dependencies that break when initialization order changes."
 #     adr: docs/architecture/adr-0001-health-system.md
 #     added: 2026-03-26
 #

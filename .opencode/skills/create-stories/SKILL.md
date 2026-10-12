@@ -143,9 +143,6 @@ read a file. Per ADR:
    - `## Summary` and `## Decision` (including its `### Implementation
      Guidelines` subsection) — these feed the story's ADR Decision Summary
      and Implementation Notes.
-   - `## Engine Compatibility` — feeds the story's Engine, Risk, and Engine
-     Notes fields. (Engine Notes is a *story* field derived from this
-     section — it is not an ADR section name; do not search for one.)
 3. **Capture the `## Status` and the `## Last Verified` date** in one call:
    ```
    Grep pattern="^## (Status|Last Verified|Date)" path="docs/architecture/[adr-file].md" output_mode="content" -A 2
@@ -224,7 +221,6 @@ For each story, determine:
   - **Multiple ADRs apply**: List all governing ADRs in the story's `Governing ADRs:` field. Designate the one most directly controlling the implementation pattern as primary (first in the list). Others are listed as secondary references.
   - **No ADR applies at all**: Write `ADR: N/A — [brief reason, e.g. "pure data configuration, no architectural pattern required"]` in the story's ADR field. Do NOT leave the field blank — a blank ADR field means "not checked", not "not applicable".
 - **Story Type**: from Step 3 classification
-- **Engine risk**: from the ADR's Knowledge Risk field
 
 ---
 
@@ -313,22 +309,6 @@ For each story, write `production/epics/[epic-slug]/story-[NNN]-[slug].md`:
 > - **Requirement** → `Brief MVP feature N` (the feature this story implements — NOT a `TR-[system]-NNN` ID)
 > - **ADR Governing Implementation / ADR Decision Summary / ADR Version** → `N/A (minimal — no ADRs)`
 > - **Manifest Version** and **Control Manifest Rules (this layer)** → `N/A (minimal — no control manifest)`
-> - **Engine** and **Risk** → read `docs/engine-reference/<engine>/VERSION.md`
->   (engine from `engine.name`). **Engine** is `engine.name` + `engine.version`.
->   **Risk** is the risk level that file assigns to the pinned version — its
->   post-cutoff timeline row, or its stated overall risk. If the file is missing
->   or assigns no level, write `NOT ASSESSED (no VERSION.md risk rating)` — never
->   guess a level.
->
->   > **This field is load-bearing and had no rule, so it was improvised.**
->   > `/dev-story` Phase 3 spawns the engine specialist as a mandatory secondary
->   > "when engine risk is HIGH (from the ADR or VERSION.md)". At `minimal` there
->   > is no ADR, so `VERSION.md` is the *only* source — and nothing here told this
->   > skill to read it. A story written with an invented `Risk: MEDIUM` against a
->   > `VERSION.md` rating of HIGH silently disables the specialist review.
->   > Treat `NOT ASSESSED` as HIGH for the spawn decision: an unknown risk is not
->   > a low one.
-> - **Engine Notes** → `none (no ADR engine-compatibility analysis at minimal)`
 > - The Acceptance-Criteria source line → "From `design/game-brief.md` (the **Player goal & fail state** field + the MVP feature this story implements), scoped to this story" — derive concrete, testable ACs from what the user wrote there rather than inventing them from a bare MVP bullet
 > - The **`## QA Test Cases`** section → at any tier where the QL-STORY-READY / qa-lead gate is skipped (`minimal`, or `lean`/`solo` review mode) no qa-lead specs are authored; write "*N/A — no qa-lead specs at this tier; implement against the Acceptance Criteria above*" rather than improvising test cases.
 > - Any **Test Evidence / DoD** line is governed by `qa.level`, not this template — at `qa.level: minimal` tests are **waived** (advisory, never "must exist and pass"), but a Visual/Feel or UI story's retained screenshot is not.
@@ -353,9 +333,6 @@ For each story, write `production/epics/[epic-slug]/story-[NNN]-[slug].md`:
 **ADR Governing Implementation**: [ADR-NNNN: title]
 **ADR Decision Summary**: [1-2 sentence summary of what the ADR decided]
 **ADR Version**: [the ADR's `## Last Verified` date, else its `## Date`, else `unversioned`]
-
-**Engine**: [name + version] | **Risk**: [LOW / MEDIUM / HIGH]
-**Engine Notes**: [from ADR Engine Compatibility section — post-cutoff APIs, verification required]
 
 **Control Manifest Rules (this layer)**:
 - Required: [relevant required pattern]

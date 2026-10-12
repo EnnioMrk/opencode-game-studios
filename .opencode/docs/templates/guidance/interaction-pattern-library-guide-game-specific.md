@@ -29,7 +29,7 @@ content.
 
 **Accessibility**: Stack counts and quality tiers must have text or icon alternatives to color coding. Tooltip is the primary accessibility mechanism — ensure it is reachable by keyboard and screen reader. Locked slots must announce "locked" to screen readers.
 
-**Implementation Notes**: [Godot: Custom `Control` node. Quality border implemented as a `StyleBoxFlat` swapped based on rarity — avoid using `modulate` color for quality, as it affects the icon color. Drag and drop implemented via `get_drag_data()` and `can_drop_data()` / `drop_data()` override methods.]
+**Implementation Notes**: [Custom slot element. Quality border implemented as a border style swapped based on rarity — avoid tinting the icon itself for quality, as it affects the icon color. Drag and drop implemented through the platform's drag-and-drop mechanism.]
 
 ---
 
@@ -54,11 +54,9 @@ any context where an ability must show availability state.
 
 **Accessibility**: All cooldown/charge information must have a numeric value (screen reader cannot parse radial overlays). The cooldown timer number satisfies this. Ability names and descriptions must be exposed to screen readers via tooltip.
 
-**Implementation Notes**: [Godot: Custom `TextureButton` subclass with overlay
-`Control` nodes for cooldown radial and charge pips. The cooldown radial uses a
-custom shader on a `ColorRect` rotating a mask — or implement with a
-`ProgressBar` styled as circular if engine supports it. Verify against
-engine-reference/godot/ for Godot 4.6 shader support for this pattern.]
+**Implementation Notes**: [Custom button with overlay elements for the cooldown
+radial and charge pips. The cooldown radial rotates a mask — or use a circular
+progress indicator if the UI toolkit supports one.]
 
 ---
 
@@ -82,10 +80,10 @@ critical player resource. Health, mana, stamina, shield, fuel.
 
 **Accessibility**: The current value must be accessible as a number (tooltip or persistent display, or both). Color-coded threshold states must have non-color backups (icon, flashing, or audio visual warning). Warning state at 25% must have a visual signal independent of the color change.
 
-**Implementation Notes**: [Godot: Two overlapping `ProgressBar` nodes for ghost
-bar effect — back bar holds previous value (drains via Tween), front bar holds
-current value (updates instantly). Threshold states trigger `StyleBoxFlat` swaps
-on the front bar. Ghost bar Tween duration is tunable as a designer parameter.]
+**Implementation Notes**: [Two overlapping progress bars for the ghost-bar effect
+— the back bar holds the previous value and drains, the front bar holds the
+current value and updates instantly. Threshold states swap the front bar's style.
+Ghost-bar drain duration is tunable as a designer parameter.]
 
 ---
 
@@ -112,12 +110,11 @@ delivered through a character. All dialogue that has a speaker.
 
 **Accessibility**: Subtitles are always enabled by default for all voiced dialogue. Typewriter animation speed is a user setting (see accessibility-requirements.md). The dialogue box must not auto-advance — players must control pacing. Speaker name is always shown. All choice buttons must be navigable by keyboard and gamepad. Choices must be accessible to screen readers with position announced.
 
-**Implementation Notes**: [Godot: `RichTextLabel` with `bbcode_enabled` for
-formatting. Typewriter effect via `visible_characters` property animated by a
-`Timer`. Bind the advance input to a function that either skips typewriter
-(sets `visible_characters = -1`) or advances the dialogue state. Speaker name
-displayed in a separate `Label` above or beside the box. Dialogue data loaded from
-JSON or a dedicated dialogue format (e.g., Dialogic, Yarn Spinner for Godot).]
+**Implementation Notes**: [Rich text element with inline formatting. Typewriter
+effect by animating the revealed character count on a timer. Bind the advance input
+to either skip the typewriter (show the full line) or advance the dialogue state.
+Speaker name displayed in a separate label above or beside the box. Dialogue data
+loaded from JSON or a dedicated dialogue format.]
 
 ---
 
@@ -141,7 +138,7 @@ when the player enters the interaction zone, disappears when they leave.
 
 **Accessibility**: The button icon must be accompanied by a text label — do not rely on icon alone (some players use custom button labels or adaptive controllers with non-standard icons). The prompt must be positioned to not overlap character health or critical HUD information.
 
-**Implementation Notes**: [Godot: Attach as a `Node3D` child (or `Node2D` child in 2D) of the interactable object. Use a `BillboardMesh` or a `SubViewport` with a UI scene for 3D games — this keeps the prompt facing the camera without code. Update the button icon texture based on `Input.get_joy_name()` or keyboard detection via `InputEventKey` vs `InputEventJoypadButton`. Hold progress implemented as an `AnimationPlayer` or `Tween` on a radial mask shader.]
+**Implementation Notes**: [Attach the prompt to the interactable object, keeping it facing the camera. Update the button icon when the active input method changes (keyboard versus gamepad). Hold progress implemented as an animated radial fill on the button icon.]
 
 ---
 
@@ -166,10 +163,9 @@ damage, critical damage, healing, miss.
 
 **Accessibility**: Damage numbers are purely supplementary feedback — they must never be the only way to understand combat state. Health bars are the authoritative source. Provide an option to disable damage numbers entirely (some players find them visually overwhelming). When disabled, the game must remain fully playable.
 
-**Implementation Notes**: [Godot: Pool of `Label3D` (3D games) or `Label` (2D games)
-instances recycled via an object pool. Each instance is given a random small
-horizontal offset on spawn (±20px) to reduce overlap. Float animation via
-`Tween` on `position.y` and `modulate.a`. Critical hit scale-pop via Tween
-with `EASE_OUT` on scale followed by linear settle.]
+**Implementation Notes**: [Pool and recycle the number instances. Each instance is
+given a random small horizontal offset on spawn (±20px) to reduce overlap. Float
+the instance upward while fading it out. Critical hit scale-pop eases out on scale
+followed by a linear settle.]
 
 ---

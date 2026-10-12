@@ -48,7 +48,6 @@ qa.level: standard (rigor:standard)
 team.size: individual (rigor:standard)
 project.stage: Systems Design (production/stage.txt)
 automation_always_ask: scope_changes, file_deletions, schema_changes (default)
-engine: Godot 4.6 (project.yaml)
 testing.strict: logic=true integration=false visual=unset ui=unset config=unset (unset = each skill applies its own default)
 system_overrides: combat=full inventory=minimal
 notes: none
@@ -178,11 +177,6 @@ table in `.opencode/docs/coding-standards.md`. `resolve_config` therefore report
 only the *configured state* (`unset` where absent) and each skill applies its own
 default. The script resolves **sources**; the skill owns **policy**.
 
-**`engine` is reported from `project.yaml` only.** No markdown reader is built.
-Skills keep their existing per-field fallback to
-`.opencode/docs/technical-preferences.md`, which also remains the sole source for
-forbidden patterns and allowed libraries — those never migrated.
-
 ## Failure modes
 
 `resolve_config` **always exits 0 and always emits a complete block.** Each
@@ -191,7 +185,7 @@ condition below degrades to defaults and is named on `notes:`:
 | Condition | Behavior |
 |---|---|
 | `project.yaml` absent | legacy → defaults; `notes: project.yaml absent` |
-| `project.yaml` **empty** | defaults; `notes: project.yaml is EMPTY`. Distinct from absent on purpose — a truncated write or an interrupted `/setup-engine` looks like this |
+| `project.yaml` **empty** | defaults; `notes: project.yaml is EMPTY`. Distinct from absent on purpose — a truncated write looks like this |
 | Malformed YAML | unparseable keys resolve empty and fall through |
 | Tab-indented lines | rejected, and the **line numbers are named** on `notes:` |
 | CRLF line endings | parsed correctly (the Windows default) |

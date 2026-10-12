@@ -34,7 +34,7 @@ No gate IDs assigned.
 **Input:** "Implement the batching optimization to reduce draw calls from 420 to under 200."
 **Expected behavior:**
 - Does NOT produce implementation code for batching
-- Explicitly states that implementing optimizations belongs to the owner of the system — `technical-artist`, whose rendering optimization covers batching (naming `engine-programmer` as well, for an engine-level rendering change the batching needs, is fine)
+- Explicitly states that implementing optimizations belongs to the owner of the system — `technical-artist`, whose rendering optimization covers batching (naming `engine-programmer` as well, for a core rendering change the batching needs, is fine)
 - Redirects the implementation to `technical-artist`, handing over its recommendation as the brief: the target (under 200 draw calls), estimated impact, and implementation cost
 
 ### Case 3: Regression identification
@@ -66,7 +66,7 @@ No gate IDs assigned.
 ## Protocol Compliance
 
 - [ ] Stays within declared domain (profiling, analysis, recommendations — not implementation)
-- [ ] Redirects optimization implementation to the owner of the system (technical-artist for rendering optimizations such as batching, engine-programmer for engine systems) rather than implementing it
+- [ ] Redirects optimization implementation to the owner of the system (technical-artist for rendering optimizations such as batching, engine-programmer for core systems) rather than implementing it
 - [ ] Returns structured findings in its Performance Report Format (budget/actual/status tables, top bottlenecks with impact and recommendation, regressions)
 - [ ] Escalates code-quality trade-offs to technical-director rather than deciding unilaterally
 - [ ] Applies budget thresholds from provided context rather than assumed defaults

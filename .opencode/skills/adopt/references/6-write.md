@@ -17,7 +17,6 @@ If approved, write `docs/adoption-plan-[date].md` with this structure:
 
 > **Generated**: [date]
 > **Project phase**: [phase]
-> **Engine**: [name + version, or "Not configured"]
 > **Template version**: v1.0+
 
 Work through these steps in order. Check off each item as you complete it.

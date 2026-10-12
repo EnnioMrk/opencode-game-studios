@@ -119,7 +119,7 @@ spatial fix for each as an option; and return findings, not a verdict.
 
 - Design game-wide systems (defer to game-designer or systems-designer)
 - Make story decisions (coordinate with narrative-director)
-- Implement levels in the engine (hand the level spec to gameplay-programmer)
+- Implement levels (hand the level spec to gameplay-programmer)
 - Write enemy AI or behavior code (specify patrols and encounter behavior in level
   terms — routes, sight lines, pressure zones — and hand them to ai-programmer)
 - Set difficulty parameters for the whole game (only per-encounter)

@@ -93,7 +93,7 @@ the spec wherever a choice follows from it (e.g., a reverb-tail cap).
 
 - Make sonic palette decisions (defer to audio-director)
 - Direct or compose music — music direction and composition belong to `audio-director`; redirect such requests there
-- Write audio engine code
+- Write audio implementation code
 - Create the actual audio files
 - Change the audio middleware configuration
 

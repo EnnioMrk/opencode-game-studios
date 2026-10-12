@@ -12,7 +12,7 @@
 - The governing ADR
 - The control manifest
 - Dependency validation
-- Engine reference
+- Project config
 - Mark Story In Progress
 
 **Before loading any context, resolve the workflow tier for this story's system** (see the Workflow tier note above), then **verify required files exist.** Extract the ADR path from the story's `ADR Governing Implementation` field. The "If missing — `full`" column is the baseline; the tier columns relax it:
@@ -112,7 +112,7 @@ If **[A]**: first check the ADR's size — `Bash: wc -c "docs/architecture/[adr-
 - **~50KB or larger** — read *only* the sections that govern implementation,
   never the whole file:
   ```
-  Grep pattern="^## (Decision|Engine Compatibility|ADR Dependencies)" path="docs/architecture/[adr-file].md" output_mode="content" -A 40
+  Grep pattern="^## (Decision|ADR Dependencies)" path="docs/architecture/[adr-file].md" output_mode="content" -A 40
   ```
   Escalate to a bounded `Read(offset, limit)` on one section only if a scanned
   section cross-references material outside itself.
@@ -165,12 +165,8 @@ If a dependency file cannot be found: warn "Dependency story not found: [path]. 
 
 ---
 
-### Engine reference
+### Project config
 Read from `project.yaml` first, falling back to `.opencode/docs/technical-preferences.md` for any key absent or empty:
-- `specialists.*` — the project's chosen specialist agents; **read before**
-  `engine.name` when selecting an agent (see Phase 3)
-- `engine.name` (else the `Engine:` value) — the generic engine specialist, and
-  the fallback when `specialists` is absent
 - `naming.*` (else Naming conventions) — class names, file names, signal/event names
 - `performance.*` (else Performance budgets) — frame budget, memory ceiling
 - Forbidden patterns — from `.opencode/docs/technical-preferences.md` (not migrated to project.yaml)

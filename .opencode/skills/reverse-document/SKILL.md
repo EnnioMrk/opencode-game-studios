@@ -25,11 +25,9 @@ appropriate design or architecture documentation. Use this when:
 - `architecture` → Generate an Architecture Decision Record (ADR)
 - `concept` → Generate a concept document from prototype
 
-**Path**: Directory or file to analyze, under the code root — `src/` Godot,
-`Assets/` Unity, `Source/<Module>/` Unreal (`.opencode/docs/code-root-resolution.md`)
-- `src/gameplay/combat/` → All combat-related code (Godot)
-- `Assets/Scripts/Core/EventSystem.cs` → Specific file (Unity)
-- `Source/MyGame/Private/AI/` → A module folder (Unreal)
+**Path**: Directory or file to analyze, under the code root — `src/`
+(`.opencode/docs/code-root-resolution.md`)
+- `src/gameplay/combat/` → All combat-related code
 - `prototypes/stealth-mech/` → Prototype directory
 
 > **Resolved config** (the `/reverse-document` command runs this before the skill; run it yourself if you loaded the skill without the command):
@@ -59,7 +57,6 @@ generated — see Phase 5. Semantics of each tier are in
 **Examples**:
 ```bash
 /reverse-document design src/gameplay/magic-system
-/reverse-document architecture Source/MyGame/Private/EntityComponent
 /reverse-document concept prototypes/vehicle-combat
 ```
 

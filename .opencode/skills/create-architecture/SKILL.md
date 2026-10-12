@@ -1,5 +1,5 @@
 ---
-description: "Author the architecture blueprint before code is written. Validates decisions against the pinned engine, flags knowledge gaps."
+description: "Author the architecture document before code is written."
 name: create-architecture
 ---
 
@@ -11,11 +11,11 @@ defaults in `.opencode/docs/config-resolution.md`.
 # Create Architecture
 
 This skill produces `docs/architecture/architecture.md` — the master architecture
-document that translates all approved GDDs into a concrete technical blueprint.
+document that translates all approved GDDs into a concrete technical design.
 It sits between design and implementation, and must exist before sprint planning begins.
 
 **Distinct from `/architecture-decision`**: ADRs record individual point decisions.
-This skill creates the whole-system blueprint that gives ADRs their context.
+This skill creates the whole-system document that gives ADRs their context.
 
 See `.opencode/docs/director-gates.md` for the full check pattern. Individual gate definitions live in `.opencode/docs/director-gates/[gate-id].md` — the spawned agent reads its own gate file; do not read it in the parent session.
 
@@ -41,7 +41,7 @@ considered per layer. Apply it to every section you author.
 - **`layers`**: Focus on the system layer diagram only
 - **`data-flow`**: Focus on data flow between modules only
 - **`api-boundaries`**: Focus on API boundary definitions only
-- **`adr-audit`**: Audit existing ADRs for engine compatibility gaps only
+- **`adr-audit`**: Audit existing ADRs for conflicts and gaps only
 
 ---
 
@@ -90,7 +90,7 @@ describe what collaborative mode requires, not universal behavior.
 This skill follows the collaborative design principle at every phase:
 
 1. **Load context silently** — do not narrate file reads
-2. **Present findings** — show the knowledge gap inventory and layer proposals
+2. **Present findings** — show the technical requirements baseline and layer proposals
 3. **Ask before deciding** — present options for each architectural choice
 4. **Draft before approval** — show the content inline before asking to write it.
    Never ask approval for a section the user has not yet seen.
@@ -103,7 +103,7 @@ This skill follows the collaborative design principle at every phase:
    ask. Record each approved section's decisions in
    `production/session-state/active.md` as you go, so a crash loses no decision.
    A revision that Phase 7b forces is written the same way — once, after its
-   re-drafted sections are approved — and an update (Phase 0e) writes only the
+   re-drafted sections are approved — and an update (Phase 0c) writes only the
    sections it chose.
 
 Never make a binding architectural decision without user input. If the user is

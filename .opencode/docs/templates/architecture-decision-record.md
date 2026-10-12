@@ -23,7 +23,7 @@
 ## Last Verified
 
 [YYYY-MM-DD — when this ADR was last confirmed accurate against the current
-engine version and design. Update this date when you re-read and confirm it
+code and design. Update this date when you re-read and confirm it
 is still correct, even if nothing changed.]
 
 ## Decision Makers
@@ -37,20 +37,12 @@ tiered context loading — a skill scanning 20 ADRs uses this to decide whether
 to read the full decision. Be specific: name the system, the problem, and the
 chosen approach.]
 
-## Engine Compatibility
+## Domain and Layer
 
 | Field | Value |
 |-------|-------|
-| **Engine** | [e.g. Godot 4.6 / Unity 6 / Unreal Engine 5.7] |
 | **Domain** | [Physics / Rendering / UI / Audio / Navigation / Animation / Networking / Core / Input / Scripting] |
 | **Layer** | [Foundation / Core / Feature / Presentation] |
-| **Knowledge Risk** | [LOW — in training data / MEDIUM — near cutoff, verify / HIGH — post-cutoff, must verify] |
-| **References Consulted** | [e.g. `docs/engine-reference/godot/modules/physics.md`, `breaking-changes.md`] |
-| **Post-Cutoff APIs Used** | [Specific APIs from post-cutoff engine versions this decision depends on, or "None"] |
-| **Verification Required** | [Concrete behaviours to test against the target engine version before shipping, or "None"] |
-
-> **Note**: If Knowledge Risk is MEDIUM or HIGH, this ADR must be re-validated if the
-> project upgrades engine versions. Flag it as "Superseded" and write a new ADR.
 
 > **`Layer` is the ADR's own layer, not the referencing epic's — and it is a
 > different taxonomy from `Domain`.** Several sites branch on whether an ADR is
@@ -64,7 +56,7 @@ chosen approach.]
 >
 > The vocabulary is the same `Foundation / Core / Feature / Presentation` that
 > epics and stories already carry — do not invent a fifth value, and do not
-> reuse a `Domain` value here. `Domain` says *what part of the engine this
+> reuse a `Domain` value here. `Domain` says *what part of the code this
 > touches*; `Layer` says *how early in the build it must exist*.
 
 ## ADR Dependencies
@@ -89,7 +81,7 @@ cost of not deciding?]
 
 ### Constraints
 
-- [Technical constraints -- engine limitations, platform requirements]
+- [Technical constraints -- framework limitations, platform requirements]
 - [Timeline constraints -- deadline pressures, dependencies]
 - [Resource constraints -- team size, expertise available]
 - [Compatibility requirements -- must work with existing systems]

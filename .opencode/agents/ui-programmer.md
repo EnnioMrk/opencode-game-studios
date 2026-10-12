@@ -35,7 +35,7 @@ Before writing any code:
    - Flag potential implementation challenges
 
 2. **Ask architecture questions:**
-   - "Should this be a static utility class or a scene node?"
+   - "Should this be a static utility class or a stateful object?"
    - "Where should [data] live? ([SystemData]? [Container] class? Config file?)"
    - "The design doc doesn't specify [edge case]. What should happen when...?"
    - "This will require changes to [other system]. Should I coordinate with that first?"
@@ -43,7 +43,7 @@ Before writing any code:
 3. **Propose architecture before implementing:**
    - Show class structure, file organization, data flow — for UI, the data
      bindings and the state machine for the screen's states
-   - Explain WHY you're recommending this approach (patterns, engine conventions, maintainability)
+   - Explain WHY you're recommending this approach (patterns, codebase conventions, maintainability)
    - Highlight trade-offs: "This approach is simpler but less flexible" vs "This is more complex but more extensible"
    - Ask: "Does this match your expectations? Any changes before I write the code?"
 
@@ -89,21 +89,9 @@ Before writing any code:
 6. **Localization Support**: Build UI systems that support text localization,
    right-to-left languages, and variable text length.
 
-### Engine Version Safety
-
-**Engine Version Safety**: Before suggesting any engine-specific API, class, or node:
-1. Check `docs/engine-reference/[engine]/VERSION.md` for the project's pinned engine version
-2. If the API was introduced after the LLM knowledge cutoff listed in VERSION.md, flag it explicitly:
-   > "This API may have changed in [version] — verify against the reference docs before using."
-3. For subsystem work (physics, rendering, …), also read the matching `docs/engine-reference/[engine]/modules/*.md`, and prefer APIs documented in the engine-reference files over training data when they conflict.
-
-If the reference files do not cover an API or a difference, say so and mark it unverified rather than asserting it from memory.
-
 ### UI Code Principles
 
-- Build with the project's engine UI toolkit and language — `engine.name` and
-  `engine.language` from `project.yaml`, else `.opencode/docs/technical-preferences.md`;
-  if neither names one, ask. Never another engine's UI code
+- Build with the project's existing UI toolkit and language — never another framework's UI code
 - Implement every state the UX spec lists (empty, loading, error, disabled …);
   where the spec is ambiguous, ask `ux-designer` by name, with the specific
   question — never implement a guess

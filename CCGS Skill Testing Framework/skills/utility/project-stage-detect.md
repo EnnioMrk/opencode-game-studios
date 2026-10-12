@@ -12,10 +12,10 @@ A configured stage (`project.stage` in `project.yaml`, else legacy
 `production/stage.txt`) is authoritative for what the stage is, but the skill
 always runs its heuristics too and states explicitly when the artifacts
 disagree. Heuristics, checked from most advanced backward: Production = code
-root has 10+ source files; Pre-Production = engine configured, <10 source files;
-Technical Setup = systems index, no engine; Systems Design = concept, no
-complete systems index; Concept = no concept doc; Polish and Release are
-explicit only. The resolved workflow tier decides which absent documents count
+root has 10+ source files; Pre-Production = code root resolved, <10 source
+files; Technical Setup = systems index, no source files; Systems Design =
+concept, no complete systems index; Concept = no concept doc; Polish and Release
+are explicit only. The resolved workflow tier decides which absent documents count
 as gaps (none of GDDs/ADRs/sprints at `minimal`). An unresolved code root means
 the source files were not counted: `NOT ASSESSED — code root unresolved`, never
 zero files.
@@ -57,7 +57,7 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 ### Case 1: Configured Stage Matches the Artifacts
 
 **Fixture:**
-- `project.yaml` has `project.stage: Production` and `engine.name: Godot`
+- `project.yaml` has `project.stage: Production`
 - `src/` has 24 source files; `design/gdd/` has 4 GDDs and `systems-index.md`,
   one GDD per indexed system
 - `docs/architecture/` has `architecture.md` and 5 ADRs; `design/art/art-bible.md`
@@ -89,7 +89,7 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 
 **Fixture:**
 - No `project.stage` in `project.yaml` and no `production/stage.txt`
-- `engine.name: Godot`; `src/` has 14 source files
+- `src/` has 14 source files
 - `design/gdd/` has 3 GDDs; `docs/architecture/` has no ADRs
 - Resolved workflow tier: `full`
 
@@ -116,16 +116,14 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 
 **Fixture:**
 - `project.yaml` has `project.stage: Release`
-- `engine.name: Godot`; `src/` has 2 source files; no ADRs, no architecture
-  doc, no epics
+- `src/` has 2 source files; no ADRs, no architecture doc, no epics
 - Resolved workflow tier: `full`
 
 **Input:** `/project-stage-detect`
 
 **Expected behavior:**
 1. Skill reads the configured stage `Release`
-2. Heuristics indicate Pre-Production (engine configured, fewer than 10 source
-   files)
+2. Heuristics indicate Pre-Production (fewer than 10 source files)
 3. Skill reports both and says explicitly that they disagree — the configured
    stage may be stale, or work exists outside this repo
 4. The configured value is not silently replaced, and the disagreement is not
@@ -145,23 +143,22 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 - Resolved workflow tier: `minimal`
 - `project.yaml` has `project.stage: Concept`, as `/start` wrote it — nothing on
   the minimal path runs `/gate-check`, so it has never advanced
-- `design/game-brief.md` exists; `engine.name: Godot`; `src/` has 5 source files
+- `design/game-brief.md` exists; `src/` has 5 source files
 - No GDDs, no art bible, no ADRs, no epics, no sprint plans
 
 **Input:** `/project-stage-detect`
 
 **Expected behavior:**
 1. Skill uses the resolved tier `minimal` rather than assuming one
-2. It treats a brief plus an engine as the normal state
+2. It treats a brief with a code root as the normal state
 3. It does NOT flag absent GDDs, art bible, UX specs, ADRs, epics or sprint
    plans as gaps
 4. It does not suggest `/reverse-document` for an absent GDD or `/sprint-plan`
 5. The Production line reports stories through the brief's build order, never
    "no sprint plan"
-6. The heuristics observe Pre-Production (engine configured, fewer than 10 source
-   files); the configured Concept is reported as not advanced at this tier — an
-   expected lag, not a disagreement — so it does not by itself make Stage
-   Confidence CONCERNS
+6. The heuristics observe Pre-Production (fewer than 10 source files); the
+   configured Concept is reported as not advanced at this tier — an expected lag,
+   not a disagreement — so it does not by itself make Stage Confidence CONCERNS
 
 **Assertions:**
 - [ ] No absent GDD, art bible, ADR, epic or sprint plan is listed as a gap
@@ -200,9 +197,8 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 
 **Fixture:**
 - No `project.stage`, no `production/stage.txt`
-- `project.yaml` has no `engine.name`; `.opencode/docs/technical-preferences.md`
-  reads `[TO BE CONFIGURED]`
-- Both `src/` and `Assets/` exist, each holding source files (ambiguous tree)
+- The project tree has no `src/`, so the code root is unresolved
+- Source files exist elsewhere in the tree, so the project is not greenfield
 - `design/gdd/game-concept.md` and `design/gdd/systems-index.md` exist, with a
   GDD for every indexed system; `docs/architecture/` holds the Foundation-layer
   ADRs — nothing the `standard` tier flags is missing
@@ -211,14 +207,14 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 **Input:** `/project-stage-detect`
 
 **Expected behavior:**
-1. The code root cannot be resolved (no engine, two candidate roots), so the
-   source-file count does not run
+1. The code root cannot be resolved (`src/` is absent), so the source-file
+   count does not run
 2. The Source Code section reads `NOT ASSESSED — code root unresolved` — not
    "0 source files", and the project is not called greenfield
 3. Without the count the Production row (10+ source files) can be neither ruled
    in nor out — the rows below it would say Technical Setup (systems index, no
-   engine) — so the report says which check did not run instead of settling
-   silently on the lower stage
+   source files) — so the report says which check did not run instead of
+   settling silently on the lower stage
 4. No stage is configured and there are no gaps, so nothing ranks above it:
    Stage Confidence is **NOT ASSESSED**, naming the unresolved code root. The
    two candidate roots are the reason the check could not run, not an
@@ -246,8 +242,8 @@ None. `/project-stage-detect` is a diagnostic utility. It spawns no agents
 
 ## Coverage Notes
 
-- Concept (no concept doc) and Technical Setup (systems index, no engine) follow
-  the same heuristic table and are not separately fixture-tested.
+- Concept (no concept doc) and Technical Setup (systems index, no source files)
+  follow the same heuristic table and are not separately fixture-tested.
 - Polish and Release are explicit-only stages; they can only come from a
   configured value, which Case 3 covers.
 - The `standard` tier (flag missing GDDs for built systems and critical ADRs

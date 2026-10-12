@@ -236,7 +236,6 @@ the medium.]
 
 | Consideration | Assessment |
 | ---- | ---- |
-| **Recommended Engine** | [Godot / Unity / Unreal and why — consider scope, team expertise, platform targets] |
 | **Key Technical Challenges** | [What's technically hard about this game?] |
 | **Art Style** | [Pixel / 2D / 2.5D / 3D stylized / 3D realistic] |
 | **Art Pipeline Complexity** | [Low (asset store + modifications) / Medium (custom 2D) / High (custom 3D)] |
@@ -307,7 +306,7 @@ the combat-crafting loop engaging for 30+ minute sessions"]
 ## Next Steps
 
 - [ ] Get concept approval from creative-director
-- [ ] Fill in AGENTS.md technology stack based on engine choice (`/setup-engine`)
+- [ ] Fill in AGENTS.md technology stack
 - [ ] Create game pillars document (`/design-review` to validate)
 - [ ] **Prototype core idea** (`/prototype [core-mechanic]`) — before writing GDDs, validate the concept is worth designing
 - [ ] If prototype PROCEEDS: Decompose concept into systems (`/map-systems`)

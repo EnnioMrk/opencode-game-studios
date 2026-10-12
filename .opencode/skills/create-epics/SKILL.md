@@ -131,19 +131,18 @@ Read for in-scope systems:
 - `docs/architecture/architecture.md` — module ownership and API boundaries
 - Accepted ADRs **whose domains cover in-scope systems only** — skip ADRs for
   unrelated domains entirely. For each in-scope ADR, load only the "GDD
-  Requirements Addressed", "Decision", and "Engine Compatibility" sections —
+  Requirements Addressed" and "Decision" sections —
   never an unbounded full read:
   ```
-  Grep pattern="^## (GDD Requirements Addressed|Decision|Engine Compatibility)" path="docs/architecture/[adr-file].md" output_mode="content" -n
+  Grep pattern="^## (GDD Requirements Addressed|Decision)" path="docs/architecture/[adr-file].md" output_mode="content" -n
   ```
   then `Read(offset, limit)` bounded to each match through the next `## `
   heading (or to end of file for the last match). This matters most on a
   large ADR.
 - `docs/architecture/control-manifest.md` — manifest version date from header
 - `docs/architecture/tr-registry.yaml` — for tracing requirements to ADR coverage
-- `docs/engine-reference/[engine]/VERSION.md` — engine name, version, risk levels
 
-Report: "Loaded [N] GDDs, [M] ADRs, engine: [name + version]."
+Report: "Loaded [N] GDDs, [M] ADRs."
 
 > **Workflow tier adjustment** (resolved in Step 1; per-system via
 > `system_overrides`). The inputs above are the `full` baseline:
@@ -203,7 +202,6 @@ Present to user before writing anything:
 **GDD**: design/gdd/[filename].md
 **Architecture Module**: [module name from architecture.md]
 **Governing ADRs**: [ADR-NNNN, ADR-MMMM]
-**Engine Risk**: [LOW / MEDIUM / HIGH — highest risk among governing ADRs]
 **GDD Requirements Covered by ADRs**: [N / total]
 **Untraced Requirements**: [list TR-IDs with no ADR, or "None"]
 ```
@@ -293,9 +291,9 @@ and the architecture module's stated responsibilities]
 
 ## Governing ADRs
 
-| ADR | Decision Summary | Engine Risk |
-|-----|-----------------|-------------|
-| ADR-NNNN: [title] | [1-line summary] | LOW/MEDIUM/HIGH |
+| ADR | Decision Summary |
+|-----|------------------|
+| ADR-NNNN: [title] | [1-line summary] |
 
 ## GDD Requirements
 
@@ -309,7 +307,7 @@ and the architecture module's stated responsibilities]
 This epic is complete when:
 - All stories are implemented, reviewed, and closed via `/story-done`
 - All acceptance criteria from `design/gdd/[filename].md` are verified
-- All Logic and Integration stories have passing test files in [the test root — `tests/` on Godot, `Assets/Tests/` on Unity, `Source/<Module>/Private/Tests/` on Unreal]
+- All Logic and Integration stories have passing test files in `tests/`
 - All Visual/Feel and UI stories have retained screenshots in `production/qa/evidence/` — each screen touched for UI, plus a lead sign-off for Visual/Feel
 
 ## Next Step
@@ -327,7 +325,6 @@ row, and never reset `Stories` to `Not yet created`:
 # Epics Index
 
 Last Updated: [date]
-Engine: [name + version]
 
 | Epic | Layer | System | GDD | Stories | Status |
 |------|-------|--------|-----|---------|--------|

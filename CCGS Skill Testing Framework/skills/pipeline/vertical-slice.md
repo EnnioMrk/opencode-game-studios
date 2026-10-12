@@ -67,8 +67,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 ### Case 1: Happy Path — slice built, played unaided, PROCEED
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `engine.language: GDScript`,
-  `modes.review_mode: solo`
+- `project.yaml`: `modes.review_mode: solo`
 - `design/gdd/game-concept.md` (core fantasy, pillars), `design/gdd/systems-index.md`,
   `docs/architecture/architecture.md` and `docs/architecture/control-manifest.md`
   exist; `prototypes/` has no `ember-trail-vertical-slice/`
@@ -85,7 +84,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
    `production/session-state/active.md`, and the checkpoint is written there
 3. Asks "May I create the vertical slice directory at
    `prototypes/ember-trail-vertical-slice/` and begin implementation?"; every
-   GDScript file it writes starts with `# VERTICAL SLICE - NOT FOR PRODUCTION`
+   slice file it writes starts with `VERTICAL SLICE - NOT FOR PRODUCTION` in its own comment syntax
 4. Iterates with the user until the loop is playable, then asks for the
    from-scratch playthrough and puts the six debrief questions one at a time
 5. Drafts the report from `.opencode/docs/templates/vertical-slice-report.md` with a
@@ -99,7 +98,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 **Assertions:**
 - [ ] The validation question has both a player-experience and a build-feasibility part
 - [ ] Scope is confirmed, and the checkpoint ask names `active.md`, before any slice file is written
-- [ ] The directory ask comes before any slice file; each GDScript file's header is a `#` comment, never `//`
+- [ ] The directory ask comes before any slice file; each slice file's header uses that file's own comment syntax
 - [ ] The debrief questions are asked one at a time, after the from-scratch playthrough
 - [ ] REPORT.md and the `prototypes/index.md` row are written only after one ask naming both; the row records PROCEED
 - [ ] The formal stage step is `/gate-check production` (Pre-Production → Production), not `/gate-check pre-production`

@@ -137,7 +137,6 @@ After writing all approved files, silently append to
     - Verdict: [PASS / NOT ASSESSED / CONCERNS / FAIL]
     - Requirements: [N] total — [X] covered, [Y] partial, [Z] gaps
     - New TR-IDs registered: [N, or "None"]
-    - GDD revision flags: [comma-separated GDD names, or "None"]
     - Top ADR gaps: [top 3 gap titles from the report, or "None"]
     - Report: docs/architecture/architecture-review-[date].md
 
@@ -151,7 +150,6 @@ later extends the same file with story and test columns — uses this format:
 ```markdown
 # Architecture Traceability Index
 Last Updated: [date]
-Engine: [name + version]
 
 ## Coverage Summary
 - Total requirements: [N]

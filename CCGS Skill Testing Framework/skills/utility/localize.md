@@ -50,8 +50,8 @@ it spawns is `localization-lead` (an operations-tier agent), and only in the
 ### Case 1: Extract — New Strings Keyed and Appended After Approval
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot`, so the code root is `src/`
-- `src/ui/hud.gd` wraps three strings in `tr()` that have no entry in
+- The code root is `src/`
+- `src/ui/hud.ts` holds three player-facing strings with no entry in
   `assets/data/strings/strings-en.json`
 - No `production/localization/freeze-status.md` exists
 
@@ -172,15 +172,13 @@ it spawns is `localization-lead` (an operations-tier agent), and only in the
 ### Case 6: Scan With an Unresolved Code Root — NOT ASSESSED, never "no hardcoded strings"
 
 **Fixture:**
-- `project.yaml` has no `engine.name`; `.opencode/docs/technical-preferences.md`
-  reads `[TO BE CONFIGURED]`
-- Both `src/` and `Assets/` exist and hold UI code with hardcoded strings
-  (ambiguous tree)
+- The project tree has no `src/`, so the code root is unresolved
+- UI code with hardcoded strings sits under a different directory
 
 **Input:** `/localize scan`
 
 **Expected behavior:**
-1. Skill tries to resolve the code root and cannot (no engine, two candidate roots)
+1. Skill tries to resolve the code root and cannot (`src/` is absent)
 2. It reports `NOT ASSESSED — code root unresolved` for the hardcoded-string
    search and says which checks did not run
 3. It does not guess `src/`, and does not report zero hits or "no hardcoded

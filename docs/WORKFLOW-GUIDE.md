@@ -63,8 +63,7 @@ This guided onboarding asks where you are and routes you to the right phase:
 
 - **Path A** -- No idea yet: routes to `/brainstorm`
 - **Path B** -- Vague idea: routes to `/brainstorm` with seed
-- **Path C** -- Clear concept: routes to `/brainstorm` to write it down, or
-  straight to `/setup-engine`
+- **Path C** -- Clear concept: routes to `/brainstorm` to write it down
 - **Path D1** -- Existing project, few artifacts: normal flow
 - **Path D2** -- Existing project, GDDs/ADRs exist: runs `/project-stage-detect`
   then `/adopt` for brownfield migration
@@ -104,8 +103,8 @@ OPTIONAL opportunities.
 Directories are created as needed. The system expects this layout:
 
 ```
-src/                  # Game source code (Godot; Unity: Assets/, Unreal: Source/<Module>/)
-  core/               # Engine/framework code
+src/                  # Game source code
+  core/               # Core/framework code
   gameplay/           # Gameplay systems
   ai/                 # AI systems
   networking/         # Multiplayer code
@@ -143,23 +142,21 @@ production/           # Sprint plans, milestones, releases
 > reach the phase that needs them. The important thing is to follow this
 > structure when you do create them, because the **rules system** enforces
 > standards based on file paths. Code in `src/gameplay/` gets gameplay rules,
-> code in `src/ai/` gets AI rules, and so on — and the same for C# and C++ in
-> Unity and Unreal `Gameplay/` and `AI/` folders.
+> code in `src/ai/` gets AI rules, and so on.
 
 ---
 
 ## The Default Path: Rigor Minimal
 
 `modes.rigor` defaults to `minimal` (`/start` asks which tier fits; `/settings`
-changes it any time). At `minimal` the path to code is four steps:
+changes it any time). At `minimal` the path to code is three steps:
 
-1. `/setup-engine` -- configure the engine
-2. `/brainstorm` -- writes the one-page `design/game-brief.md`, which replaces
+1. `/brainstorm` -- writes the one-page `design/game-brief.md`, which replaces
    the full concept doc, the systems decomposition and the per-system GDDs
-3. `/create-stories` -- turns the brief's MVP list and build order into stories
+2. `/create-stories` -- turns the brief's MVP list and build order into stories
    under `production/epics/<slug>/`. No `/create-epics`, no `/sprint-plan`: the
    brief's build order is the plan
-4. `/dev-story` then `/story-done`, story by story. `/story-done` names the
+3. `/dev-story` then `/story-done`, story by story. `/story-done` names the
    next story, and `/help` knows this route
 
 Nothing on this path runs `/gate-check`, so `project.stage` stays at Concept --
@@ -187,17 +184,12 @@ with defined pillars and a player journey. This is where you figure out
 ### Phase 1 Pipeline
 
 ```
-/brainstorm  -->  game-concept.md  -->  /design-review  -->  /setup-engine
+/brainstorm  -->  game-concept.md  -->  /design-review  -->  /prototype
      |                                        |                    |
      v                                        v                    v
-  10 concepts     Concept doc with       Validation          Engine pinned in
-  MDA analysis    pillars, MDA,          of concept          project.yaml
-  Player motiv.   core loop, USP         document
-                                                                   |
-                                                                   v
-                                                             /prototype
-                                                       (concept prototype — 1-3 days)
-                                                        PROCEED ↓     PIVOT → /brainstorm
+  10 concepts     Concept doc with       Validation          Concept prototype
+  MDA analysis    pillars, MDA,          of concept          (1-3 days)
+  Player motiv.   core loop, USP         document            PROCEED ↓  PIVOT → /brainstorm
                                                                    |
                                                                    v (PROCEED)
                                                              /map-systems
@@ -251,32 +243,6 @@ The concept document includes:
 ```
 
 Validates structure and completeness before you proceed.
-
-### Step 1.3: Choose Your Engine
-
-```
-/setup-engine
-```
-
-Or with a specific engine:
-
-```
-/setup-engine godot 4.6
-```
-
-**What /setup-engine does:**
-
-- Writes engine, language, specialists, naming conventions, and performance
-  budgets to `project.yaml` (the source of truth) and mirrors them to
-  `.opencode/docs/technical-preferences.md` (the human-readable legacy fallback)
-- Detects knowledge gaps (engine version newer than LLM training data) and
-  advises cross-referencing `docs/engine-reference/`
-- Creates version-pinned reference docs in `docs/engine-reference/`
-
-**Why this matters:** Once you set the engine, the system knows which
-engine-specialist agents to use. If you pick Godot, agents like
-`godot-specialist`, `godot-gdscript-specialist`, and `godot-shader-specialist`
-become your go-to experts.
 
 ### Step 1.4: Decompose Your Concept Into Systems
 
@@ -506,7 +472,7 @@ gives programmers flat, actionable rules. You also establish UX foundations.
         v                          v                                   v
   Master architecture       Per-decision ADRs              Validates completeness,
   document covering         in docs/architecture/          dependency ordering,
-  all systems               adr-*.md                       engine compatibility
+  all systems               adr-*.md                       GDD revision flags
                                                                       |
                                                                       v
                                                          /create-control-manifest
@@ -542,7 +508,7 @@ For each significant technical decision:
 
 **What happens:** The skill guides you through creating an ADR with:
 - Context and decision drivers
-- All options with pros/cons and engine compatibility
+- All options with pros/cons and trade-offs
 - Chosen option with rationale
 - Consequences (positive, negative, risks)
 - Dependencies (Depends On, Enables, Blocks, Ordering Note)
@@ -570,7 +536,6 @@ overwriting existing content.
 
 Validates all ADRs together:
 - Topological sort of ADR dependencies (detects cycles)
-- Engine compatibility verification
 - GDD Revision Flags (flags GDD sections that need updates based on ADR choices)
 - TR-ID registry maintenance (`docs/architecture/tr-registry.yaml`)
 
@@ -608,9 +573,8 @@ gate checks.
 /test-setup
 ```
 
-Scaffolds the engine's test root, `.github/workflows/tests.yml` and one example
-test; the Pre-Production gate checks for them. `/test-helpers` can follow once
-there are systems to test.
+Scaffolds the test root, `.github/workflows/tests.yml` and one example
+test; the Pre-Production gate checks for them.
 
 ### Phase 3 Gate
 
@@ -620,13 +584,11 @@ there are systems to test.
 
 **Requirements to pass:**
 
-- The engine configured, `project.yaml` populated (engine, naming, performance)
-  and the engine reference docs present
 - Art bible Sections 1–4 (`design/art/art-bible.md`)
 - `docs/architecture/architecture.md`, at least 3 ADRs covering Foundation-layer
   systems, an `/architecture-review` report and
   `docs/architecture/requirements-traceability.md`
-- The test framework in the engine's test root, `.github/workflows/tests.yml`
+- The test framework in the test root, `.github/workflows/tests.yml`
   and one example test (`/test-setup`)
 - `design/accessibility-requirements.md` and `design/ux/interaction-patterns.md`
   (`/ux-design accessibility`, `/ux-design patterns`)
@@ -756,7 +718,6 @@ implementable story files in `production/epics/[slug]/`. Each story embeds:
 - GDD requirement references (TR-IDs, not quoted text -- stays fresh)
 - ADR references (only from Accepted ADRs; Proposed ADRs cause `Status: Blocked`)
 - Control manifest version date (for staleness detection)
-- Engine-specific implementation notes
 - Acceptance criteria from the GDD
 
 Once stories exist, run `/dev-story [story-path]` to implement one — it routes
@@ -881,7 +842,7 @@ scope clarity. Verdict: READY / NEEDS WORK / BLOCKED / NOT ASSESSED.
 **2. Implementation:** Work with the appropriate agents:
 
 - `gameplay-programmer` for gameplay systems
-- `engine-programmer` for core engine work
+- `engine-programmer` for core systems work
 - `ai-programmer` for AI behavior
 - `network-programmer` for multiplayer
 - `ui-programmer` for UI code
@@ -1007,7 +968,7 @@ recommendation.
 
 - Every core GDD mechanic implemented, and the main gameplay path playable end
   to end
-- Tests in the engine's test root covering the Logic and Integration stories,
+- Tests in the test root covering the Logic and Integration stories,
   and passing
 - A smoke-check report in `production/qa/` with PASS or PASS WITH WARNINGS
 - A `/team-qa` sign-off (APPROVED or APPROVED WITH CONDITIONS)
@@ -1378,14 +1339,7 @@ Tier 3 (Specialists):  gameplay-programmer, engine-programmer,
                        qa-tester, performance-analyst, devops-engineer,
                        analytics-engineer, accessibility-specialist,
                        live-ops-designer, prototyper, security-engineer,
-                       community-manager, godot-specialist,
-                       godot-gdscript-specialist, godot-shader-specialist,
-                       godot-csharp-specialist, godot-gdextension-specialist,
-                       unity-specialist, unity-dots-specialist,
-                       unity-shader-specialist, unity-addressables-specialist,
-                       unity-ui-specialist, unreal-specialist,
-                       ue-blueprint-specialist, ue-gas-specialist,
-                       ue-replication-specialist, ue-umg-specialist
+                       community-manager
 ```
 
 **Coordination rules:**
@@ -1404,13 +1358,13 @@ The system has 12 hooks that run automatically:
 | Hook | Trigger | What It Does |
 |------|---------|-------------|
 | `session-start.sh` | Session start | Shows branch, recent commits, detects active.md for recovery |
-| `detect-gaps.sh` | Session start | Detects fresh projects (no engine, no concept) and suggests `/start` |
+| `detect-gaps.sh` | Session start | Detects fresh projects (no concept) and suggests `/start` |
 | `pre-compact.sh` | Before compaction | Logs the compaction (logged only; post-compact.sh restores context next turn) |
 | `post-compact.sh` | After compaction | Queues a reminder; the plugin adds it to the next model call |
 | `notify.sh` | Notification event | Shows Windows toast notification via PowerShell |
 | `validate-commit.sh` | Before commit | Checks design doc sections, valid JSON, hardcoded values, TODO format |
 | `validate-push.sh` | Before push | Warns on pushes to main, master or release/* |
-| `validate-assets.sh` | After a file write | Checks data-file JSON, and asset naming in Godot's `assets/` |
+| `validate-assets.sh` | After a file write | Checks data-file JSON, and asset naming in `assets/` |
 | `validate-skill-change.sh` | Skill file written | Advises running `/skill-test` after `.opencode/skills/` changes |
 | `log-agent.sh` | Agent start | Logs agent invocations for audit trail |
 | `log-agent-stop.sh` | Agent stop | Completes agent audit trail (start + stop) |
@@ -1525,7 +1479,7 @@ Reads existing code and generates GDD-format design documentation from it.
 | Make a creative decision | `creative-director` | 1 |
 | Make a technical decision | `technical-director` | 1 |
 | Implement gameplay code | `gameplay-programmer` | 3 |
-| Implement core engine systems | `engine-programmer` | 3 |
+| Implement core systems | `engine-programmer` | 3 |
 | Implement AI behavior | `ai-programmer` | 3 |
 | Implement multiplayer | `network-programmer` | 3 |
 | Implement UI | `ui-programmer` | 3 |
@@ -1548,20 +1502,6 @@ Reads existing code and generates GDD-format design documentation from it.
 | Prototype quickly | `prototyper` | 3 |
 | Audit security | `security-engineer` | 3 |
 | Communicate with players | `community-manager` | 3 |
-| Godot-specific help | `godot-specialist` | 3 |
-| GDScript-specific help | `godot-gdscript-specialist` | 3 |
-| Godot shader help | `godot-shader-specialist` | 3 |
-| GDExtension modules | `godot-gdextension-specialist` | 3 |
-| Unity-specific help | `unity-specialist` | 3 |
-| Unity DOTS/ECS | `unity-dots-specialist` | 3 |
-| Unity shaders/VFX | `unity-shader-specialist` | 3 |
-| Unity Addressables | `unity-addressables-specialist` | 3 |
-| Unity UI Toolkit | `unity-ui-specialist` | 3 |
-| Unreal-specific help | `unreal-specialist` | 3 |
-| Unreal GAS | `ue-gas-specialist` | 3 |
-| Unreal Blueprints | `ue-blueprint-specialist` | 3 |
-| Unreal replication | `ue-replication-specialist` | 3 |
-| Unreal UMG/CommonUI | `ue-umg-specialist` | 3 |
 
 ### Agent Hierarchy
 
@@ -1596,7 +1536,6 @@ conflicts go to `producer`.
 | `/start` | Guided onboarding, routes to right workflow | Any (first session) |
 | `/help` | Context-aware "what do I do next?" | Any |
 | `/project-stage-detect` | Full project audit to determine current phase | Any |
-| `/setup-engine` | Configure engine, pin version, set preferences | 1 |
 | `/adopt` | Brownfield audit and migration plan | Any (existing projects) |
 | `/settings` | View or change project config (rigor, review mode, ...) | Any |
 | `/skill-improve` | Improve a skill via test-fix-retest loop | Any |
@@ -1668,7 +1607,6 @@ conflicts go to `producer`.
 | `/soak-test` | Soak test protocol for extended play sessions | 6 |
 | `/regression-suite` | Map test coverage, identify fixed bugs lacking regression tests | 5-6 |
 | `/test-setup` | Scaffold test framework and CI/CD pipeline | 3 |
-| `/test-helpers` | Generate engine-specific test helper libraries | 3-5 |
 | `/test-evidence-review` | Quality review of test files and manual evidence | 5 |
 | `/test-flakiness` | Detect non-deterministic tests from CI logs | 5-6 |
 | `/skill-test` | Validate skill files for structural and behavioral correctness | Any |
@@ -1727,11 +1665,10 @@ conflicts go to `producer`.
 ```
 1. /start (routes you based on where you are)
 2. /brainstorm (collaborative ideation, pick a concept)
-3. /setup-engine (pin engine and version)
-4. /design-review on concept doc (optional, recommended)
-5. /map-systems (decompose concept into systems with deps and priorities)
-6. /gate-check systems-design (verify you're ready for Systems Design)
-7. /design-system per system (guided GDD authoring)
+3. /design-review on concept doc (optional, recommended)
+4. /map-systems (decompose concept into systems with deps and priorities)
+5. /gate-check systems-design (verify you're ready for Systems Design)
+6. /design-system per system (guided GDD authoring)
 ```
 
 ### Workflow 2: "I have designs and want to start coding"

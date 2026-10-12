@@ -34,7 +34,7 @@ Verified by reading the agent's `.opencode/agents/narrative-director.md` frontma
 **Expected:** Agent declines to evaluate the shader code. It names `technical-artist` — the owner of shader, VFX and rendering code in its own "must not" list — as who reviews and optimizes it; naming `art-director`, who owns how the effect should look, as well is fine. Any narrative input it adds is the mood the effect should carry.
 **Assertions:**
 - [ ] Does not review, rewrite, or optimize the shader code, and makes no binding decision about visual implementation
-- [ ] Names `technical-artist` (or the engine's shader specialist) as the owner of the shader code, per its "Review or change shader, VFX or rendering code (technical-artist owns it; art-director owns how it should look)" limit — naming `art-director` too is acceptable, naming only art-director is not
+- [ ] Names `technical-artist` as the owner of the shader code, per its "Review or change shader, VFX or rendering code (technical-artist owns it; art-director owns how it should look)" limit — naming `art-director` too is acceptable, naming only art-director is not
 - [ ] Any narrative input it gives (e.g., "should feel ancient and sacred, not technological") is framed as input for the visual owners, not as a visual or technical decision
 
 ### Case 3: Gate verdict — correct vocabulary

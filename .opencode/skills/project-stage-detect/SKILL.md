@@ -31,8 +31,8 @@ Resolved above — use as-is. No block → defaults in
 > tier" without resolving it — no bootstrap, no helper call — leaves
 > the tier as whatever the model assumed. The tier decides what counts as a gap
 > at all: at `full` every missing doc is one; at `minimal` none of them are,
-> because a brief plus an engine is the normal state and code is the expected
-> next step. Guessing high tells a jam project it is missing GDDs, an art bible
+> because a brief is the normal state and code is the expected next step.
+> Guessing high tells a jam project it is missing GDDs, an art bible
 > and ADRs — the exact "process feels mismatched to my project" experience
 > `modes.rigor` exists to prevent. A missing bootstrap is invisible to a static
 > read — the config block simply does not render — so verify it by running.
@@ -75,7 +75,7 @@ track, and the judgement calls.
 - Count narrative docs in `design/narrative/`
 - Count level designs in `design/levels/`
 
-**Source Code** (the code root — `src/` Godot, `Assets/` Unity, `Source/` Unreal; resolve per `.opencode/docs/code-root-resolution.md`):
+**Source Code** (the code root — `src/`; resolve per `.opencode/docs/code-root-resolution.md`):
 - Count source files (language-agnostic)
 - Identify major systems (directories with 5+ files)
 - Check for core/, gameplay/, ai/, networking/, ui/ directories
@@ -135,8 +135,8 @@ Based on scanned artifacts, determine stage. Check `project.stage` in `project.y
 |-------|-----------|
 | **Concept** | No game concept doc, brainstorming phase |
 | **Systems Design** | Game concept exists, systems index missing or incomplete |
-| **Technical Setup** | Systems index exists, engine not configured |
-| **Pre-Production** | Engine configured, code root has <10 source files |
+| **Technical Setup** | Systems index exists, no code written yet |
+| **Pre-Production** | Code root has <10 source files |
 | **Production** | code root has 10+ source files, active development |
 | **Polish** | Explicit only (set by `/gate-check` Production → Polish gate) |
 | **Release** | Explicit only (set by `/gate-check` Polish → Release gate) |
@@ -148,7 +148,7 @@ Based on scanned artifacts, determine stage. Check `project.stage` in `project.y
 - **`standard`** — flag only required docs: missing GDDs for built systems and
   missing critical (Foundation-layer) ADRs. Do NOT flag an absent art bible unless
   visual-asset stories exist, and do NOT flag non-core UX specs.
-- **`minimal`** — a `design/game-brief.md` + engine present is the normal state. Do NOT flag
+- **`minimal`** — a `design/game-brief.md` is the normal state. Do NOT flag
   absent GDDs, art bible, UX specs, ADRs, epics or sprint plans as gaps: the brief's build
   order is the plan, and the expected next step is code.
 

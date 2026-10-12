@@ -4,9 +4,9 @@
 
 `/create-control-manifest` reads the Accepted ADRs in `docs/architecture/` and
 generates a control manifest — a flat, actionable rules sheet that captures the
-required patterns, forbidden approaches, performance guardrails and engine API
-constraints for each architectural layer (Foundation, Core, Feature,
-Presentation), plus global rules from project config and engine reference docs.
+required patterns, forbidden approaches and performance guardrails for each
+architectural layer (Foundation, Core, Feature,
+Presentation), plus global rules from project config.
 Story authors use it so stories inherit the correct architectural rules without
 reading every ADR.
 
@@ -40,8 +40,8 @@ One gate: **TD-MANIFEST** (`technical-director`,
 `.opencode/docs/director-gates/td-manifest.md`), spawned after the user accepts the
 Phase 4 rule summary and before the Phase 5 write ask.
 
-- `full` → spawned; receives the Control Manifest Preview, the ADRs covered, the
-  engine version and any rules sourced from preferences or engine reference docs
+- `full` → spawned; receives the Control Manifest Preview, the ADRs covered, and
+  any rules sourced from technical-preferences.md
 - `lean` → skipped; output notes "TD-MANIFEST skipped — Lean mode."
 - `solo` → skipped; output notes "TD-MANIFEST skipped — Solo mode."
 
@@ -71,9 +71,9 @@ then supplied and the gate re-run, or the run goes on with
 **Expected behavior:**
 1. Globs `docs/architecture/adr-*.md` (N = 4), then Greps `^## Status` to resolve
    the Accepted set before reading any ADR body
-2. Greps only the Decision / Alternatives Considered / Performance Implications /
-   Engine Compatibility sections of the Accepted ADRs
-3. Reports "Loaded 4 Accepted ADRs, engine: [name + version]."
+2. Greps only the Decision / Alternatives Considered / Performance Implications
+   sections of the Accepted ADRs
+3. Reports "Loaded 4 Accepted ADRs."
 4. Shows the Control Manifest Preview (rule counts per layer, ADRs covered) and
    asks "Does this rule summary look complete?"
 5. Notes "TD-MANIFEST skipped — Solo mode."
@@ -84,7 +84,7 @@ then supplied and the gate re-run, or the run goes on with
 **Assertions:**
 - [ ] All 4 Accepted ADRs are listed under `ADRs Covered` in the manifest header
 - [ ] Each layer section has `### Required Patterns` and `### Forbidden Approaches`
-- [ ] Every rule carries its source — `— source: [ADR-NNNN]` for a layer rule; a global rule names its `project.yaml` / `technical-preferences.md` key or engine-reference file (e.g. `deprecated-apis.md`)
+- [ ] Every rule carries its source — `— source: [ADR-NNNN]` for a layer rule; a global rule names its `project.yaml` / `technical-preferences.md` key
 - [ ] Preview is shown and "Does this rule summary look complete?" is asked before any write ask
 - [ ] "TD-MANIFEST skipped — Solo mode." appears; no technical-director is spawned
 - [ ] Skill does NOT write before the "May I write the Control Manifest?" approval
@@ -178,14 +178,15 @@ then supplied and the gate re-run, or the run goes on with
 1. Skill shows the Phase 4 preview; user picks
    `[A] Yes — looks good, run the director review and write the manifest`
 2. Spawns `technical-director` via `Agent` with gate TD-MANIFEST, passing the
-   preview (full rule list), ADRs covered and engine version
+   preview (full rule list), the ADRs covered, and any rules sourced from
+   technical-preferences.md
 3. On REJECT: does not write the manifest; fixes the flagged rule and re-presents
    the summary
 4. "May I write the Control Manifest?" is not asked while the REJECT stands
 
 **Assertions:**
 - [ ] TD-MANIFEST is spawned only after the Phase 4 summary is accepted
-- [ ] The gate receives the rule list, ADRs covered and engine version
+- [ ] The gate receives the rule list, the ADRs covered, and any rules sourced from technical-preferences.md
 - [ ] On REJECT no manifest file is written
 - [ ] The flagged rule is revised and the summary re-presented before any write ask
 - [ ] No "TD-MANIFEST skipped" note appears in `full` mode
@@ -240,5 +241,3 @@ then supplied and the gate re-run, or the run goes on with
   fixture-tested.
 - TD-MANIFEST APPROVE, CONCERNS and NOT ASSESSED paths, and the `lean` skip note,
   are not separately fixture-tested.
-- Relevance filtering of `deprecated-apis.md` entries (2D vs 3D scoping) is not
-  covered.

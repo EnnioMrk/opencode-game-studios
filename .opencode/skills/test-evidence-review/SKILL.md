@@ -109,14 +109,12 @@ For each story, find the evidence. **Check the story's stated evidence path firs
 — the one Section 2 captured from its `## Test Evidence` section. If it exists, use
 it. Fall back to searching only when no path is stated or it is not found:
 
-**Logic stories**: search the engine's unit-test root — `tests/unit/[system]/`
-(Godot), `Assets/Tests/EditMode/` (Unity), `Source/<Module>/Private/Tests/`
-(Unreal); see `.opencode/docs/directory-structure.md` — for a file whose name
+**Logic stories**: search the unit-test root — `tests/unit/[system]/`; see
+`.opencode/docs/directory-structure.md` — for a file whose name
 contains the story slug or its system. Test files are named per
 `.opencode/rules/test-standards.md`, not necessarily `[story-slug]_test.*`.
 
-**Integration stories**: the same, under the integration root (`tests/integration/[system]/`,
-`Assets/Tests/PlayMode/`, or Unreal's test root)
+**Integration stories**: the same, under the integration root (`tests/integration/[system]/`)
   - Also check `production/session-logs/` for playtest records mentioning the story
 
 **Visual/Feel and UI stories**: Glob `production/qa/evidence/` for a retained image
@@ -136,7 +134,7 @@ For each test file found, read it and evaluate:
 ### Assertion coverage
 
 Count the number of distinct assertions (lines containing assert, expect,
-check, verify, or engine-specific assertion patterns). Low assertion count is
+check or verify). Low assertion count is
 a quality signal — a test that makes only 1 assertion per test function may
 not cover the range of expected behaviour.
 
@@ -161,10 +159,8 @@ Heuristics:
 
 ### Naming quality
 
-Test function names should describe: the scenario + the expected result.
-Pattern per engine (`.opencode/rules/test-standards.md`): Godot
-`test_[scenario]_[expected]`, Unity `[Scenario]_[Expected]`, Unreal
-`<Project>.[System].[Scenario]`.
+Test function names should describe: the scenario + the expected result
+(`.opencode/rules/test-standards.md`).
 
 Flag functions named generically (`test_1`, `test_run`, `testBasic`) as
 **naming issues** — they make failures harder to diagnose.
@@ -332,8 +328,6 @@ After the report:
 
 - For BLOCKING items: "These must be resolved before `/story-done` can mark the
   story Complete. Would you like to address any of them now?"
-- For thin assertions: "Consider running `/test-helpers [system]` to see
-  scaffolded assertion patterns for common cases."
 - For missing sign-offs: "Manual sign-off is required from [role]. Share
   `[evidence-path]` with them to complete sign-off."
 

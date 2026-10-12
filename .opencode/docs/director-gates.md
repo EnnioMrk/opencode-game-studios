@@ -36,7 +36,6 @@ Agent by prefix: `CD-` creative-director · `TD-` technical-director ·
 | TD-FEASIBILITY | Technical feasibility of early concept risks | td-feasibility.md |
 | TD-ARCHITECTURE | Master architecture document sign-off | td-architecture.md |
 | TD-ADR | Individual ADR review before Accepted | td-adr.md |
-| TD-ENGINE-RISK | Engine version risk for post-cutoff APIs | td-engine-risk.md |
 | TD-PHASE-GATE | Technical readiness at phase transition | td-phase-gate.md |
 | TD-MANIFEST | Control manifest review before it is written | td-manifest.md |
 | TD-CHANGE-IMPACT | Design-change impact assessment review | td-change-impact.md |
@@ -196,7 +195,7 @@ Collect every verdict from the directors that ran, then apply escalation rules:
 |-------|---------------|----------------|
 | **Concept** | CD-PILLARS, AD-CONCEPT-VISUAL | TD-FEASIBILITY, PR-SCOPE |
 | **Systems Design** | TD-SYSTEM-BOUNDARY, CD-SYSTEMS, PR-SCOPE, CD-GDD-ALIGN (per GDD) | ND-CONSISTENCY, AD-VISUAL, TD-CHANGE-IMPACT (on GDD revision) |
-| **Technical Setup** | TD-ARCHITECTURE, TD-ADR (per ADR), TD-MANIFEST, LP-FEASIBILITY, AD-ART-BIBLE | TD-ENGINE-RISK |
+| **Technical Setup** | TD-ARCHITECTURE, TD-ADR (per ADR), TD-MANIFEST, LP-FEASIBILITY, AD-ART-BIBLE | — |
 | **Pre-Production** | PR-EPIC, QL-STORY-READY (per story), PR-SPRINT, the PHASE-GATE panel (via gate-check — PR at `minimal`, TD + PR at `standard`, all four at `full`) | CD-PLAYTEST |
 | **Production** | LP-CODE-REVIEW (per story), QL-STORY-READY, PR-SPRINT (per sprint), QL-TEST-COVERAGE (per story, via `/story-done`) | PR-MILESTONE, AD-VISUAL, TD-CHANGE-IMPACT (on GDD revision) |
 | **Polish** | CD-PLAYTEST, PR-MILESTONE | AD-VISUAL |

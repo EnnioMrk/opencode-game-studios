@@ -23,6 +23,6 @@ Once confirmed, write a session checkpoint to `production/session-state/active.m
 (create `production/session-state/` if it does not exist). Include: concept name,
 hypothesis, path chosen, scope bullet points, and current phase ("Phase 5 —
 Implement"). This lets the next session resume without starting over if the session
-ends mid-build — especially important for multi-day Engine path work.
+ends mid-build — especially important for multi-day builds.
 
 ---

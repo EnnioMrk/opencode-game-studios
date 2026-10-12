@@ -119,8 +119,6 @@ requirements:
 If neither source is configured, ask once:
 > "Input methods aren't configured yet. What does this game target?"
 > Options: "Keyboard/Mouse only", "Gamepad only", "Both (PC + Console)", "Touch (mobile)", "All of the above"
->
-> (Run `/setup-engine` to save this permanently so you won't be asked again.)
 
 Store the answer for the rest of this session. Do **not** ask again per section
 or per screen.

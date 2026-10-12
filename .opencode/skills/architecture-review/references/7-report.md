@@ -8,7 +8,6 @@
 ```
 ## Architecture Review Report
 Date: [date]
-Engine: [name + version]
 GDDs Reviewed: [N]
 ADRs Reviewed: [M]
 
@@ -29,7 +28,6 @@ For each gap:
   ❌ TR-[id]: [GDD] → [system] → [requirement]
      Suggested ADR: "/architecture-decision [suggested title]"
      Domain: [Physics/Rendering/etc]
-     Engine Risk: [LOW/MEDIUM/HIGH]
 
 ### Cross-ADR Conflicts
 [List all conflicts from Phase 4]
@@ -38,13 +36,6 @@ For each gap:
 [Topologically sorted implementation order from Phase 4 — dependency ordering section]
 [Unresolved dependencies and cycles if any]
 
-### GDD Revision Flags
-[GDD assumptions that conflict with verified engine behaviour — from Phase 5b]
-[Or: "None — all GDD assumptions consistent with verified engine behaviour"]
-
-### Engine Compatibility Issues
-[List all engine issues from Phase 5]
-
 ### Architecture Document Coverage
 [List missing systems and orphaned architecture from Phase 6]
 
@@ -52,7 +43,7 @@ For each gap:
 
 ### Verdict: [PASS / NOT ASSESSED / CONCERNS / FAIL]
 
-PASS: All requirements covered by **Accepted** ADRs, no conflicts, engine consistent
+PASS: All requirements covered by **Accepted** ADRs, no conflicts
 NOT ASSESSED: The review could not be performed over its stated scope — name why
 CONCERNS: Some gaps, partial coverage, or coverage resting on `Proposed` ADRs,
       but no blocking conflicts
@@ -75,10 +66,6 @@ FAIL: Critical gaps (Foundation/Core layer requirements uncovered),
   finding elsewhere still stands; but in `full` mode, whose scope includes
   Phase 6, the verdict cannot be PASS — a review that could not look at part of
   its scope has not shown that part is sound, so it is NOT ASSESSED.
-- **No engine is configured** (`full` and `engine` modes) — Phase 5 has no pinned
-  engine reference to audit the ADRs against, and the specialist consultation was
-  skipped. Record the `Engine validation: NOT ASSESSED` line item; like Phase 6
-  above, it keeps the verdict from PASS.
 
 Do not resolve any of these to PASS on the grounds that no gap was *found*. No
 gap was looked for.

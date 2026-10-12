@@ -10,7 +10,7 @@ No gate IDs assigned.
 ## Static Assertions (Structural)
 
 - [ ] `description:` field is present and domain-specific (references SFX / audio events / mixing)
-- [ ] Toolset (ported to `permissions:` — see PORTING.md): includes Read, Write, Edit, Glob, Grep — does NOT include engine code execution tools
+- [ ] Toolset (ported to `permissions:` — see PORTING.md): includes Read, Write, Edit, Glob, Grep — does NOT include code execution tools
 - [ ] Model tier is `inherit` — recorded in `PORTING.md` (OpenCode agents inherit the session model unless `model:` is pinned; tiers: `.opencode/docs/model-tiers.md`)
 - [ ] Agent definition does not claim authority over music direction or audio code implementation, and names `audio-director` as the owner of music direction and composition
 
@@ -28,7 +28,7 @@ No gate IDs assigned.
   - Audio event entry: what triggers it, priority, concurrency limit, and cooldown
   - Bus assignment for mixing (e.g., the combat SFX bus)
 - Event name follows the project audio naming convention if one is established (e.g., `sfx_combat_sword_swing`)
-- Does NOT create the audio files or write engine code; asks before writing the spec to a file
+- Does NOT create the audio files or write game code; asks before writing the spec to a file
 
 ### Case 2: Out-of-domain request — redirects correctly
 **Input:** "Compose a looping ambient music track for the forest level."
@@ -46,7 +46,7 @@ No gate IDs assigned.
   - Falloff curve type (e.g., logarithmic, linear, custom)
   - Near/far distance thresholds with corresponding volume and high-frequency attenuation values
 - Asks about behavior the request leaves unspecified (e.g., occlusion by arena geometry) rather than assuming it
-- Does NOT write the audio engine integration code or change the audio middleware configuration
+- Does NOT write audio implementation code or change the audio middleware configuration
 
 ### Case 4: Naming convention conflict
 **Input:** "Add a new SFX event called `SWORD_HIT_1` for the melee system." [Context includes the audio-director's naming convention: `[category]_[context]_[name]_[variant]`, e.g., `sfx_combat_sword_swing_01`.]

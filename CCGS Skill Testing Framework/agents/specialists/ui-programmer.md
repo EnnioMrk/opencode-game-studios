@@ -22,7 +22,7 @@ No gate IDs assigned.
 **Input:** The UX spec at `design/ux/inventory-flow.md` defines five slot states: default, hover, selected, empty-slot, locked-slot. Request: "Implement the inventory screen from the UX spec in `design/ux/inventory-flow.md`."
 **Expected behavior:**
 - Reads the UX spec before producing any code
-- Produces implementation using the project's configured UI framework (UI Toolkit, UGUI, UMG, or Godot Control nodes)
+- Produces implementation using the project's configured UI toolkit and language
 - Implements every state the spec defines (default, hover, selected, empty-slot, locked-slot) — none dropped, none invented
 - Binds inventory data to UI elements via the project's data model, not hardcoded values
 - Includes doc comments on public UI API per coding standards
@@ -51,13 +51,12 @@ No gate IDs assigned.
 - Flags the ambiguity back to `ux-designer` with the specific question: "What should the detail panel show when an empty inventory slot is selected?"
 - Any options it offers (e.g., hide the panel / show a placeholder) go to ux-designer as part of the question — none is implemented before the answer
 
-### Case 5: Context pass — engine UI toolkit
-**Input:** Engine context provided: project uses Godot 4.6 with Control node UI. Request: "Implement a scrollable item list for the inventory."
+### Case 5: Context pass — project UI toolkit
+**Input:** UI context provided: the project uses React components and plain CSS. Request: "Implement a scrollable item list for the inventory."
 **Expected behavior:**
-- Uses Godot's `ScrollContainer` + `VBoxContainer` + `ItemList` (or equivalent) pattern, not Canvas or UGUI
-- Does NOT produce Unity UGUI or Unreal UMG code for a Godot project
-- Checks the engine version reference (4.6) for any Control node API changes from 4.4/4.5 before using specific APIs
-- Produces GDScript or C# code consistent with the project's configured language
+- Builds with React and CSS — the project's existing UI toolkit and language
+- Does NOT add a UI framework the project does not use
+- Produces TypeScript/TSX consistent with the project's configured language
 
 ---
 
@@ -68,7 +67,7 @@ No gate IDs assigned.
 - [ ] Takes animation timing and easing from ux-designer / art-director specs rather than inventing them, and makes every animation skippable and motion-preference aware
 - [ ] Flags ambiguous UX specs back to ux-designer rather than making arbitrary implementation decisions
 - [ ] Returns structured output (implementation code, data binding patterns, state machine for UI states)
-- [ ] Uses the correct engine UI toolkit for the project — never cross-engine code
+- [ ] Uses the project's configured UI toolkit and language — never another framework's UI code
 - [ ] Asks "May I write this to [filepath]?" naming the file before writing
 
 ---

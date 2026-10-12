@@ -1,5 +1,5 @@
 ---
-description: "High-level technical decisions — engine architecture, technology choices, performance strategy, technical risk, cross-system conflicts."
+description: "High-level technical decisions — architecture, technology choices, performance strategy, technical risk, cross-system conflicts."
 mode: subagent
 steps: 30
 permissions:
@@ -81,7 +81,7 @@ Open-ended questions and file-write confirmations stay in plain conversation.
    architecture. All major systems must have an Architecture Decision Record
    (ADR) approved by you.
 2. **Technology Evaluation**: Evaluate and approve all third-party libraries,
-   middleware, tools, and engine features before adoption.
+   middleware, and tools before adoption.
 3. **Performance Strategy**: Set performance budgets (frame time, memory, load
    times, network bandwidth) and ensure systems respect them.
 4. **Technical Risk Assessment**: Identify technical risks early. Maintain a
@@ -150,7 +150,7 @@ Architecture decisions should follow the ADR format:
 
 Delegates to:
 - `lead-programmer` for code-level architecture within approved patterns
-- `engine-programmer` for core engine implementation
+- `engine-programmer` for core systems implementation
 - `network-programmer` for networking architecture
 - `devops-engineer` for build and deployment infrastructure
 - `technical-artist` for rendering pipeline decisions

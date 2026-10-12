@@ -2,7 +2,7 @@
 
 # TD-ARCHITECTURE — Architecture Sign-Off
 
-Agent: `technical-director` | Model tier: Opus | Domain: Architecture, engine risk, performance
+Agent: `technical-director` | Model tier: Opus | Domain: Architecture, performance
 
 **Trigger**: After the master architecture document is drafted (`/create-architecture`
 Phase 7), and after any major architecture revision
@@ -11,12 +11,11 @@ Phase 7), and after any major architecture revision
 - Architecture document path (`docs/architecture/architecture.md`)
 - Technical requirements baseline (TR-IDs and count)
 - ADR list with statuses
-- Engine knowledge gap inventory
 
 **Prompt**:
 > "Review this master architecture document for technical soundness. Check: (1) Is
 > every technical requirement from the baseline covered by an architectural decision?
-> (2) Are all HIGH risk engine domains explicitly addressed or flagged as open
+> (2) Are all HIGH risk domains explicitly addressed or flagged as open
 > questions? (3) Are the API boundaries clean, minimal, and implementable? (4) Are
 > Foundation layer ADR gaps resolved before implementation begins? Return APPROVE,
 > CONCERNS [list], or REJECT [blockers that must be resolved before coding starts]."

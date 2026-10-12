@@ -1,7 +1,7 @@
 # Agent Test Spec: engine-programmer
 
 ## Agent Summary
-Domain: Rendering pipeline, physics integration, memory management, resource loading, and core engine framework.
+Domain: Rendering pipeline, physics integration, memory management, resource loading, and core systems.
 Does NOT own: gameplay mechanics (gameplay-programmer), build infrastructure (devops-engineer), editor/debug tool UI (tools-programmer).
 No gate IDs assigned.
 
@@ -9,7 +9,7 @@ No gate IDs assigned.
 
 ## Static Assertions (Structural)
 
-- [ ] `description:` field is present and domain-specific (references rendering / memory / engine core)
+- [ ] `description:` field is present and domain-specific (references rendering / memory / core systems)
 - [ ] Toolset (ported to `permissions:` — see PORTING.md): includes Read, Write, Edit, Bash, Glob, Grep
 - [ ] Model tier is `inherit` — recorded in `PORTING.md` (OpenCode agents inherit the session model unless `model:` is pinned; tiers: `.opencode/docs/model-tiers.md`)
 - [ ] Agent definition does not claim authority over gameplay mechanics or tool UI
@@ -21,11 +21,11 @@ No gate IDs assigned.
 ### Case 1: In-domain request — appropriate output
 **Input:** "Implement a custom object pool for projectiles to avoid per-frame allocation."
 **Expected behavior:**
-- Produces an engine-level object pool implementation with acquire/release interface
+- Produces a core-system object pool implementation with acquire/release interface
 - Pool is typed to the projectile object type, uses pre-allocated fixed-size storage
 - Provides thread-safety notes (or clearly marks as single-threaded-only with rationale)
 - Includes doc comments on the public API per coding standards
-- Output is compatible with the project's configured engine and language
+- Output is compatible with the project's configured language and coding standards
 
 ### Case 2: Out-of-domain request — redirects correctly
 **Input:** "Add a wall-jump ability to the player controller."
@@ -33,7 +33,7 @@ No gate IDs assigned.
 - Does NOT produce the wall-jump gameplay code
 - Explicitly states that gameplay features belong to `gameplay-programmer`
 - Redirects the request to `gameplay-programmer`
-- If it offers an engine-level query the ability can call (e.g., wall contact and surface normal), that API does not depend on gameplay code (strict dependency direction)
+- If it offers a core-system query the ability can call (e.g., wall contact and surface normal), that API does not depend on gameplay code (strict dependency direction)
 
 ### Case 3: Memory leak diagnosis
 **Input:** "Memory usage grows by ~50MB per level load and never releases. We suspect the resource loading system."
@@ -51,13 +51,8 @@ No gate IDs assigned.
 - Proposes a migration path: new optimized API alongside old API, with a deprecation period
 - Documents the coordination requirement before proceeding
 
-### Case 5: Context pass — checks engine version reference
-**Input:** Engine version reference (Godot 4.6) provided in context. Request: "Set up the default physics engine for the project."
-**Expected behavior:**
-- Reads the engine version reference and notes Godot 4.6 change: Jolt physics is now the default
-- Produces configuration guidance that accounts for the Jolt-as-default change (4.6 migration note)
-- Flags the GodotPhysics3D→Jolt differences `docs/engine-reference/godot/modules/physics.md` documents — HingeJoint3D `damp` is unsupported under Jolt, collision margins may behave differently, Jolt warns at runtime about unsupported properties — and that existing projects keep their current engine setting; says the reference lists no other API differences rather than inventing any
-- Does NOT suggest deprecated or pre-4.6 physics setup steps without noting they apply to older versions
+### Case 5: Version reference check
+**Expected:** NOT ASSESSED — no reference set for this stack.
 
 ---
 
@@ -67,13 +62,11 @@ No gate IDs assigned.
 - [ ] Redirects gameplay feature requests to gameplay-programmer and build infrastructure changes to devops-engineer
 - [ ] Returns structured findings (implementation code, diagnosis steps, migration plans)
 - [ ] Coordinates with lead-programmer before changing shared API surfaces
-- [ ] Checks engine version reference before suggesting engine-specific APIs
 - [ ] Provides test evidence for fixes (memory before/after, performance measurements)
 - [ ] Asks "May I write this to [filepath]?" naming the file before writing
 
 ---
 
 ## Coverage Notes
-- Object pool (Case 1) must include a unit test in `tests/unit/engine/`
+- Object pool (Case 1) must include a unit test in `tests/unit/core/`
 - Memory leak diagnosis (Case 3) should produce evidence artifacts in `production/qa/evidence/`
-- Engine version check (Case 5) confirms the agent treats VERSION.md as authoritative, not LLM training data

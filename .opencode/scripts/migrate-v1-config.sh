@@ -79,7 +79,7 @@ legacy_present() {
 # This list is every key handed to tp_get below -- keep the two in step. A key
 # missing from here fails safe (the file reads as unconfigured) rather than
 # resurrecting the false positive.
-_TP_KEYS='Engine|Language|Rendering|Physics|Target Platforms|Primary Input|Gamepad Support|Touch Support|Classes|Variables|Constants|Signals(/Events)?|Files|Scenes(/Prefabs)?|Target Framerate|Frame Budget|Draw Calls|Memory Ceiling|Framework|Minimum Coverage|Additional Specialists|Language/Code Specialist|Shader Specialist|UI Specialist'
+_TP_KEYS='Target Platforms|Primary Input|Gamepad Support|Touch Support|Classes|Variables|Constants|Signals(/Events)?|Files|Scenes(/Prefabs)?|Target Framerate|Frame Budget|Draw Calls|Memory Ceiling|Framework|Minimum Coverage'
 tp_configured() {
   [ -f "$TP" ] || return 1
   grep -qE "^[[:space:]]*-[[:space:]]+\*\*($_TP_KEYS)\*\*:[[:space:]]*[^[:space:]\[]" "$TP" 2>/dev/null
@@ -205,10 +205,6 @@ legacy_conflict() {
     [ "$_lc" = "none" ] && _lc="solo"
     [ -z "$_lc" ] || grep -qE "^[[:space:]]*review_mode:[[:space:]]*\"?$(re_quote "$_lc")\"?" "$PY" || return 0
   fi
-  if [ -f "$TP" ] && tp_configured; then
-    _lc=$(tp_get "Engine & Language" "Engine" | awk '{print $1}')
-    [ -z "$_lc" ] || grep -qE "^[[:space:]]*name:[[:space:]]*\"?$(re_quote "$_lc")\"?" "$PY" || return 0
-  fi
   return 1
 }
 
@@ -268,10 +264,6 @@ if [ "$MODE" = "finalize" ]; then
     # would look for `review_mode: none` (never written) and refuse to finalize.
     [ "$want" = "none" ] && want="solo"
     grep -qE "^[[:space:]]*review_mode:[[:space:]]*\"?$(re_quote "$want")\"?" "$PY" || FAILED="$FAILED $REVIEW_TXT"
-  fi
-  if [ -f "$TP" ] && tp_configured; then
-    want=$(tp_get "Engine & Language" "Engine" | awk '{print $1}')
-    [ -z "$want" ] || grep -qE "^[[:space:]]*name:[[:space:]]*\"?$(re_quote "$want")\"?" "$PY" || FAILED="$FAILED $TP"
   fi
   if [ -n "$FAILED" ]; then
     echo "REFUSED: content not preserved in $PY for:$FAILED"
@@ -336,13 +328,6 @@ esac
 # `modes.rigor` supply it, which is the v1.1 design. If the user genuinely
 # chose a review mode in v1.0, the file exists and its value is preserved above.
 
-ENGINE_RAW=$(tp_get "Engine & Language" "Engine")
-ENGINE_NAME=$(printf '%s' "$ENGINE_RAW" | awk '{print $1}')
-ENGINE_VER=$(printf '%s' "$ENGINE_RAW" | awk '{if (NF>1 && $NF ~ /^[0-9]+(\.[0-9]+)*[A-Za-z0-9]*$/) print $NF}')
-LANG=$(tp_get "Engine & Language" "Language")
-RENDER=$(tp_get "Engine & Language" "Rendering")
-PHYSICS=$(tp_get "Engine & Language" "Physics")
-
 TARGETS=$(tp_get "Input & Platform" "Target Platforms")
 PRIMARY_INPUT=$(tp_get "Input & Platform" "Primary Input")
 GAMEPAD=$(tp_get "Input & Platform" "Gamepad Support")
@@ -392,16 +377,6 @@ if [ -n "$TEST_COV" ] && ! is_num "$TEST_COV"; then
   manual "Set \`qa.coverage_minimum\` by hand — the legacy value was: $TEST_COV"
 fi
 
-# v1.0 /setup-engine wrote every specialist line as `agent-name (what it covers)`,
-# and the Unreal code line as `a-specialist (Blueprint) or b-specialist (C++)`.
-# Skills pass `specialists.*` straight to the Agent tool as a subagent_type, so
-# anything but the bare agent name is an agent that does not exist. Keep the
-# first agent name per entry; the prose goes to the report, not the yaml.
-S_CODE_RAW=$(tp_get "Engine Specialists" "Language/Code Specialist")
-S_SHADER_RAW=$(tp_get "Engine Specialists" "Shader Specialist")
-S_UI_RAW=$(tp_get "Engine Specialists" "UI Specialist")
-S_ADD_RAW=$(tp_get "Engine Specialists" "Additional Specialists")
-
 # agent_name <prose> -> first token that looks like an agent name, else the
 # trimmed input unchanged (a value this cannot parse is surfaced, not dropped).
 agent_name() {
@@ -428,20 +403,12 @@ specialist_warn() {   # <dotted.key> <raw> <kept>
     *" or "*) manual "\`$1\` had two candidates in $TP (\"$2\"); kept the first — change it in project.yaml if the other is right" ;;
   esac
 }
-S_CODE=$(agent_name "$S_CODE_RAW")
-S_SHADER=$(agent_name "$S_SHADER_RAW")
-S_UI=$(agent_name "$S_UI_RAW")
-S_ADD=$(agent_names "$S_ADD_RAW")
-specialist_warn "specialists.code"       "$S_CODE_RAW"   "$S_CODE"
-specialist_warn "specialists.shader"     "$S_SHADER_RAW" "$S_SHADER"
-specialist_warn "specialists.ui"         "$S_UI_RAW"     "$S_UI"
-specialist_warn "specialists.additional" "$S_ADD_RAW"    "$S_ADD"
 
 # Sections a fork may have added. Not migrated — surfaced instead of dropped.
 if [ -f "$TP" ]; then
   while IFS= read -r h; do
     case "$h" in
-      "Engine & Language"|"Input & Platform"|"Naming Conventions"|"Performance Budgets"|"Testing"|"Forbidden Patterns"|"Allowed Libraries / Addons"|"Architecture Decisions Log"|"Engine Specialists") ;;
+      "Input & Platform"|"Naming Conventions"|"Performance Budgets"|"Testing"|"Forbidden Patterns"|"Allowed Libraries / Addons"|"Architecture Decisions Log") ;;
       "") ;;
       *) manual "Custom section \`## $h\` in $TP — not migrated, integrate by hand" ;;
     esac
@@ -464,14 +431,13 @@ manual "Decide \`modes.rigor\`: leave unset for the lighter v1.1 default, or pin
 # is emitted when ANY of its members is set -- every guard in the writer below is
 # `[ -n "$A$B$C" ]` -- so PARTIAL configuration is what produces these, and
 # partial is the ordinary state of a v1.0 file: you configure what you use. A
-# project that named its code specialist and left the rest at [TO BE CONFIGURED]
-# got `shader: null` and `ui: null` written, "Warnings: None", and no report row
-# for either.
+# project that filled in one naming convention and left the rest at
+# [TO BE CONFIGURED] got the others written as `null`, "Warnings: None", and no
+# report row for them.
 #
 # It matters because `get_yaml_key` returns the four-character STRING "null" for
 # such a key. That is not empty, so a caller testing `[ -z ... ]` reads it as
-# CONFIGURED, and nothing in the framework tests for the string -- /code-review
-# reads `specialists.shader` to choose which agent to spawn.
+# CONFIGURED, and nothing in the framework tests for the string.
 #
 # The value written is deliberately NOT changed here. `null` is the record that
 # the key was seen and held nothing, and the config suite pins that. What was
@@ -486,15 +452,6 @@ null_warn() {   # <block-guard> <dotted.key> <value>
   warn "$2 written as \`null\` — $TP had no value for it"
   manual "Set \`$2\` in project.yaml, or delete the key so it resolves to its default"
 }
-_G_ENGINE="$ENGINE_NAME"
-null_warn "$_G_ENGINE" "engine.version"    "$ENGINE_VER"
-null_warn "$_G_ENGINE" "engine.language"   "$LANG"
-null_warn "$_G_ENGINE" "engine.rendering"  "$RENDER"
-null_warn "$_G_ENGINE" "engine.physics"    "$PHYSICS"
-_G_SPEC="$S_CODE$S_SHADER$S_UI$S_ADD"
-null_warn "$_G_SPEC" "specialists.code"    "$S_CODE"
-null_warn "$_G_SPEC" "specialists.shader"  "$S_SHADER"
-null_warn "$_G_SPEC" "specialists.ui"      "$S_UI"
 _G_NAME="$N_CLASSES$N_VARS$N_CONST$N_SIG$N_FILES$N_SCENES"
 null_warn "$_G_NAME" "naming.classes"      "$N_CLASSES"
 null_warn "$_G_NAME" "naming.variables"    "$N_VARS"
@@ -514,9 +471,9 @@ yaml_list() {
   #
   # Splits on top-level commas ONLY -- a comma inside parentheses stays part of
   # its element. These values come from a hand-written document, so an entry is
-  # routinely prose: `ue-gas-specialist (abilities, effects)` is ONE specialist,
-  # not two, and splitting it produced entries like `attributes` that read as
-  # real agent names. Every element is quoted for the same reason: prose carries
+  # routinely prose: `PC (x64, ARM), Console (current gen)` is TWO entries, not
+  # three, and splitting it produced entries like `ARM)` that read as real
+  # platform names. Every element is quoted for the same reason: prose carries
   # colons, dashes and brackets, all of which make a bare YAML scalar ambiguous
   # or invalid.
   [ -z "$1" ] && { printf '[]'; return; }
@@ -554,7 +511,7 @@ if [ "$MODE" = "dry-run" ]; then
   # And the other direction, for the same reason: the preview is the one artifact
   # a cautious user reads before migrating, so the consequence belongs here too.
   [ -n "$REVIEW" ] && echo "  (modes.review_mode will be set EXPLICITLY to '$REVIEW' — this outranks modes.rigor, so rigor will not control review depth afterwards)"
-  [ -f "$TP" ] && tp_configured && echo "  $TP -> engine/platform/naming/performance/testing/specialists"
+  [ -f "$TP" ] && tp_configured && echo "  $TP -> platform/naming/performance/testing"
   [ -n "$WARN" ] && { echo; echo "warnings:"; printf '%s' "$WARN"; }
   exit 0
 fi
@@ -589,23 +546,6 @@ fi
   if [ -n "$REVIEW" ]; then
     echo "modes:"
     echo "  review_mode: $REVIEW"
-    echo ""
-  fi
-  if [ -n "$ENGINE_NAME" ]; then
-    echo "engine:"
-    echo "  name: $(yaml_str "$ENGINE_NAME")"
-    echo "  version: $(yaml_str "$ENGINE_VER")"
-    echo "  language: $(yaml_str "$LANG")"
-    echo "  rendering: $(yaml_str "$RENDER")"
-    echo "  physics: $(yaml_str "$PHYSICS")"
-    echo ""
-  fi
-  if [ -n "$S_CODE$S_SHADER$S_UI$S_ADD" ]; then
-    echo "specialists:"
-    echo "  code: $(yaml_str "$S_CODE")"
-    echo "  shader: $(yaml_str "$S_SHADER")"
-    echo "  ui: $(yaml_str "$S_UI")"
-    echo "  additional: $(yaml_list "$S_ADD")"
     echo ""
   fi
   if [ -n "$N_CLASSES$N_VARS$N_CONST$N_SIG$N_FILES$N_SCENES" ]; then
@@ -668,22 +608,13 @@ mkdir -p production 2>/dev/null
   echo "|---|---|---|"
   [ -n "$STAGE" ]         && echo "| \`project.stage\` | $STAGE | $STAGE_TXT |"
   [ -n "$REVIEW" ]        && echo "| \`modes.review_mode\` | $REVIEW | ${REVIEW_TXT} |"
-  [ -n "$ENGINE_NAME" ]   && echo "| \`engine.name\` | $ENGINE_NAME | $TP |"
-  [ -n "$ENGINE_VER" ]    && echo "| \`engine.version\` | $ENGINE_VER | $TP |"
-  [ -n "$LANG" ]          && echo "| \`engine.language\` | $LANG | $TP |"
   [ -n "$TEST_FW" ]       && echo "| \`testing.framework\` | $TEST_FW | $TP |"
   is_num "$TEST_COV"      && echo "| \`qa.coverage_minimum\` | $TEST_COV | $TP |"
-  [ -n "$S_CODE" ]        && echo "| \`specialists.code\` | $S_CODE | $TP |"
   # Every migrated value gets a row. This table is titled "Values preserved" and
   # is what the user reviews before --finalize deletes anything -- listing 6 of
-  # the 29 keys actually written meant someone checking "did my naming
+  # the keys actually written meant someone checking "did my naming
   # conventions survive?" found nothing and could reasonably conclude they had
   # not. Understating what was preserved is the same defect as overstating it.
-  [ -n "$RENDER" ]        && echo "| \`engine.rendering\` | $RENDER | $TP |"
-  [ -n "$PHYSICS" ]       && echo "| \`engine.physics\` | $PHYSICS | $TP |"
-  [ -n "$S_SHADER" ]      && echo "| \`specialists.shader\` | $S_SHADER | $TP |"
-  [ -n "$S_UI" ]          && echo "| \`specialists.ui\` | $S_UI | $TP |"
-  [ -n "$S_ADD" ]         && echo "| \`specialists.additional\` | $S_ADD | $TP |"
   [ -n "$N_CLASSES" ]     && echo "| \`naming.classes\` | $N_CLASSES | $TP |"
   [ -n "$N_VARS" ]        && echo "| \`naming.variables\` | $N_VARS | $TP |"
   [ -n "$N_CONST" ]       && echo "| \`naming.constants\` | $N_CONST | $TP |"

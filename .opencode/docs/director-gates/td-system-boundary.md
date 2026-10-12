@@ -2,7 +2,7 @@
 
 # TD-SYSTEM-BOUNDARY — System Boundary Architecture Review
 
-Agent: `technical-director` | Model tier: Opus | Domain: Architecture, engine risk, performance
+Agent: `technical-director` | Model tier: Opus | Domain: Architecture, performance
 
 **Trigger**: After `/map-systems` Phase 3 dependency mapping is agreed but before
 GDD authoring begins — validates that the system structure is architecturally

@@ -257,7 +257,7 @@ are what lean mode keeps); its width still follows `workflow`.
 **Fixture:**
 - `project.yaml` sets only `modes.rigor: standard` → `workflow: standard`,
   `review_mode: lean`, so the panel is `technical-director` + `producer`
-- The engine is configured; `design/gdd/systems-index.md` enumerates 3 MVP
+- `design/gdd/systems-index.md` enumerates 3 MVP
   systems, each with a GDD holding the 5 standard sections, each reviewed, and a
   `/review-all-gdds` report with verdict PASS; the systems index maps
   dependencies both ways and defines the MVP tier

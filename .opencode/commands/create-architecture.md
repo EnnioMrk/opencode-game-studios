@@ -1,5 +1,5 @@
 ---
-description: "Author the architecture blueprint before code is written. Validates decisions against the pinned engine, flags knowledge gaps."
+description: "Author the architecture document before code is written."
 ---
 !`bash ".opencode/hooks/yaml-helper.sh" resolve_config --keys review_mode,automation,workflow,docs.density`
 

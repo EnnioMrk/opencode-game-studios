@@ -9,24 +9,19 @@ Before running anything, understand the environment:
 
 0. **Config coherence**: run `bash .opencode/scripts/project-coherence.sh`.
 
-   It compares what `project.yaml` declares against the real project file, the
-   installed engine binary, and the files `commands.*` name. This runs first
-   because two of its checks are about *this skill's own inputs*: a
-   `commands.test` naming a runner that does not exist, or a `commands.build`
-   naming an export preset with no `export_presets.cfg`, will fail here and read
-   as a broken build rather than as broken config.
+   It compares what `project.yaml` declares against the real project files the
+   `commands.*` keys name. This runs first because two of its checks are about
+   *this skill's own inputs*: a `commands.test` naming a runner that does not
+   exist, or a `commands.build` naming a file the project does not have, will
+   fail here and read as a broken build rather than as broken config.
 
    Report any `[DIFFERS]` lines in the report's Environment section. They do not
-   by themselves decide the verdict -- but a smoke check run against a project
-   whose declared engine is not the installed one is worth saying out loud.
+   by themselves decide the verdict.
 
 1. **Test framework check**: verify that **game** test files exist — not merely
-   that `tests/` does. Check the engine's **test root** (from step 3; the table
-   is in `.opencode/docs/directory-structure.md` — Godot `tests/unit/` and
-   `tests/integration/`, Unity `Assets/Tests/`, Unreal
-   `Source/*/Private/Tests/`) and `tests/smoke/` for actual test files. A
-   **test file** is one the engine's test runner executes — a `*_test.gd` suite,
-   a C# test class, an Unreal automation test source. Markdown checklists do not
+   that `tests/` does. Check the **test root** — `tests/` — and `tests/smoke/`
+   for actual test files. A **test file** is one the test runner executes — a
+   `*.test.ts` suite. Markdown checklists do not
    count: `/test-setup` always writes `tests/smoke/critical-paths.md`, and
    counting it would hide exactly the zero-test state this step exists to catch.
    If none are found **at `qa.level: minimal`**, tests are waived at this level:
@@ -59,22 +54,10 @@ Before running anything, understand the environment:
 2. **CI check**: check whether `.github/workflows/` contains a workflow file
    referencing tests. Note in the report whether CI is configured.
 
-3. **Engine detection**: read `engine.name` from `project.yaml`; if that key
-   is absent or empty (including when `project.yaml` has no `engine:` block),
-   fall back to the `Engine:` value in `.opencode/docs/technical-preferences.md`
-   (a `[TO BE CONFIGURED]` value means not configured). Store this for test
-   command selection in Phase 2.
-
-   Then find the **editor executable** — none of the three engines installs
-   onto `PATH` by default on Windows or macOS, so a bare `godot` that does not
-   resolve says nothing about whether the engine is installed. Take the first
-   that resolves (the file exists, or `command -v` finds it): the executable
-   `commands.test` names (its quoted path or first word), else the editor
-   `engine.path` records, else the engine's name on `PATH` (`godot`). Use it
-   wherever Phase 2 writes `godot` or `"<Unity editor>"`, quoting a path with a
-   space; on Unreal, `<UE root>` is `engine.path`. If none resolves, the test
-   runner is not available (Phase 2) — on Godot,
-   `NOT ASSESSED — Godot executable not found (commands.test, engine.path, PATH)`.
+3. **Test command**: take the executable `commands.test` names (its quoted
+   path or first word) when that key is set, else the project's own test command
+   (`bun test`, from `package.json`). Store it for Phase 2. Any step that needs
+   reference knowledge is `NOT ASSESSED — no reference set for this stack`.
 
 4. **Smoke test list**: check whether `production/qa/smoke-tests.md` or
    `tests/smoke/` exists. If a smoke test list is found, load it for use in
@@ -87,8 +70,8 @@ Before running anything, understand the environment:
    `/qa-plan sprint` before smoke-checking for best results." (At `workflow: minimal`,
    which has no sprints, a QA plan is optional — say so rather than recommend one.)
 
-Report findings before proceeding: "Environment: [engine]. Editor: [the
-resolved executable / not found]. Test directory:
+Report findings before proceeding: "Test command: [the
+resolved command / not found]. Test directory:
 [found / not found]. CI configured: [yes / no]. QA plan: [path / not found]."
 
 ---

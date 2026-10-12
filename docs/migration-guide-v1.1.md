@@ -35,12 +35,10 @@ through the steps below. You can also run the converter directly.
 |---|---|
 | `production/stage.txt` | `project.stage` |
 | `production/review-mode.txt` | `modes.review_mode` |
-| `technical-preferences.md` → Engine & Language | `engine.name`, `engine.version`, `engine.language`, `engine.rendering`, `engine.physics` |
 | `technical-preferences.md` → Input & Platform | `platform.targets`, `platform.primary_input`, `platform.gamepad_support`, `platform.touch_support` |
 | `technical-preferences.md` → Naming Conventions | `naming.classes`, `naming.variables`, `naming.constants`, `naming.signals`, `naming.files`, `naming.scenes` |
 | `technical-preferences.md` → Performance Budgets | `performance.target_framerate`, `performance.frame_budget_ms`, `performance.draw_call_limit`, `performance.memory_ceiling_mb` |
 | `technical-preferences.md` → Testing | `testing.framework`, `qa.coverage_minimum` |
-| `technical-preferences.md` → Engine Specialists | `specialists.code`, `specialists.shader`, `specialists.ui`, `specialists.additional` |
 
 Settings that don't exist in v1.0 at all (`modes.rigor`, `qa.level`,
 `docs.density`, `team.size`, `modes.story_granularity`, and the rest of the
@@ -125,7 +123,7 @@ remove or back up the other, then re-run `--dry-run`.
 ## After migrating
 
 1. Spot-check `project.yaml` against your old `technical-preferences.md` —
-   engine, naming, and performance values in particular.
+   naming and performance values in particular.
 2. Run `/settings` to see the effective config the way skills will read it.
 3. Everything else in the framework works identically whether or not you've
    run `--finalize` — there's no rush.

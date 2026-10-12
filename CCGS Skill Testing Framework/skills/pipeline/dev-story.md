@@ -11,14 +11,14 @@ every tier, while a story whose ADR field reads `N/A` references none — and ch
 freshness by comparing the story's `ADR Version` with the ADR's current version
 (`Last Verified`, else `Date`, else `unversioned` — the rule `/create-stories`
 stamps with). It checks the story's `Manifest Version` and its dependencies, asks
-to mark the story `In Progress`, and routes implementation to a programmer agent
-plus the project's engine specialist. It does not write source code itself, and
+to mark the story `In Progress`, and routes implementation to a programmer agent.
+It does not write source code itself, and
 every file it does write — story fields, `sprint-status.yaml`, a dependency's
-`Status`, a Config/Data file, Unity's `ScreenshotOnArg.cs` — follows an ask that
+`Status`, a Config/Data file — follows an ask that
 names it; only the session-state checkpoint is written without one.
 
-After the agent returns it verifies the agent finished, runs the engine parse
-check, launches the build to observe anything player-visible (`Run result:`
+After the agent returns it verifies the agent finished, runs the project's check
+command, launches the build to observe anything player-visible (`Run result:`
 line), prints an "Implementation Complete" summary and overwrites the CHECKPOINT
 block in `active.md`, whose **Next step** follows the result: `/story-done` after
 Implementation Complete, `/dev-story` to resume after INCOMPLETE, the unblocking
@@ -46,8 +46,8 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
 ## Director Gate Checks
 
-No director gates. `/dev-story` spawns implementation agents (a primary programmer
-and the engine specialist), not director review gates, and does not resolve
+No director gates. `/dev-story` spawns implementation agents (a primary
+programmer), not director review gates, and does not resolve
 `review_mode`. Code review is the separate `/code-review` skill, named as the next
 step at `standard`/`full`.
 
@@ -58,13 +58,13 @@ step at `standard`/`full`.
 ### Case 1: Happy Path — Logic story implemented at full workflow
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `specialists.code: godot-gdscript-specialist`,
+- `project.yaml`:
   `modes.workflow: full`, `qa.level: standard`
 - `production/epics/combat/story-001-damage-calc.md`: `Status: Ready`, Layer Core,
   Type Logic, `Requirement: TR-combat-001`, `ADR Governing Implementation: ADR-0003`,
   an `ADR Version` equal to ADR-0003's `## Last Verified` date, a `Manifest Version`
   equal to the manifest header date, Dependencies None, Test Evidence
-  `tests/unit/combat/combat_damage_calc_test.gd`
+  `tests/unit/combat/combat_damage_calc_test.ts`
 - `docs/architecture/tr-registry.yaml` has `TR-combat-001`; ADR-0003 exists and is
   Accepted; `docs/architecture/control-manifest.md` exists
 - `production/sprint-status.yaml` does not exist
@@ -80,11 +80,11 @@ step at `standard`/`full`.
    absent `sprint-status.yaml`); on yes sets the story's `Status:` to `In Progress`
    and its `Last Updated:`; prints "Sprint status not updated:
    production/sprint-status.yaml absent"
-5. Spawns `gameplay-programmer` with `godot-gdscript-specialist` as secondary,
+5. Spawns `gameplay-programmer`,
    briefing the story path, TR-ID lookup, the story's ADR Decision Summary and
    Implementation Notes inline, the Core layer rules, and the test file path
    with the test requirement
-6. Confirms the agent finished, runs the Godot parse check and reports its exit code
+6. Confirms the agent finished, runs the project's check command and reports its exit code
 7. Prints "Implementation Complete: [title]" with files, test function count,
    Verification and a `Run result:` line; next step `/code-review` then `/story-done`
 8. Overwrites the `<!-- CHECKPOINT -->` block in `active.md`
@@ -92,10 +92,10 @@ step at `standard`/`full`.
 **Assertions:**
 - [ ] ADR-0003 is not read in full when its `Last Verified` matches the story's `ADR Version`
 - [ ] The In Progress ask names the story file; `Status:` becomes `In Progress` only after it and before any agent is spawned, and the sprint-status-absent line is printed
-- [ ] Primary is `gameplay-programmer`; secondary comes from `specialists.code`, not the roster table
+- [ ] Primary is `gameplay-programmer`, from the routing table
 - [ ] The ADR guidance is passed inline, not as the ADR path
-- [ ] The brief names `tests/unit/combat/combat_damage_calc_test.gd` (`[system]_[feature]_test.gd`) and requires one test per acceptance criterion
-- [ ] The parse check's command and exit code are reported, and exactly one `Run result:` line appears
+- [ ] The brief names `tests/unit/combat/combat_damage_calc_test.ts` and requires one test per acceptance criterion
+- [ ] The check command and its exit code are reported, and exactly one `Run result:` line appears
 - [ ] Story is NOT marked Complete; the handoff is `/code-review` then `/story-done`
 - [ ] The CHECKPOINT block in `active.md` is overwritten, not appended to
 
@@ -119,7 +119,7 @@ step at `standard`/`full`.
 
 **Assertions:**
 - [ ] The Proposed status is read from ADR-0005's `## Status` section, not inferred
-- [ ] No programmer or engine-specialist agent is spawned
+- [ ] No programmer agent is spawned
 - [ ] Output names ADR-0005 and recommends `/architecture-decision`
 - [ ] The story header stays `Status: Ready`, and no "May I mark this story In Progress?" ask is shown
 - [ ] BLOCKED is recorded in session state, and the checkpoint's **Next step** names `/architecture-decision accept ADR-0005` — not `/story-done`
@@ -149,14 +149,14 @@ The `full` column of the file-check table has its own STOP rule, so the
 **Assertions:**
 - [ ] The stop happens at `full`
 - [ ] The Status decides before the freshness check: no ADR-version mismatch prompt is shown although the versions differ, and the ADR is not read beyond the one Grep
-- [ ] No programmer or engine-specialist agent is spawned, and the story stays `Status: Ready`
+- [ ] No programmer agent is spawned, and the story stays `Status: Ready`
 
 ---
 
 ### Case 3: ADR changed since the story was written
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: full`
+- `project.yaml`: `modes.workflow: full`
 - Story file with `Status: Ready`, Type Logic, `Requirement: TR-combat-002`,
   `ADR Governing Implementation: ADR-0004`, an `ADR Version` older than ADR-0004's
   `## Last Verified` date, a `Manifest Version` equal to the manifest header date,
@@ -242,11 +242,10 @@ The `full` column of the file-check table has its own STOP rule, so the
 ### Case 5: Minimal tier, Logic story — tests waived
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: minimal`, `qa.level: minimal`
+- `project.yaml`: `modes.workflow: minimal`, `qa.level: minimal`
 - Story Type Logic with `Requirement: Brief MVP feature 1` and ADR fields
   `N/A (minimal — no ADRs)`
 - No TR registry, no ADRs, no control manifest
-- `docs/engine-reference/godot/VERSION.md` rates the pinned version HIGH risk
 
 **Input:** `/dev-story production/epics/[slug]/story-001-[slug].md`
 
@@ -254,7 +253,7 @@ The `full` column of the file-check table has its own STOP rule, so the
 1. Phase 2 does not stop or set BLOCKED for the absent registry, ADR or manifest
 2. Before spawning, prints a `Briefing omits: …` line naming the TR registry, the
    ADR guidance and the control manifest
-3. Spawns `gameplay-programmer` plus the engine specialist (VERSION.md risk HIGH)
+3. Spawns `gameplay-programmer`
 4. The brief omits the test requirement and tells the agent: "Do not write a test
    file for this story — test evidence is waived at `qa.level: minimal`."
 5. Phase 5 is skipped; the summary prints "Test evidence: waived at
@@ -265,7 +264,6 @@ The `full` column of the file-check table has its own STOP rule, so the
 **Assertions:**
 - [ ] No STOP or BLOCKED for the absent TR registry, ADR or manifest at `minimal`
 - [ ] The `Briefing omits:` line names all three dropped inputs, the ADR included
-- [ ] The engine specialist is spawned because VERSION.md rates the risk HIGH
 - [ ] The test waiver is stated to the agent and printed in the summary; no tests row or "run your test suite" paragraph appears
 - [ ] A `Run result:` line is printed — run-and-observe is not waived
 - [ ] The handoff is `/story-done` with no `/code-review` step
@@ -275,7 +273,7 @@ The `full` column of the file-check table has its own STOP rule, so the
 ### Case 5b: Minimal tier, UI story — the screenshot is still required
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: minimal`, `qa.level: minimal`
+- `project.yaml`: `modes.workflow: minimal`, `qa.level: minimal`
 - Story Type UI with `Requirement: Brief MVP feature 2` and ADR fields
   `N/A (minimal — no ADRs)`
 - No TR registry, no ADRs, no control manifest
@@ -299,65 +297,29 @@ The `full` column of the file-check table has its own STOP rule, so the
 
 ---
 
-### Case 6: Unity — code under `Assets/`, capture script asked for
+### Case 6: Code Root Unresolved — nothing is written
 
 **Fixture:**
-- `project.yaml`: `engine.name: Unity`, `specialists.code: unity-specialist`,
-  `specialists.ui: unity-ui-specialist`, `commands.smoke` and `commands.run` set,
-  `modes.workflow: minimal`, `qa.level: minimal`
-- Story Type UI (an inventory screen) with `Requirement: Brief MVP feature 3` and
-  ADR fields `N/A (minimal — no ADRs)`
-- The project has `Assets/` and no `src/`; no `ScreenshotOnArg.cs` exists under `Assets/`
-- `docs/engine-reference/unity/VERSION.md` rates the pinned version HIGH risk
-
-**Input:** `/dev-story production/epics/[slug]/story-003-[slug].md`
-
-**Expected behavior:**
-1. Spawns `ui-programmer` with `unity-specialist` (`specialists.code`) and
-   `unity-ui-specialist` (`specialists.ui`, for a UI story)
-2. The brief sends the code to `Assets/Scripts/<System>/`, the Unity code root
-3. Verification runs `commands.smoke` and reports its exit code
-4. Before launching, globs `Assets/**/ScreenshotOnArg.cs`, finds none and asks
-   "May I write `Assets/Scripts/ScreenshotOnArg.cs`?"; on yes writes the script
-   verbatim from `.opencode/docs/run-and-observe.md`
-5. Launches the built player with `--scene`/`--screenshot` and prints
-   `Run result: OBSERVED — …` with the retained path
-
-**Assertions:**
-- [ ] No file is written under `src/` — the Godot row is not a default
-- [ ] Both specialists come from the `specialists` block, not the roster table
-- [ ] `ScreenshotOnArg.cs` is written only after its ask, at `Assets/Scripts/`, exactly as run-and-observe.md gives it
-- [ ] If the user declines that ask, the result is `Run result: NOT VERIFIED — ScreenshotOnArg.cs not written`, not an observation
-- [ ] Verification names `commands.smoke` and its exit code
-
----
-
-### Case 7: Engine unset — the code root is unresolved, nothing is written
-
-**Fixture:**
-- `project.yaml` has no `engine` block; `.opencode/docs/technical-preferences.md`
-  reads `Engine: [TO BE CONFIGURED]`
-- The project has none of `src/`, `Assets/` or `Source/`
+- `src/` does not exist, so the code root is unresolved per `.opencode/docs/code-root-resolution.md`
 - `modes.workflow: minimal`; the story is Type Logic
 
 **Input:** `/dev-story production/epics/[slug]/story-001-[slug].md`
 
 **Expected behavior:**
-1. The code root cannot be resolved (`.opencode/docs/code-root-resolution.md`: no
-   `engine.name`, no legacy `Engine:` value, no single unambiguous root in the tree)
+1. The code root cannot be resolved per `.opencode/docs/code-root-resolution.md`
 2. No source file is written, and the output says the code root is unresolved
 
 **Assertions:**
-- [ ] No file is created under `src/` or any other guessed root
+- [ ] No file is created under any guessed root
 - [ ] The output names the unresolved code root as the reason nothing was written
 - [ ] "Implementation Complete" is not printed
 
 ---
 
-### Case 8: Dependency marked Complete through option [C]
+### Case 7: Dependency marked Complete through option [C]
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: minimal`, `qa.level: minimal`
+- `project.yaml`: `modes.workflow: minimal`, `qa.level: minimal`
 - `story-003` lists `story-002` under Dependencies; `story-002` has
   `Status: In Progress`
 - At the dependency prompt the user picks `[C]`, then approves the update
@@ -379,13 +341,13 @@ The `full` column of the file-check table has its own STOP rule, so the
 - [ ] story-003 itself is not marked Complete — it is set In Progress, after its own ask
 - [ ] Had the user picked `[B]`, story-003 would be BLOCKED in session state and no agent spawned
 
-### Case 9: The agent stops early — INCOMPLETE, and the checkpoint says resume
+### Case 8: The agent stops early — INCOMPLETE, and the checkpoint says resume
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: minimal`, `qa.level: minimal`
+- `project.yaml`: `modes.workflow: minimal`, `qa.level: minimal`
 - Story Type Logic, `Status: Ready`, ADR fields `N/A (minimal — no ADRs)`
 - The programmer agent reports that it hit its turn limit after adding
-  `src/combat/damage.gd`, which calls a helper it never defined
+  `src/combat/damage.ts`, which calls a helper it never defined
 
 **Input:** `/dev-story production/epics/[slug]/story-001-[slug].md`
 
@@ -402,10 +364,10 @@ The `full` column of the file-check table has its own STOP rule, so the
 
 ---
 
-### Case 10: `full` tier, a story with no governing ADR (`ADR: N/A`)
+### Case 9: `full` tier, a story with no governing ADR (`ADR: N/A`)
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: full`
+- `project.yaml`: `modes.workflow: full`
 - Story `Status: Ready`, Type Logic, `ADR Governing Implementation: N/A — no
   architectural pattern required` (what `/create-stories` writes for a
   requirement `/create-epics` flagged as untraced)
@@ -431,7 +393,7 @@ The `full` column of the file-check table has its own STOP rule, so the
 - [ ] Does NOT write source code directly — delegates to specialist agents
 - [ ] Resolves the workflow tier and verifies required inputs before any agent is spawned
 - [ ] Mismatch and dependency prompts (`question`) come before implementation
-- [ ] Every file the skill itself writes — story fields, `sprint-status.yaml`, a dependency's `Status`, a Config/Data file, `ScreenshotOnArg.cs` — follows an ask that names it; only the `active.md` checkpoint is written without one
+- [ ] Every file the skill itself writes — story fields, `sprint-status.yaml`, a dependency's `Status`, a Config/Data file — follows an ask that names it; only the `active.md` checkpoint is written without one
 - [ ] Code is written only under the resolved code root; an unresolved root writes nothing
 - [ ] Skipped phases and dropped briefing items are announced in the output
 - [ ] Never emits "Implementation Complete" for an agent that stopped early (INCOMPLETE)
@@ -442,10 +404,9 @@ The `full` column of the file-check table has its own STOP rule, so the
 
 ## Coverage Notes
 
-- The code root is covered for Godot (`src/`) and Unity (`Assets/`, Case 6) and for
-  an unresolved engine (Case 7). Unreal (`Source/<Module>/<System>/`, with the
-  editor-target build as the parse check) is not given a fixture.
-- The INCOMPLETE path is Case 9; `parse NOT VERIFIED` when the engine binary is
+- The code root is covered for the resolved root (`src/`) and for an unresolved
+  root (Case 6).
+- The INCOMPLETE path is Case 8; `parse NOT VERIFIED` when the check command is
   unavailable is not given a fixture.
 - The Manifest Version mismatch prompt (`[A]` update / `[B]` keep old rules, which
   records a `Manifest-Note` / `[C]` stop) follows Case 3's ask-before-spawn pattern

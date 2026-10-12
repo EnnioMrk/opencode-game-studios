@@ -48,30 +48,15 @@ Read the target file(s) in full. Read AGENTS.md for project coding standards.
 
 ---
 
-## Phase 2: Identify Engine Specialists
+## Phase 2: Specialist Validation
 
-Read the `specialists` block from `project.yaml`; if it is absent, fall back to the `## Engine Specialists` section of `.opencode/docs/technical-preferences.md`. Note:
-
-- The **Primary** specialist — `<engine>-specialist` derived from `engine.name` (Godot→`godot-specialist`, Unity→`unity-specialist`, Unreal→`unreal-specialist`); used for architecture and broad engine concerns
-- The **Language/Code Specialist** — `specialists.code` — used when reviewing the project's primary language files
-- The **Shader Specialist** — `specialists.shader` — used when reviewing shader files
-- The **UI Specialist** — `specialists.ui` — used when reviewing UI code
-
-**A value of `null` means UNSET — treat that key as absent and skip its
-specialist. Never spawn it as an agent name.** The v1.0 migration writes `null`
-for any specialist the legacy file did not name, and it writes the whole block
-whenever *one* member is set — so a project that configured only its code
-specialist carries `shader: null` and `ui: null`. The config reader returns the
-four-character string `"null"` for these, which is not empty and therefore reads
-as configured. `null`, empty, and missing are the same state here.
-
-If no engine is configured (no `engine.name` in `project.yaml`, and `technical-preferences.md` reads `[TO BE CONFIGURED]` or is missing), skip engine specialist steps. **Record ``Engine validation: NOT ASSESSED — no engine configured (`engine.name` unset in `project.yaml`)`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed; the reader cannot tell engine guidance was never sought.
+**Record ``Specialist validation: NOT ASSESSED — no specialist applies`` in this run's output.** No specialist can be identified or spawned. A skipped check that says nothing is indistinguishable from a check that passed; the reader cannot tell the guidance was never sought.
 
 ---
 
 ## Phase 3: ADR Compliance Check
 
-**Argument:** `/code-review [file(s)]` may optionally include a story file path as the last argument (e.g., `/code-review Assets/Scripts/Combat/Attack.cs production/epics/combat/story-001.md`). If a story path is provided, read it to extract the governing ADR reference.
+**Argument:** `/code-review [file(s)]` may optionally include a story file path as the last argument (e.g., `/code-review src/game/aim.ts production/epics/combat/story-001.md`). If a story path is provided, read it to extract the governing ADR reference.
 
 Search for ADR references in, in priority order:
 1. The story file (if provided as argument)
@@ -101,7 +86,7 @@ From those two sections, classify any deviation:
 
 ## Phase 4: Standards Compliance
 
-Identify the system category (engine, gameplay, AI, networking, UI, tools) and evaluate:
+Identify the system category (gameplay, AI, networking, UI, tools) and evaluate:
 
 - [ ] Public methods and classes have doc comments
 - [ ] Cyclomatic complexity under 10 per method
@@ -115,7 +100,7 @@ Identify the system category (engine, gameplay, AI, networking, UI, tools) and e
 ## Phase 5: Architecture and SOLID
 
 **Architecture:**
-- [ ] Correct dependency direction (engine <- gameplay, not reverse)
+- [ ] Correct dependency direction (core <- gameplay, not reverse)
 - [ ] No circular dependencies between modules
 - [ ] Proper layer separation (UI does not own game state)
 - [ ] Events/signals used for cross-system communication
@@ -163,20 +148,13 @@ Spawn all applicable specialists simultaneously via `Agent` — do not wait for 
 > this step the parent review is a laundering channel: a guess enters as a
 > specialist finding and leaves as a reviewed defect.
 
-### Engine Specialists
+### Specialist Routing
 
-If an engine is configured, determine which specialist applies to each file and spawn in parallel:
-
-- Primary language files (`.gd`, `.cs`, `.cpp`) → Language/Code Specialist
-- Shader files (`.gdshader`, `.hlsl`, shader graph) → Shader Specialist
-- UI screen/widget code → UI Specialist
-- Cross-cutting or unclear → Primary Specialist
-
-Also spawn the **Primary Specialist** for any file touching engine architecture (scene structure, node hierarchy, lifecycle hooks).
+No specialist spawn applies — `NOT ASSESSED — no specialist applies`. The QA testability review below still runs.
 
 ### QA Testability Review
 
-For Logic and Integration stories, also spawn `qa-tester` via `Agent` in parallel with the engine specialists. Pass:
+For Logic and Integration stories, spawn `qa-tester` via `Agent`. Pass:
 - The implementation files being reviewed
 - The story's `## QA Test Cases` section (the pre-written test specs from qa-lead)
 - The story's `## Acceptance Criteria`
@@ -199,8 +177,7 @@ Collect all specialist findings before producing output.
 ```
 ## Code Review: [File/System Name]
 
-### Engine Specialist Findings: [N/A — no engine configured / CLEAN / ISSUES FOUND]
-[Findings from engine specialist(s), or "No engine configured." if skipped]
+### Specialist Findings: [NOT ASSESSED — no specialist applies]
 
 ### Testability: [N/A — no story path given / N/A — Visual/Feel or Config story / TESTABLE / GAPS / BLOCKING]
 [qa-tester findings: test hooks, coverage gaps, untestable paths, new edge cases]
@@ -235,13 +212,13 @@ Collect all specialist findings before producing output.
 
 Choose the verdict, first match wins:
 - **CHANGES REQUIRED** — anything under Required Changes
-- **NOT ASSESSED** — nothing to review (the no-data path above), the engine
-  specialist review did not run — no engine configured, or a specialist that
-  could not be spawned — or any report section reads `NOT ASSESSED` (ADR
-  Compliance with a referenced ADR that could not be read, Architecture, SOLID);
+- **NOT ASSESSED** — nothing to review (the no-data path above), the
+  specialist review did not run — no specialist applies — or any report section
+  reads `NOT ASSESSED` (ADR Compliance with a referenced ADR that could not be
+  read, Architecture, SOLID);
   name which. NOT ASSESSED ranks below CHANGES REQUIRED, because a known
   defect is more actionable than a skipped check, and above both approvals: a
-  review that skipped the engine check has not approved the code. (`NO ADRS
+  review that skipped a check has not approved the code. (`NO ADRS
   FOUND` is not NOT ASSESSED: with no ADR to check, it does not stop an
   approval.)
 - **APPROVED WITH SUGGESTIONS** — only Suggestions
@@ -268,7 +245,7 @@ Use `question`:
     - `[B] Run /story-done anyway with noted exceptions`
     - `[C] Stop here`
   - If NOT ASSESSED:
-    - `[A] Fix what stopped the review (point me at the code, run /setup-engine, or fix the unreadable ADR reference), then re-run /code-review`
+    - `[A] Fix what stopped the review (point me at the code, or fix the unreadable ADR reference), then re-run /code-review`
     - `[B] Stop here`
 
 If an ARCHITECTURAL VIOLATION is found:

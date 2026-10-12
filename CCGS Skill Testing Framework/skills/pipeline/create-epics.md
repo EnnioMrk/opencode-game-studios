@@ -6,7 +6,7 @@
 the TR registry, and turns each system into one epic mapped to an architectural
 module. Systems are processed in layer order (Foundation → Core → Feature →
 Presentation), and within a layer in `systems-index.md` order. Each epic is
-presented (layer, GDD, architecture module, governing ADRs, engine risk, ADR
+presented (layer, GDD, architecture module, governing ADRs, ADR
 coverage, untraced requirements) and the user is asked "Shall I create Epic:
 [name]?" before anything is written.
 
@@ -61,13 +61,11 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — Solo mode
 ### Case 1: Happy Path — Two approved GDDs create two epics
 
 **Fixture:**
-- `project.yaml`: `engine.name: Godot`, `modes.workflow: full`, `modes.review_mode: lean`
+- `project.yaml`: `modes.workflow: full`, `modes.review_mode: lean`
 - `design/gdd/systems-index.md` lists 2 Foundation systems
 - Both systems have Approved GDDs in `design/gdd/`, each with a `## Summary`
 - `docs/architecture/architecture.md` has a module for each system
-- Accepted ADRs cover every TR-ID for both systems in `docs/architecture/tr-registry.yaml`;
-  the first system has two governing ADRs whose Engine Compatibility rates
-  Knowledge Risk LOW and HIGH
+- Accepted ADRs cover every TR-ID for both systems in `docs/architecture/tr-registry.yaml`
 - `docs/architecture/control-manifest.md` exists
 - No `production/epics/` directory
 
@@ -77,8 +75,8 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — Solo mode
 1. Globs `design/gdd/*.md` (excluding systems-index and other non-system docs)
    to establish N, then Greps `^## Summary` to scope the Foundation systems
 2. Reads the 2 in-scope GDDs, `architecture.md`, the Decision / GDD Requirements
-   Addressed / Engine Compatibility sections of the in-scope ADRs, the TR
-   registry and the manifest header; reports "Loaded 2 GDDs, [M] ADRs, engine: …"
+   Addressed sections of the in-scope ADRs, the TR
+   registry and the manifest header; reports "Loaded 2 GDDs, [M] ADRs."
 3. For each system: presents the epic block and asks "Shall I create Epic: [name]?"
 4. Notes "PR-EPIC skipped — Lean mode."
 5. For each epic: asks "May I write `production/epics/[epic-slug]/EPIC.md` and
@@ -92,8 +90,7 @@ In `solo` mode: PR-EPIC is skipped. Output notes: "PR-EPIC skipped — Solo mode
 - [ ] "May I write" is asked per epic (not once for both)
 - [ ] Files land at `production/epics/[epic-slug]/EPIC.md`
 - [ ] Each EPIC.md contains Layer, GDD path, Architecture Module, Governing ADRs table, GDD Requirements table, Definition of Done
-- [ ] The first epic's Engine Risk is HIGH — the highest among its governing ADRs, not the first or the average
-- [ ] The Definition of Done asks Logic and Integration stories for passing tests under `tests/` (the Godot test root) and Visual/Feel and UI stories for retained screenshots in `production/qa/evidence/` — each screen touched for UI, plus a lead sign-off for Visual/Feel
+- [ ] The Definition of Done asks Logic and Integration stories for passing tests under `tests/` (the test root) and Visual/Feel and UI stories for retained screenshots in `production/qa/evidence/` — each screen touched for UI, plus a lead sign-off for Visual/Feel
 - [ ] "PR-EPIC skipped — Lean mode." appears; no producer is spawned
 - [ ] `production/epics/index.md` is created or updated after writing, and only after an ask that named it
 - [ ] Verdict is COMPLETE and names `/create-stories [epic-slug]`

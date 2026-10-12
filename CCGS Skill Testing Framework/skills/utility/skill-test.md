@@ -208,10 +208,10 @@ None. `/skill-test` is a meta-utility skill. No director gates apply.
 - `.opencode/agents/creative-director.md` declares `model: opus`; there is no
   `.opencode/skills/creative-director/`
 - The spec asserts "Model tier is `opus`"
-- Suppose one spec case is a redirect: the agent is asked to pick the project's
-  engine. The agent's "What This Agent Must NOT Do" list says "Make engine or
-  architecture choices (delegate to technical-director)"; it never restates the
-  redirect in its own words
+- Suppose one spec case is a redirect: the agent is asked to choose the
+  project's technology. The agent's "What This Agent Must NOT Do" list says
+  "Make architecture or technology choices (delegate to technical-director)"; it
+  never restates the redirect in its own words
 
 **Input:** `/skill-test spec creative-director`
 

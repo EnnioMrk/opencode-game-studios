@@ -34,7 +34,7 @@ Identify files and modules that would need to change:
 **Code Complexity:**
 - Lines of code in affected files
 - Number of dependencies and coupling level
-- Whether this touches core/engine code vs leaf/feature code
+- Whether this touches core code vs leaf/feature code
 - Whether existing patterns can be followed or new patterns are needed
 
 **Scope:**

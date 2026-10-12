@@ -6,13 +6,12 @@
 
 
 **Required Artifacts:**
-- [ ] Engine chosen (AGENTS.md Technology Stack is not `[CHOOSE]`)
-- [ ] Project config populated (`project.yaml` has engine/naming/performance set, or legacy `.opencode/docs/technical-preferences.md` populated)
+- [ ] Tech stack chosen (AGENTS.md Technology Stack is not `[CHOOSE]`)
+- [ ] Project config populated (`project.yaml` has naming/performance set, or legacy `.opencode/docs/technical-preferences.md` populated)
 - [ ] Art bible exists at `design/art/art-bible.md` with at least Sections 1–4 (Visual Identity Foundation)
 - [ ] At least 3 Architecture Decision Records in `docs/architecture/` covering
       Foundation-layer systems (scene management, event architecture, save/load)
-- [ ] Engine reference docs exist in `docs/engine-reference/[engine]/`
-- [ ] Test framework initialized: the engine's test root exists — `tests/unit/` and `tests/integration/` (Godot), `Assets/Tests/EditMode/` and `Assets/Tests/PlayMode/` (Unity), or `Source/<Module>/Private/Tests/` (Unreal); see `.opencode/docs/directory-structure.md`
+- [ ] Test framework initialized: the test root exists (`tests/`); see `.opencode/docs/directory-structure.md`
 - [ ] CI/CD test workflow exists at `.github/workflows/tests.yml` (or equivalent)
 - [ ] At least one example test file exists to confirm the framework is functional
 - [ ] Master architecture document exists at `docs/architecture/architecture.md`
@@ -26,11 +25,7 @@
 - [ ] Technical preferences have naming conventions and performance budgets set
 - [ ] Accessibility tier is defined and documented (even "Basic" is acceptable — undefined is not)
 - [ ] At least one screen's UX spec started (often the main menu or core HUD is designed during Technical Setup)
-- [ ] All ADRs have an **Engine Compatibility section** with engine version stamped
 - [ ] All ADRs have a **GDD Requirements Addressed section** with explicit GDD linkage
-- [ ] No ADR references APIs listed in `docs/engine-reference/[engine]/deprecated-apis.md`
-- [ ] All HIGH RISK engine domains (per VERSION.md) have been explicitly addressed
-      in the architecture document or flagged as open questions
 - [ ] Architecture traceability matrix has **zero Foundation layer gaps**
       (all Foundation requirements must have ADR coverage before Pre-Production)
 
@@ -50,11 +45,6 @@ dependency cycle.
   trustworthy as the dependency sections are complete: if `NO_DEPS_SECTION` lists
   many ADRs, surface that as a CONCERNS note rather than a clean pass.
 
-**Engine Validation** (read `docs/engine-reference/[engine]/VERSION.md` first):
-- [ ] ADRs that touch post-cutoff engine APIs are flagged with Knowledge Risk: HIGH/MEDIUM
-- [ ] `/architecture-review` engine audit shows no deprecated API usage
-- [ ] All ADRs agree on the same engine version (no stale version references)
-
 ## Workflow tier reductions
 
 The checklist above is the **`full` baseline**. At lower tiers apply the
@@ -62,6 +52,6 @@ reduction for the resolved tier; items not named keep their status above.
 Reductions only ever *relax* a requirement — `workflow_overrides` is the
 only thing that adds one.
 
-- **`full`** — engine + art bible §1–4+ + 3+ ADRs + architecture + UX specs started + accessibility doc + traceability index all required
+- **`full`** — art bible §1–4+ + 3+ ADRs + architecture + UX specs started + accessibility doc + traceability index all required
 - **`standard`** — art bible required **only if visual-asset stories exist**; ADRs reduced to **critical (Foundation-layer) only**; UX-specs-started, accessibility doc, interaction-patterns, traceability index → recommended
-- **`minimal`** — only **engine configured** required (the minimal floor); everything else **drops**
+- **`minimal`** — only **project config populated** required (the minimal floor); everything else **drops**

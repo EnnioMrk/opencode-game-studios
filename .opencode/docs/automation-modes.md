@@ -120,7 +120,7 @@ the mode rules.
 |---------------|---------|
 | Choosing a system name or document path | "What should we call this system?" |
 | Mutually exclusive design directions | "Real-time or turn-based?" |
-| Any choice that gates downstream work | Engine choice, architecture approach |
+| Any choice that gates downstream work | Architecture approach |
 | Scope changes | "Cut this feature or slip the deadline?" |
 | Any decision that can't be changed without significant rework | Core loop mechanic |
 
@@ -160,7 +160,7 @@ active reports rule violations the project never asked for.
 | `file_deletions` | Removing a story, deleting a GDD, removing a system, removing a test file |
 | `schema_changes` | Changes to project.yaml, story template, control manifest, ADR template, GDD template |
 | `architecture_decisions` | New ADR creation, ADR replacement, system boundary changes |
-| `version_bumps` | Engine version change, framework version bump, dependency major version change |
+| `version_bumps` | Framework version bump, dependency major version change |
 | `external_calls` | Invoking external APIs (asset gen, AI services) when in autonomous mode |
 
 ### Helper
@@ -184,7 +184,6 @@ These skills always behave as `collaborative` regardless of the setting:
 | `hotfix` | Emergency decisions — user must approve scope and risk before any action |
 | `gate-check` | Results must be reviewed — a gate verdict without acknowledgement defeats the purpose |
 | `day-one-patch` | Release-critical — every action needs explicit sign-off |
-| `setup-engine` | One-time irreversible choice that affects the entire project |
 
 These skills do NOT add the automation prelude described above. They keep
 the v1.0 Q→O→D→Draft→Approval protocol exactly.

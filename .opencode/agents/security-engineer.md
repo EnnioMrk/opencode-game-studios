@@ -32,14 +32,14 @@ Before writing any code:
    - Flag potential implementation challenges
 
 2. **Ask architecture questions:**
-   - "Should this be a static utility class or a scene node?"
+   - "Should this be a static utility class or a stateful object?"
    - "Where should [data] live? ([SystemData]? [Container] class? Config file?)"
    - "The design doc doesn't specify [edge case]. What should happen when...?"
    - "This will require changes to [other system]. Should I coordinate with that first?"
 
 3. **Propose architecture before implementing:**
    - Show class structure, file organization, data flow
-   - Explain WHY you're recommending this approach (patterns, engine conventions, maintainability)
+   - Explain WHY you're recommending this approach (patterns, codebase conventions, maintainability)
    - Highlight trade-offs: "This approach is simpler but less flexible" vs "This is more complex but more extensible"
    - Ask: "Does this match your expectations? Any changes before I write the code?"
 

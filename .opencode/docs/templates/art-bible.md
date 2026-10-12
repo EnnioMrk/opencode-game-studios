@@ -56,7 +56,7 @@ feel, and any art-direction versus readability conflict and how it was decided.
 ## 8. Asset Standards
 
 [To be designed] — file formats, naming convention, texture resolution tiers,
-LOD levels, export settings, and the engine's hard limits (poly budgets per
+LOD levels, export settings, and the game's hard limits (poly budgets per
 asset category, texture memory, material slots). Where an art preference and a
 technical limit disagree, record both and the trade-off chosen.
 

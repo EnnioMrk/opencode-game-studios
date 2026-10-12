@@ -4,13 +4,12 @@
 
 `/create-architecture` produces the master architecture document,
 `docs/architecture/architecture.md`. Phase 0 loads context and stops early when
-a prerequisite is missing: the engine reference docs (no engine → `/setup-engine`),
+a prerequisite is missing:
 `design/gdd/systems-index.md` (absent at `standard`/`full` → `/map-systems`),
 and `design/gdd/game-concept.md` (absent → `/brainstorm`; at `minimal` the
 one-page `design/game-brief.md` stands in). It extracts a Technical Requirements
 Baseline (`TR-[system]-[NNN]`) from the requirement-bearing sections of every
-GDD, inventories existing ADRs from their headers, and shows an Engine Knowledge
-Gap Inventory with an `question` before authoring.
+GDD, and inventories existing ADRs from their headers.
 
 Phases 1–4 (layer map, module ownership, data flow, API boundaries) are each
 presented and approved. Phase 5 audits existing ADRs and maps every baseline
@@ -22,7 +21,7 @@ the sign-off in the Document Status section. Phase 8 updates
 `production/session-state/active.md` and prints a fixed handoff template.
 
 An existing `docs/architecture/architecture.md` is never replaced unasked:
-Phase 0e offers to update chosen sections in place (raising the document's
+Phase 0c offers to update chosen sections in place (raising the document's
 version), to rewrite it, or to stop. Focus-area arguments (`layers`,
 `data-flow`, `api-boundaries`, `adr-audit`) are that update with one section
 chosen; with no document yet, they offer the full walkthrough instead.
@@ -40,7 +39,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 - [ ] Has a next-step handoff at the end (`/architecture-decision`, `/architecture-review`, `/create-control-manifest`)
 - [ ] Documents one consistent write model for `docs/architecture/architecture.md` — when the file is first created and when each approved section is written
 - [ ] Documents gate behavior: TD-ARCHITECTURE + LP-FEASIBILITY in full mode; each skipped in lean/solo with a named note
-- [ ] Documents the stop branches for a missing engine, systems index and game concept
+- [ ] Documents the stop branches for a missing systems index and game concept
 - [ ] Documents retrofit: an existing `docs/architecture/architecture.md` is detected, and updating chosen sections is offered before any rewrite
 
 ---
@@ -57,7 +56,7 @@ a spawned agent that reads its own gate file
 inputs are independent, so they spawn together and both verdicts are collected
 before Step 3 presents them. The parent never reads those files: it passes
 TD-ARCHITECTURE the document path, the Technical Requirements Baseline (TR-IDs
-and count), the ADR list with statuses and the Engine Knowledge Gap Inventory.
+and count), and the ADR list with statuses.
 
 In `lean` mode: neither is a PHASE-GATE, so both are skipped. Output notes
 "TD-ARCHITECTURE and LP-FEASIBILITY skipped — Lean mode."
@@ -72,8 +71,7 @@ skipped — Solo mode."
 ### Case 1: Happy Path — New architecture document, full mode, reviews approve
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot`, `modes.review_mode: full`, `modes.workflow: full`
-- `docs/engine-reference/godot/` has `VERSION.md`, `breaking-changes.md`, `deprecated-apis.md`, `current-best-practices.md` and `modules/`
+- `project.yaml` has `modes.review_mode: full`, `modes.workflow: full`
 - `design/gdd/game-concept.md` and `design/gdd/systems-index.md` exist with real content
 - `design/gdd/combat.md` and `design/gdd/inventory.md` follow the GDD template
 - `docs/architecture/adr-0001-event-bus.md` exists (`Status: Accepted`)
@@ -83,23 +81,20 @@ skipped — Solo mode."
 **Input:** `/create-architecture`
 
 **Expected behavior:**
-1. Phase 0a reads the four engine docs and only the `modules/` docs matching domains in the systems index
-2. Phase 0b Greps the requirement-bearing sections of each GDD (Detailed Rules/Design, Formulas, Dependencies, Tuning Knobs, Acceptance Criteria) and presents the Technical Requirements Baseline with IDs such as `TR-combat-001`
-3. Phase 0c builds the ADR inventory from `## Status`/`## Summary` and `**Domain**` Greps, not full reads
-4. Phase 0d shows the Engine Knowledge Gap Inventory and asks `[A] Proceed — flag HIGH RISK domains…` / `[B] Let me check the engine reference first…` / `[C] Show me which domains are HIGH RISK and why`
-5. Phases 1–4: each proposal (layer map, ownership map, each data-flow scenario, API boundaries) is shown and approved before the next, and each approval is recorded in `production/session-state/active.md` — nothing is written to the architecture document before Phase 7
-6. Phase 7: a one-paragraph summary, then "All sections approved. May I write the master architecture document?" with `[A] Yes — write…` / `[B] Show me the full draft inline first…` / `[C] Not yet…`
-7. Phase 7b: TD-ARCHITECTURE (passed the document path, the TR baseline, the ADR list with statuses and the knowledge gap inventory) and LP-FEASIBILITY review the written document; both assessments are shown side by side; the user chooses `Accept — proceed to handoff`
-8. The proposed Document Status block is shown, then "May I update the Document Status section with the sign-off results?"
-9. Phase 8 writes a summary to `production/session-state/active.md` and prints the handoff with the headings "Architecture Complete", "Run These ADRs Next", "Gate-Check Readiness"; its **Then:** line names `/architecture-review`, then `/create-control-manifest` once the review passes, and the readiness block names `/gate-check pre-production`
+1. Phase 0a Greps the requirement-bearing sections of each GDD (Detailed Rules/Design, Formulas, Dependencies, Tuning Knobs, Acceptance Criteria) and presents the Technical Requirements Baseline with IDs such as `TR-combat-001`
+2. Phase 0b builds the ADR inventory from `## Status`/`## Summary` and `**Domain**` Greps, not full reads
+3. Phases 1–4: each proposal (layer map, ownership map, each data-flow scenario, API boundaries) is shown and approved before the next, and each approval is recorded in `production/session-state/active.md` — nothing is written to the architecture document before Phase 7
+4. Phase 7: a one-paragraph summary, then "All sections approved. May I write the master architecture document?" with `[A] Yes — write…` / `[B] Show me the full draft inline first…` / `[C] Not yet…`
+5. Phase 7b: TD-ARCHITECTURE (passed the document path, the TR baseline, and the ADR list with statuses) and LP-FEASIBILITY review the written document; both assessments are shown side by side; the user chooses `Accept — proceed to handoff`
+6. The proposed Document Status block is shown, then "May I update the Document Status section with the sign-off results?"
+7. Phase 8 writes a summary to `production/session-state/active.md` and prints the handoff with the headings "Architecture Complete", "Run These ADRs Next", "Gate-Check Readiness"; its **Then:** line names `/architecture-review`, then `/create-control-manifest` once the review passes, and the readiness block names `/gate-check pre-production`
 
 **Assertions:**
 - [ ] The baseline uses `TR-[system]-[NNN]` IDs and is built from the scanned GDD sections, not whole-file reads
-- [ ] The knowledge gap inventory and its three-option `question` come before Phase 1
 - [ ] Each section is shown before its approval is asked
 - [ ] The master document is written only after the Phase 7 `question` approval
 - [ ] TD-ARCHITECTURE and LP-FEASIBILITY are each spawned as agents (`technical-director`, `lead-programmer`) after the document is written, and both verdicts are collected before Step 3
-- [ ] TD-ARCHITECTURE is passed its four context items by name; the parent session does not read the gate file
+- [ ] TD-ARCHITECTURE is passed the document path, the TR baseline and the ADR list by name; the parent session does not read the gate file
 - [ ] The Document Status sign-off is written only after the "May I update" approval
 - [ ] The handoff uses the fixed template headings, with no trailing commentary
 - [ ] The handoff names `/gate-check pre-production` — never a `[stage]` placeholder, which while this skill runs would resolve to the gate already passed
@@ -187,7 +182,7 @@ skipped — Solo mode."
 ### Case 4: Edge Case — Systems index missing or empty
 
 **Fixture:**
-- Engine configured; `design/gdd/game-concept.md` exists
+- `design/gdd/game-concept.md` exists
 - Scenario (a): `modes.workflow: standard`, no `design/gdd/systems-index.md`
 - Scenario (b): `modes.workflow: standard`, `design/gdd/systems-index.md` exists but contains only template placeholders
 - Scenario (c): `modes.workflow: minimal`, no systems index, no game concept, `design/game-brief.md` exists
@@ -204,7 +199,7 @@ skipped — Solo mode."
 - [ ] (a) The skill stops with the `/map-systems` message and writes nothing
 - [ ] (b) A present-but-placeholder systems index is treated as absent
 - [ ] (c) At `minimal` the skill says the index is not required and proceeds from the game brief
-- [ ] At `standard` (a, b), no run continues past Phase 0b with a missing design file; at `minimal` (c) the brief stands in for both, and the run stops only if it is absent too
+- [ ] At `standard` (a, b), no run continues past Phase 0a with a missing design file; at `minimal` (c) the brief stands in for both, and the run stops only if it is absent too
 
 ---
 
@@ -218,8 +213,8 @@ skipped — Solo mode."
 **Input:** `/create-architecture`
 
 **Expected behavior:**
-1. Phase 0b's section Grep matches nothing in `crafting.md`, so the skill full-reads it, says so, and its requirements enter the baseline as `TR-crafting-NNN` — a zero-match GDD is never treated as having no requirements
-2. Phase 0c lists ADR-0001 (Accepted) and ADR-0002 (Proposed) with their domains
+1. Phase 0a's section Grep matches nothing in `crafting.md`, so the skill full-reads it, says so, and its requirements enter the baseline as `TR-crafting-NNN` — a zero-match GDD is never treated as having no requirements
+2. Phase 0b lists ADR-0001 (Accepted) and ADR-0002 (Proposed) with their domains
 3. Phase 5 shows the ADR quality table and the traceability table, marking `TR-combat-002` as `❌ GAP`, with a covered/gap count
 4. The gap is listed under Required New ADRs, grouped by layer with Foundation first, as `/architecture-decision [title] → covers: TR-combat-002`
 5. Phase 8's "Gate-Check Readiness" lists ADR-0002 under "Accept ADRs" and the unwritten ADRs under "Write ADRs"
@@ -245,7 +240,7 @@ skipped — Solo mode."
 **Input:** (a) `/create-architecture` (b) `/create-architecture layers`
 
 **Expected behavior:**
-1. (a) Phase 0e finds the document, reads its Document Status and headings, and asks "An architecture document already exists (v2, [last updated]). What should this run do?" with `[A] Update chosen sections in place` / `[B] Rewrite the whole document — replaces the existing file` / `[C] Stop`
+1. (a) Phase 0c finds the document, reads its Document Status and headings, and asks "An architecture document already exists (v2, [last updated]). What should this run do?" with `[A] Update chosen sections in place` / `[B] Rewrite the whole document — replaces the existing file` / `[C] Stop`
 2. (a) Only Phase 3 (Data Flow) is authored; the output says which phases were skipped
 3. (a) Phase 7's ask names the Data Flow section and the change from v2 to v3; on yes, only `## Data Flow` is replaced, with `Edit`, and `Version` becomes 3
 4. (a) Every other section of the document is unchanged, and the handoff names v3
@@ -261,7 +256,7 @@ skipped — Solo mode."
 
 ## Protocol Compliance
 
-- [ ] Stops before authoring when the engine is missing, or on a `standard`/`full` project when the systems index or game concept is missing; at `minimal` it proceeds from `design/game-brief.md` and stops only when that is absent too
+- [ ] Stops before authoring on a `standard`/`full` project when the systems index or game concept is missing; at `minimal` it proceeds from `design/game-brief.md` and stops only when that is absent too
 - [ ] Every section is shown in full before its approval is asked
 - [ ] Write approvals use `question` with labeled options, not plain-text asks
 - [ ] Follows one consistent write model for `docs/architecture/architecture.md`, and never replaces an existing one without the user choosing to
@@ -276,8 +271,7 @@ skipped — Solo mode."
 - Of the focus-area arguments, only `layers` with no existing document is
   fixture-tested (Case 6 b). A focus-area run against an existing document
   follows Case 6 (a)'s update path but is not tested on its own.
-- The "no engine configured" stop is asserted structurally only.
 - `workflow: standard` (a system layer map and the critical ADR list only) is
-  not fixture-tested past Phase 0b; Case 4 exercises only its stop branches.
+  not fixture-tested past Phase 0a; Case 4 exercises only its stop branches.
 - `docs.density` depth variations and `guided` / `autonomous` automation modes
   are not tested.

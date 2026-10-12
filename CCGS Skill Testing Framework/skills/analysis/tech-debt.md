@@ -4,8 +4,9 @@
 
 `/tech-debt` tracks technical debt through four subcommands: `scan`, `add`,
 `prioritize` and `report`. With no subcommand it prints usage and stops with
-Verdict FAIL. `scan` searches the code root (resolved per engine: `src/`,
-`Assets/` or `Source/`) for `TODO`, `FIXME`, `HACK` and `@deprecated` markers,
+Verdict FAIL. `scan` searches the code root (resolved per
+`.opencode/docs/code-root-resolution.md`) for `TODO`, `FIXME`, `HACK` and
+`@deprecated` markers,
 duplicated blocks, files over 500 lines and functions over 50 lines, sorts the
 findings into six debt categories, states how many files it covered, and asks
 "May I write these findings to `docs/tech-debt-register.md`?" before appending
@@ -48,21 +49,21 @@ invoked.
 ### Case 1: Happy Path — Scan appends new findings to an existing register
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`; `modes.automation` unset (collaborative)
+- `modes.automation` unset (collaborative)
 - `docs/tech-debt-register.md` is in the skill's Debt Register Format and has 2 `Open` rows:
-  - TD-001 — Code Quality, Files `src/core/save_system.gd`: a `# HACK` workaround for a save-path bug. That `HACK` comment is no longer in the file
-  - TD-002 — Code Quality, Files `src/gameplay/combat.gd`: the `# TODO` comments in that file
-- `src/gameplay/combat.gd` has 2 `# TODO` comments and 1 `# FIXME` comment
-- `src/ui/hud.gd` is 620 lines long; 12 source files in `src/` in total
+  - TD-001 — Code Quality, Files `src/core/save_system.ts`: a `HACK` workaround for a save-path bug. That `HACK` comment is no longer in the file
+  - TD-002 — Code Quality, Files `src/gameplay/combat.ts`: the `TODO` comments in that file
+- `src/gameplay/combat.ts` has 2 `TODO` comments and 1 `FIXME` comment
+- `src/ui/hud.ts` is 620 lines long; 12 source files in `src/` in total
 
 **Input:** `/tech-debt scan`
 
 **Expected behavior:**
 1. Skill resolves the code root to `src/` and scans it for debt indicators
-2. Findings include the 2 TODOs, the FIXME (treated as a bug disguised as debt) and `hud.gd` as a file over 500 lines
+2. Findings include the 2 TODOs, the FIXME (treated as a bug disguised as debt) and `hud.ts` as a file over 500 lines
 3. Each finding is sorted into one of the six categories (Architecture, Code Quality, Test, Documentation, Dependency, Performance)
 4. The output states the denominator — 12 source files scanned
-5. Matching against the register: the 2 TODOs share TD-002's file and kind, so they update TD-002; TD-001's `HACK` is gone, so TD-001 is proposed as `Resolved [date]`; the FIXME and `hud.gd` become new rows TD-003 and TD-004
+5. Matching against the register: the 2 TODOs share TD-002's file and kind, so they update TD-002; TD-001's `HACK` is gone, so TD-001 is proposed as `Resolved [date]`; the FIXME and `hud.ts` become new rows TD-003 and TD-004
 6. Skill presents the findings and the TD-001 resolution, then asks "May I write these findings to `docs/tech-debt-register.md`?" — one approval covers both
 7. On approval, TD-001's Status becomes `Resolved YYYY-MM-DD` and the row stays; TD-002 is updated; TD-003 and TD-004 are appended with all ten columns, Status `Open`, `Added` set to today (`YYYY-MM-DD`) and Priority `—`
 8. Verdict: **COMPLETE** — scan findings written to register
@@ -103,7 +104,6 @@ invoked.
 ### Case 3: Empty Code Root — NOT ASSESSED, not a clean scan
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`
 - `src/` exists but contains no source files
 - `docs/tech-debt-register.md` exists with 3 entries
 
@@ -125,8 +125,7 @@ invoked.
 ### Case 3b: Code Root Unresolved — NOT ASSESSED, nothing scanned on a guess
 
 **Fixture:**
-- `project.yaml` has no `engine.name`; `.opencode/docs/technical-preferences.md` reads `[TO BE CONFIGURED]`
-- Both `src/` and `Source/` exist and hold source files, so the tree does not decide the root
+- `src/` does not exist, so the code root is unresolved per `.opencode/docs/code-root-resolution.md`
 - `docs/tech-debt-register.md` exists with 3 entries
 
 **Input:** `/tech-debt scan`
@@ -134,7 +133,7 @@ invoked.
 **Expected behavior:**
 1. The code root cannot be resolved per `.opencode/docs/code-root-resolution.md`
 2. Skill reports `NOT ASSESSED — code root unresolved` and stops
-3. Neither directory is scanned on a guess; no "May I write" prompt, no register write, no COMPLETE verdict
+3. Nothing is scanned on a guess; no "May I write" prompt, no register write, no COMPLETE verdict
 
 **Assertions:**
 - [ ] Verdict is `NOT ASSESSED — code root unresolved`
@@ -242,7 +241,7 @@ invoked.
 ## Protocol Compliance
 
 - [ ] Requires a subcommand; without one prints usage and stops with FAIL
-- [ ] `scan` resolves the code root per engine (`src/`, `Assets/`, `Source/`) and states the number of files covered
+- [ ] `scan` resolves the code root per `.opencode/docs/code-root-resolution.md` and states the number of files covered
 - [ ] A zero-file or unresolved-root scan is NOT ASSESSED and writes nothing
 - [ ] Every register write is preceded by a "May I write" / "May I append" prompt naming `docs/tech-debt-register.md`, after the content is shown
 - [ ] `scan` appends and never overwrites existing entries; a finding matching an `Open` row updates it, and an `Open` row whose pattern is gone is proposed `Resolved [date]`, never deleted
@@ -259,5 +258,3 @@ invoked.
   added and resolved counts from each row's `Added` and `Resolved` dates,
   flagging items older than 3 sprints, Verdict COMPLETE — debt report generated)
   is not tested here.
-- Unity and Unreal scans differ only in the resolved root (`Assets/`,
-  `Source/`) and are not tested separately.

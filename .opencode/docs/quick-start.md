@@ -5,24 +5,21 @@
 This is a complete OpenCode agent architecture for game development. It
 organizes 49 specialized AI agents into a studio hierarchy that mirrors
 real game development teams, with defined responsibilities, delegation
-rules, and coordination protocols. It includes engine-specialist agents
-for Godot, Unity, and Unreal — each with dedicated sub-specialists for
-major engine subsystems. All design agents and templates are grounded in
+rules, and coordination protocols. All design agents and templates are grounded in
 established game design theory (MDA Framework, Self-Determination Theory,
-Flow State, Bartle Player Types). Use whichever engine set matches your project.
+Flow State, Bartle Player Types).
 
 ## The Default Path: Rigor Minimal
 
 `modes.rigor` defaults to `minimal` (`/start` asks; `/settings` changes it any
-time). At `minimal` the path to code is four steps:
+time). At `minimal` the path to code is three steps:
 
-1. `/setup-engine` -- configure the engine
-2. `/brainstorm` -- writes the one-page `design/game-brief.md`, in place of the
+1. `/brainstorm` -- writes the one-page `design/game-brief.md`, in place of the
    concept doc, systems decomposition and per-system GDDs
-3. `/create-stories` -- turns the brief's MVP list into stories under
+2. `/create-stories` -- turns the brief's MVP list into stories under
    `production/epics/<slug>/`; the brief's build order is the plan, so there is
    no `/create-epics` or `/sprint-plan`
-4. `/dev-story` then `/story-done`, story by story -- `/story-done` names the
+3. `/dev-story` then `/story-done`, story by story -- `/story-done` names the
    next story, and `/help` knows this route
 
 Nothing at `minimal` runs `/gate-check`, so `project.stage` stays at Concept.
@@ -79,21 +76,6 @@ Ask yourself: "What department would handle this in a real studio?"
 | Test a mechanic idea quickly | `prototyper` |
 | Review code for security issues | `security-engineer` |
 | Check accessibility compliance | `accessibility-specialist` |
-| Get Unreal Engine advice | `unreal-specialist` |
-| Get Unity advice | `unity-specialist` |
-| Get Godot advice | `godot-specialist` |
-| Design GAS abilities/effects | `ue-gas-specialist` |
-| Define BP/C++ boundaries | `ue-blueprint-specialist` |
-| Implement UE replication | `ue-replication-specialist` |
-| Build UMG/CommonUI widgets | `ue-umg-specialist` |
-| Design DOTS/ECS architecture | `unity-dots-specialist` |
-| Write Unity shaders/VFX | `unity-shader-specialist` |
-| Manage Addressable assets | `unity-addressables-specialist` |
-| Build UI Toolkit/UGUI screens | `unity-ui-specialist` |
-| Write idiomatic GDScript | `godot-gdscript-specialist` |
-| Write Godot C# code | `godot-csharp-specialist` |
-| Create Godot shaders | `godot-shader-specialist` |
-| Build GDExtension modules | `godot-gdextension-specialist` |
 | Plan live events and seasons | `live-ops-designer` |
 | Write patch notes for players | `community-manager` |
 | Brainstorm a new game idea | Use `/brainstorm` skill |
@@ -105,7 +87,6 @@ Ask yourself: "What department would handle this in a real studio?"
 | `/start` | First-time onboarding — asks where you are, guides you to the right workflow |
 | `/help` | Context-aware "what do I do next?" — reads your current phase and artifacts |
 | `/project-stage-detect` | Analyze project state, detect stage, identify gaps |
-| `/setup-engine` | Configure engine + version, populate reference docs |
 | `/adopt` | Brownfield audit and migration plan for existing projects |
 | `/brainstorm` | Guided game concept ideation from scratch |
 | `/map-systems` | Decompose concept into systems, map dependencies, guide per-system GDDs |
@@ -169,8 +150,7 @@ Ask yourself: "What department would handle this in a real studio?"
 | `/smoke-check` | Run critical path smoke test gate before QA hand-off (PASS/FAIL) |
 | `/soak-test` | Generate a soak test protocol for extended play sessions |
 | `/regression-suite` | Map coverage to GDD critical paths, flag gaps, maintain regression suite |
-| `/test-setup` | Scaffold test framework + CI pipeline for the project's engine (run once) |
-| `/test-helpers` | Generate engine-specific test helper libraries and factory functions |
+| `/test-setup` | Scaffold test framework + CI pipeline (run once) |
 | `/test-flakiness` | Detect flaky tests from CI history, flag for quarantine or fix |
 | `/test-evidence-review` | Quality review of test files and manual evidence — ADEQUATE/INCOMPLETE/MISSING |
 | `/skill-test` | Validate skill files for compliance and correctness (static / spec / audit) |
@@ -229,7 +209,7 @@ Templates are in `.opencode/docs/templates/`:
 ## First Steps for a New Project
 
 **Don't know where to begin?** Run `/start`. It asks where you are and routes
-you to the right workflow. No assumptions about your game, engine, or experience level.
+you to the right workflow. No assumptions about your game or experience level.
 
 The paths below walk the `standard`/`full` pipeline. At `rigor: minimal` (the
 default), follow [The Default Path](#the-default-path-rigor-minimal) instead.
@@ -241,45 +221,28 @@ If you already know what you need, jump directly to the relevant path:
 1. **Run `/start`** (or `/brainstorm open`) — guided creative exploration:
    what excites you, what you've played, your constraints
    - Generates 3 concepts, helps you pick one, defines core loop and pillars
-   - Produces a game concept document and recommends an engine
-2. **Set up the engine** — Run `/setup-engine` (uses the brainstorm recommendation)
-   - Configures AGENTS.md, detects knowledge gaps, populates reference docs
-   - Writes engine, naming conventions, and performance budgets to `project.yaml`
-     (the source of truth), mirrored to `.opencode/docs/technical-preferences.md`
-   - If the engine version is newer than the LLM's training data, it fetches
-     current docs from the web so agents suggest correct APIs
-3. **Validate the concept** — Run `/design-review design/gdd/game-concept.md`
+   - Produces a game concept document
+2. **Validate the concept** — Run `/design-review design/gdd/game-concept.md`
    (or `design/game-brief.md`, if `/brainstorm` wrote the one-page brief)
-4. **Prototype the mechanic** — Run `/prototype [core-mechanic]` (1–3 days) to
+3. **Prototype the mechanic** — Run `/prototype [core-mechanic]` (1–3 days) to
    test that the core idea is fun before you write GDDs
-5. **Decompose into systems** — Run `/map-systems` to map all systems and dependencies
-6. **Design each system** — Run `/design-system [system-name]` (or `/map-systems next`)
+4. **Decompose into systems** — Run `/map-systems` to map all systems and dependencies
+5. **Design each system** — Run `/design-system [system-name]` (or `/map-systems next`)
    to write GDDs in dependency order, informed by the prototype findings
-7. **Plan the first sprint** — After architecture and `/vertical-slice`, run `/sprint-plan new`
-8. Start building
+6. **Plan the first sprint** — After architecture and `/vertical-slice`, run `/sprint-plan new`
+7. Start building
 
 ### Path B: "I know what I want to build"
 
-If you already have a game concept and engine choice:
+If you already have a game concept:
 
-1. **Set up the engine** — Run `/setup-engine [engine] [version]`
-   (e.g., `/setup-engine godot 4.6`) — also creates technical preferences
-2. **Write the Game Pillars** — delegate to `creative-director`
-3. **Decompose into systems** — Run `/map-systems` to enumerate systems and dependencies
-4. **Design each system** — Run `/design-system [system-name]` for GDDs in dependency order
-5. **Create the initial ADR** — Run `/architecture-decision`
-6. **Create the first milestone** in `production/milestones/`
-7. **Plan the first sprint** — Run `/sprint-plan new`
-8. Start building
-
-### Path C: "I know the game but not the engine"
-
-If you have a concept but don't know which engine fits:
-
-1. **Run `/setup-engine`** with no arguments — it will ask about your game's
-   needs (2D/3D, platforms, team size, language preferences) and recommend
-   an engine based on your answers
-2. Follow Path B from step 2 onward
+1. **Write the Game Pillars** — delegate to `creative-director`
+2. **Decompose into systems** — Run `/map-systems` to enumerate systems and dependencies
+3. **Design each system** — Run `/design-system [system-name]` for GDDs in dependency order
+4. **Create the initial ADR** — Run `/architecture-decision`
+5. **Create the first milestone** in `production/milestones/`
+6. **Plan the first sprint** — Run `/sprint-plan new`
+7. Start building
 
 ### Path D: "I have an existing project"
 
@@ -290,15 +253,14 @@ If you have design docs, prototypes, or code already:
 2. **Run `/adopt`** if you have existing GDDs, ADRs, or stories — audits
    internal format compliance and builds a numbered migration plan to fill gaps
    without overwriting your existing work
-3. **Configure engine if needed** — Run `/setup-engine` if not yet configured
-4. **Validate phase readiness** — Run `/gate-check` to see where you stand
-5. **Plan the next sprint** — Run `/sprint-plan new`
+3. **Validate phase readiness** — Run `/gate-check` to see where you stand
+4. **Plan the next sprint** — Run `/sprint-plan new`
 
 ## File Structure Reference
 
 ```
 AGENTS.md                          -- Master config (read this first)
-project.yaml                       -- Machine-readable project config (engine, modes, stage) — source of truth
+project.yaml                       -- Machine-readable project config (modes, stage) — source of truth
 opencode.jsonc                     -- OpenCode configuration: permission rules
 .opencode/
   plugins/ccgs.ts                  -- The hook wiring: scripts, rules injection, session injection

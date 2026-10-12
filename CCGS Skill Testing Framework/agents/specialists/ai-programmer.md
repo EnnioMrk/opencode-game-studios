@@ -2,7 +2,7 @@
 
 ## Agent Summary
 Domain: NPC behavior, state machines, pathfinding, perception systems, and AI decision-making.
-Does NOT own: player mechanics (gameplay-programmer), rendering or engine internals (engine-programmer), enemy behavior design (game-designer), navmesh authoring tools (tools-programmer).
+Does NOT own: player mechanics (gameplay-programmer), rendering or core systems (engine-programmer), enemy behavior design (game-designer), navmesh authoring tools (tools-programmer).
 No gate IDs assigned.
 
 ---
@@ -12,7 +12,7 @@ No gate IDs assigned.
 - [ ] `description:` field is present and domain-specific (references NPC behavior / AI systems)
 - [ ] Toolset (ported to `permissions:` — see PORTING.md): includes Read, Write, Edit, Bash, Glob, Grep
 - [ ] Model tier is `inherit` — recorded in `PORTING.md` (OpenCode agents inherit the session model unless `model:` is pinned; tiers: `.opencode/docs/model-tiers.md`)
-- [ ] Agent definition does not claim authority over player mechanics or engine rendering
+- [ ] Agent definition does not claim authority over player mechanics or rendering systems
 
 ---
 
@@ -49,7 +49,7 @@ No gate IDs assigned.
 - Treats the heap as its own work: "Implement and optimize pathfinding" is its Key Responsibility, and the priority queue is part of the pathfinding code — it does not hand the heap to engine-programmer
 - Proposes the heap (interface, expected operations and their cost) and asks before writing it
 - Keeps the pathfinding update inside its 2ms-per-frame AI budget
-- Involves `engine-programmer` only if the fix needs a change to a core engine system (its "must not" line), not for the heap itself
+- Involves `engine-programmer` only if the fix needs a change to a core system (its "must not" line), not for the heap itself
 
 ### Case 5: Context pass — implements from the level layout and encounter spec
 **Input:** Provided in context: a level layout document (from level-designer) marking patrol waypoints A–D and two choke points — a doorway at (12, 0) and a bridge at (40, 5) — and an encounter spec (from game-designer) stating "When alerted, guards fall back to the nearest choke point and hold it." Request: "Implement the patrol and alert response for this level's guards."
@@ -64,10 +64,10 @@ No gate IDs assigned.
 ## Protocol Compliance
 
 - [ ] Stays within declared domain (NPC behavior, pathfinding, perception, state machines)
-- [ ] Redirects out-of-domain requests to correct agent (tools-programmer for navmesh authoring tools, engine-programmer for core engine systems, game-designer for enemy behavior design)
+- [ ] Redirects out-of-domain requests to correct agent (tools-programmer for navmesh authoring tools, engine-programmer for core systems, game-designer for enemy behavior design)
 - [ ] Returns structured findings (behavior tree specs, state machine diagrams, code scaffolds)
 - [ ] Does not modify player mechanics files without explicit delegation
-- [ ] Does its own pathfinding performance work, data structures included, and involves engine-programmer only for changes to core engine systems
+- [ ] Does its own pathfinding performance work, data structures included, and involves engine-programmer only for changes to core systems
 - [ ] Uses data-driven NPC configuration (waypoints, detection radii) not hardcoded values
 - [ ] Asks "May I write this to [filepath]?" naming the file before writing
 
@@ -76,4 +76,4 @@ No gate IDs assigned.
 ## Coverage Notes
 - Behavior tree output (Case 1) should be validated by a unit test in `tests/unit/ai/`
 - Level-layout context (Case 5) verifies the agent implements the provided documents rather than inventing geometry or designing enemy behavior itself
-- Pathfinding performance (Case 4) confirms the agent keeps work its Key Responsibilities assign it, and involves engine-programmer only for core engine changes
+- Pathfinding performance (Case 4) confirms the agent keeps work its Key Responsibilities assign it, and involves engine-programmer only for core-system changes

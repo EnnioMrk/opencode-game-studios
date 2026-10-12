@@ -469,7 +469,6 @@ team.size::individual|small|studio
 performance.enforce::warn|block|off
 platform.cert_tier::none|itch|steam|console
 accessibility.target::none|standard|aaa
-engine.name::Godot|Unity|Unreal
 project.stage::Concept|Systems Design|Technical Setup|Pre-Production|Production|Polish|Release
 testing.strict.logic::true|false
 testing.strict.integration::true|false
@@ -1187,82 +1186,33 @@ resolve_setting() {
   printf '%s\t%s' "$val" "$src"
 }
 
-# Resolve the ENGINE-SPECIFIC code root.
+# Resolve the project's code root.
 #   prints: "<dir>\t<source>"
-#   source: engine.name | <legacy path> | detected | unset
+#   source: detected | unset
 #   exit:   always 0
 #
-# WHY THIS EXISTS. `.opencode/docs/directory-structure.md` is explicit that the
-# code root is not a style preference but a hard toolchain constraint: Unity
-# compiles only `Assets/` and `Packages/`, and UnrealBuildTool discovers modules
-# under `Source/`. `src/` is that table's GODOT row, not a universal path.
-#
-# Every hook that filtered staged or on-disk files with a literal `^src/`
-# therefore matched NOTHING on a Unity or Unreal project — and matching nothing
-# is indistinguishable from scanning cleanly. That is the exact row
-# `.opencode/rules/skill-authoring.md` records for `/security-audit`
-# ("Godot-only greps returned zero hits on Unity/Unreal, and zero hits read as
-# clean"), reproduced in four more places.
+# WHY THIS EXISTS. Every hook that filtered staged or on-disk files with a
+# literal `^src/` matched NOTHING on a project whose code lives elsewhere — and
+# matching nothing is indistinguishable from scanning cleanly. That is the exact
+# row `.opencode/rules/skill-authoring.md` records ("greps returned zero hits
+# ... and zero hits read as clean"), reproduced in several places.
 #
 # UNSET DOES NOT DEFAULT TO `src`. Obligation 2 of skill-authoring.md: an absent
-# value may not default to the permissive one. Defaulting here would re-create
-# the Godot bias this function exists to remove, and would do it invisibly. An
-# unresolvable root returns empty, and the CALLER must announce that its check
-# did not run — see the `_no_code_root` reporting in validate-commit.sh.
+# value may not default to the permissive one. Defaulting would answer a check
+# with a guess, invisibly. An unresolvable root returns empty, and the CALLER
+# must announce that its check did not run — see the SKIPPED reporting in
+# validate-commit.sh.
 #
-# Step 3 (detect) is derivation, not enumeration (obligation 5): it believes the
-# tree over the absence of config, but only when the tree is UNAMBIGUOUS. Two
-# roots present means a genuinely undecidable project, and guessing there would
-# scan half of it and report a pass.
+# Detection is derivation, not enumeration (obligation 5): it believes the tree.
+# `src/` is this project's code root; a tree without it is reported as
+# unresolved rather than guessed at.
 resolve_code_root() {
   _yaml_helper_set_root
-  local ename="" src="" root="" legacy="" found="" d n=0
-
-  # 1. The configured engine, through the normal chain.
-  if [ -f "$_YH_ROOT/project.local.yaml" ]; then
-    ename=$(get_yaml_key "$_YH_ROOT/project.local.yaml" engine.name 2>/dev/null)
-    [ -n "$ename" ] && src="project.local.yaml"
+  local src="" root=""
+  if [ -d "$_YH_ROOT/src" ]; then
+    root="src"
+    src="detected"
   fi
-  if [ -z "$ename" ] && [ -f "$_YH_ROOT/project.yaml" ]; then
-    ename=$(get_yaml_key "$_YH_ROOT/project.yaml" engine.name 2>/dev/null)
-    [ -n "$ename" ] && src="engine.name"
-  fi
-
-  # 2. The legacy mirror. `/setup-engine` wrote an `Engine:` line here before
-  #    project.yaml existed, and workflow-catalog's `engine-setup` step still
-  #    accepts it as an `any_of` alternative — so a v1.0 project that never
-  #    migrated resolves rather than falling through to "unset".
-  legacy="$_YH_ROOT/.opencode/docs/technical-preferences.md"
-  if [ -z "$ename" ] && [ -f "$legacy" ]; then
-    ename=$(grep -iE '^[[:space:]]*[-*]?[[:space:]]*\*{0,2}Engine\*{0,2}[[:space:]]*:' "$legacy" 2>/dev/null \
-            | head -1 | sed 's/.*://' | tr -d '\r' \
-            | sed 's/^[[:space:]]*//; s/[[:space:]].*$//; s/\*//g')
-    case "$ename" in
-      *"[TO BE CONFIGURED]"*|"["*) ename="" ;;
-    esac
-    [ -n "$ename" ] && src=".opencode/docs/technical-preferences.md"
-  fi
-
-  case "$(printf '%s' "$ename" | tr '[:upper:]' '[:lower:]')" in
-    godot)   root="src" ;;
-    unity)   root="Assets" ;;
-    unreal*) root="Source" ;;
-    *)       root="" ;;
-  esac
-
-  # 3. No usable engine value — believe the tree, but only if it is unambiguous.
-  #    Names are compared exactly, against the directory listing: `[ -d Assets ]`
-  #    is also true for Godot's own `assets/` on a case-insensitive filesystem
-  #    (Windows, default macOS), which made src/ + assets/ "ambiguous" and a lone
-  #    assets/ a Unity project.
-  if [ -z "$root" ]; then
-    for d in "$_YH_ROOT"/*/; do
-      d="${d%/}"; d="${d##*/}"
-      case "$d" in src|Assets|Source) found="$d"; n=$((n + 1)) ;; esac
-    done
-    if [ "$n" = 1 ]; then root="$found"; src="detected"; else root=""; src=""; fi
-  fi
-
   [ -z "$src" ] && src="unset"
   printf '%s\t%s' "$root" "$src"
 }
@@ -1345,7 +1295,7 @@ PYEOF
 # knobs; a block of just those knobs is the saving.
 # Valid key names are the output labels: rigor, review_mode, automation, workflow,
 # docs.density, story_granularity, qa.level, team.size, project.stage,
-# automation_always_ask, engine, testing.strict, system_overrides.
+# automation_always_ask, testing.strict, system_overrides.
 resolve_config() {
   _yaml_helper_set_root
   local want=""
@@ -1364,7 +1314,7 @@ resolve_config() {
     # An EMPTY project.yaml resolves to defaults; unannounced it is
     # indistinguishable from a healthy fully-defaulted project. Absence is
     # announced one line above; emptiness is the more suspicious state of the two
-    # (a truncated write, an interrupted /setup-engine) and was the silent one.
+    # (a truncated write, an interrupted /start) and was the silent one.
     notes="${notes:+$notes; }project.yaml is EMPTY — defaults in use; if you configured this project, the file did not survive"
   fi
   local orphan
@@ -1443,20 +1393,6 @@ resolve_config() {
       echo "automation_always_ask: $(_rc_join "$aaa") (configured)"
     else
       echo "automation_always_ask: $(_rc_join "$_yaml_helper_always_ask_default") (default)"
-    fi
-  fi
-
-  # engine: project.yaml only. No markdown reader is built here — skills keep
-  # their existing technical-preferences.md fallback prose, and forbidden
-  # patterns / allowed libraries never migrate at all.
-  local ename eversion
-  if _rc_want engine; then
-    ename=$(get_yaml_key "$_YH_ROOT/project.yaml" engine.name 2>/dev/null)
-    eversion=$(get_yaml_key "$_YH_ROOT/project.yaml" engine.version 2>/dev/null)
-    if [ -n "$ename" ]; then
-      echo "engine: $ename${eversion:+ $eversion} (project.yaml)"
-    else
-      echo "engine: unset (fall back to .opencode/docs/technical-preferences.md)"
     fi
   fi
 

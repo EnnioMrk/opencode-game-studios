@@ -173,7 +173,7 @@ legitimate; storing it *silently* is the defect.
    > paths are.
 
 6. **Print**, grouped by top-level section (`framework`, `modes`,
-   `engine`, etc.) in the order leaves first appeared. The grouping is
+   `docs`, `qa`, etc.) in the order leaves first appeared. The grouping is
    determined by the dotted path, not by which file the leaf came from
    — e.g. `modes.automation` groups under `modes:` even if only
    `project.local.yaml` defines it. Within each section, indent leaves
@@ -204,10 +204,6 @@ docs:
 qa:
   level: full               (derived from rigor: full, locked)
 
-engine:
-  name: Godot               (project.yaml, locked)
-  version: 4.6              (project.yaml, locked)
-
 testing:
   strict:
     logic: false            (LOCAL OVERRIDE — yaml has: true)
@@ -235,7 +231,7 @@ config block:
 ```
 Schema validation: ERRORS
   [project.yaml] modes.review_mode: 'chaotic' is not a valid value (expected: full|lean|solo)
-  [project.local.yaml] engine.name: 'Pygame' is not a valid value (expected: Godot|Unity|Unreal)
+  [project.local.yaml] platform.cert_tier: 'playstation' is not a valid value (expected: none|itch|steam|console)
 ```
 
 ## Phase 3: View-one Mode

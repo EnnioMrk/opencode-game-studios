@@ -64,8 +64,8 @@ Producer, Release Manager) is checklist text for humans, coordinated later via
 ### Case 1: Happy Path — Steam project, clean scans, every section confirmed, READY
 
 **Fixture:**
-- `project.yaml`: `project.stage: Release`, `modes.rigor: standard`, `platform.cert_tier: steam`,
-  engine Godot (code root `src/`); a single-player game with no servers
+- `project.yaml`: `project.stage: Release`, `modes.rigor: standard`, `platform.cert_tier: steam`;
+  code root `src/`; a single-player game with no servers
 - `src/` has 40 source files with no TODO/FIXME/HACK, no debug output, no placeholder or hardcoded dev values
 - `assets/` exists with final assets
 - `production/releases/` does not exist yet
@@ -157,7 +157,7 @@ Producer, Release Manager) is checklist text for humans, coordinated later via
 ### Case 4: Nothing to Scan — `[?]` items, not green ticks
 
 **Fixture:**
-- `project.yaml`: `project.stage: Release`, `platform.cert_tier: itch`, engine Godot
+- `project.yaml`: `project.stage: Release`, `platform.cert_tier: itch`
 - `src/` exists but is empty; no `assets/` directory
 
 **Input:** `/launch-checklist 2026-11-01`

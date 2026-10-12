@@ -22,7 +22,7 @@
 **Input**: "Prototype a card-drawing mechanic in 2 hours. The core question: does drawing 3 cards per turn with hand-size limit of 7 feel good? I need something to test in a playtest today."
 **Expected behavior**:
 - States the falsifiable hypothesis ("If the player draws 3 cards per turn with a hand limit of 7, they will feel [Y] — evidenced by [Z]") and the riskiest assumption before building
-- Recommends a prototype path with rationale — a card mechanic where timing precision is not the question points to the HTML or Paper path, not the Engine path
+- Recommends a prototype path with rationale — a card mechanic where timing precision is not the question points to the HTML or Paper path
 - Proposes scope in 3–5 bullets (deck, draw N, hand limit 7, a minimal state display) and gets confirmation before building
 - Output goes to `prototypes/card-draw-concept/` (e.g., a single self-contained `prototype.html` that opens by double-click, or `rules.md` + `play-log.md` on the Paper path); every code file starts with the `PROTOTYPE - NOT FOR PRODUCTION` header naming the question and date
 - Code prioritizes speed over correctness: no unit tests, no doc comments required, global state is acceptable; no menus or polish
@@ -57,16 +57,14 @@
 - Does NOT recommend persisting with the prototype mechanic because of sunk cost — the verdict is based on evidence, not effort invested
 - Does NOT mark the result as inconclusive — after 4 sessions with consistent negative responses, the evidence supports a decision
 
-### Case 5: Context pass — using the project's engine scripting language
-**Input context**: Project uses Godot 4.6 with GDScript (`engine.name` and `engine.language` in `project.yaml`); the user has chosen the Engine path.
+### Case 5: Context pass — using the project's prototype path
+**Input context**: Project is a Next.js + TypeScript app; the user has chosen the HTML path.
 **Input**: "Prototype a basic grid movement system — player clicks a tile and the character moves to it."
 **Expected behavior**:
-- Produces the prototype in GDScript — not Python, C#, or pseudocode
-- Uses Godot 4.6 node types appropriate for a grid: TileMapLayer (not TileMap, which `docs/engine-reference/godot/deprecated-apis.md` lists as deprecated since 4.3) or a custom grid manager node, CharacterBody2D or Node2D for the player
+- Produces a single self-contained `prototype.html` (all styles, logic and assets inline) that opens by double-clicking with no server required
 - Does NOT apply production coding standards (no required test coverage, no doc comments, global state acceptable)
 - Writes the output to `prototypes/grid-movement-concept/` not to `src/`
-- After writing, hands control back: asks the user to run the project and paste any errors or describe what they observe, rather than assuming it worked
-- If a Godot 4.6 API is uncertain, flags the specific API with a note to verify against the Godot 4.6 docs — `docs/engine-reference/godot/VERSION.md` reaches the agent through `AGENTS.md`'s import, and its Knowledge Gap Warning says to cross-reference that directory before suggesting Godot API calls
+- After writing, hands control back: asks the user to open the prototype and paste any errors or describe what they observe, rather than assuming it worked
 
 ---
 
@@ -76,13 +74,12 @@
 - [ ] Declines production implementation requests, stating production is written from scratch and pointing to the prototype's REPORT.md as the hand-off
 - [ ] Produces a structured REPORT.md with a PROCEED / PIVOT / KILL recommendation, backed by evidence, after prototype evaluation
 - [ ] Does not recommend preserving prototype code in production form without explicit warnings
-- [ ] Uses the project's configured engine and scripting language; flags version uncertainty, per the Knowledge Gap Warning in the `VERSION.md` that `AGENTS.md` imports
+- [ ] Uses the chosen prototype path's format — a single self-contained HTML file, or a rules document plus play log on the Paper path
 
 ---
 
 ## Coverage Notes
 - Case 2 (production redirect) is critical — prototype code leaking into src/ is a common quality problem
 - Case 4 (abandonment honesty) tests whether the agent avoids sunk-cost bias — prototypes that fail should be cleanly abandoned
-- Case 5 requires that `project.yaml` has `engine.name` and `engine.language` configured; test is incomplete if not configured. With neither `project.yaml` nor `.opencode/docs/technical-preferences.md` naming them, the expected output is a question about the engine and language, not a guess
 - The intentional relaxation of coding standards is a feature, not a gap — do not flag missing tests or doc comments as failures in prototype output
 - No automated runner; review manually or via `/skill-test`

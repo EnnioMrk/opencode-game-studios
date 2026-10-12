@@ -9,12 +9,13 @@ rest), and `accept <ADR-id>` (the only path that moves an ADR from `Proposed` to
 `Accepted`). When retrofit asks for a missing Status and the user answers
 `Accepted`, it writes `Proposed` and hands the ADR to acceptance mode.
 
-Normal authoring loads engine context first (`docs/engine-reference/[engine]/VERSION.md`,
-plus a knowledge-gap warning for MEDIUM/HIGH-risk domains), picks the next ADR
+Normal authoring records its context load first (Step 1:
+`NOT ASSESSED — no reference set for this stack`), picks the next ADR
 number, checks `docs/registry/architecture.yaml` for binding stances, then
 presents its assumptions as a confirm/adjust `question` (Status is always
 `Proposed` and is never asked). It then drafts the whole ADR from its template in
-one pass, has the primary engine specialist validate it (Step 5.5), runs the
+one pass, records the validation result (Step 5.5:
+`NOT ASSESSED — no specialist applies`), runs the
 TD-ADR gate in `full` review mode only (Step 5.6), runs a GDD sync check that
 always reports, and asks once — "May I write it?" — before writing
 `docs/architecture/adr-[NNNN]-[slug].md`. A separate approval covers the registry
@@ -33,9 +34,9 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 - [ ] Contains status/verdict keywords: `Proposed`, `Accepted`, and the TD-ADR outcomes `CONCERNS` / `REJECT`
 - [ ] Contains "May I write" collaborative protocol language (whole-ADR write approval and registry approval)
 - [ ] Has a next-step handoff at the end (`/architecture-review`, `accept ADR-NNNN`)
-- [ ] Documents gate behavior: engine specialist validation, then TD-ADR in full mode; TD-ADR skipped in lean/solo with a named note
+- [ ] Documents gate behavior: Step 5.5 validation, then TD-ADR in full mode; TD-ADR skipped in lean/solo with a named note
 - [ ] Documents that authoring always produces `Proposed` and only acceptance mode sets `Accepted` — retrofit's `Accepted` answer is routed through it
-- [ ] Mentions the engine version stamp from `docs/engine-reference/` (Engine Compatibility table)
+- [ ] Documents Step 1's context load as `NOT ASSESSED — no reference set for this stack`
 
 ---
 
@@ -44,18 +45,19 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 Review mode comes from the resolved `review_mode` (`modes.review_mode` in
 `project.yaml`); `--review full|lean|solo` overrides it for one run.
 
-In `full` mode: after the draft is generated, the primary engine specialist
-validates it (Step 5.5), then `technical-director` spawns with gate TD-ADR
-(Step 5.6). The two run in that order, not in parallel. On CONCERNS the
+In `full` mode: after the draft is generated, validation Step 5.5 records
+`NOT ASSESSED — no specialist applies`, then `technical-director` spawns with
+gate TD-ADR (Step 5.6). On CONCERNS the
 concerns are shown verbatim and the user picks `Revise flagged items` /
 `Accept and proceed` / `Discuss further`; on REJECT the draft is revised before
 the write approval. No verdict changes the ADR's Status.
 
 In `lean` mode: TD-ADR is skipped (it is not a PHASE-GATE). Output notes
-"TD-ADR skipped — Lean mode." The engine specialist validation still runs.
+"TD-ADR skipped — Lean mode." Validation Step 5.5 still records
+`NOT ASSESSED — no specialist applies`.
 
 In `solo` mode: TD-ADR is skipped. Output notes "TD-ADR skipped — Solo mode."
-The engine specialist validation still runs.
+Validation Step 5.5 still records `NOT ASSESSED — no specialist applies`.
 
 In every mode the written ADR has `Status: Proposed`.
 
@@ -66,22 +68,21 @@ In every mode the written ADR has `Status: Proposed`.
 ### Case 1: Happy Path — New rendering ADR, full mode, TD-ADR approves
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot` and `modes.review_mode: full`
-- `docs/engine-reference/godot/VERSION.md` exists and marks the pinned version HIGH risk; `breaking-changes.md` lists a Rendering change
+- `project.yaml` has `modes.review_mode: full`
 - `docs/architecture/` contains `adr-0001-*.md` and `adr-0002-*.md`; none covers rendering
 - `docs/registry/architecture.yaml` exists with no stance touching rendering
 - `design/gdd/visual-effects.md` exists; the user confirms it as the GDD driving the decision, and its names match the ADR's Key Interfaces
-- The engine specialist finds only minor notes; TD-ADR returns APPROVE
+- TD-ADR returns APPROVE
 
 **Input:** `/architecture-decision rendering-approach`
 
 **Expected behavior:**
-1. Step 1 reads `VERSION.md` first and displays the ENGINE KNOWLEDGE GAP WARNING for the Rendering domain
+1. Step 1 records its context load as `NOT ASSESSED — no reference set for this stack` before anything else
 2. Step 2 scans `docs/architecture/` and assigns ADR-0003
 3. Step 3a reads the registry before any existing ADR
 4. Step 4 presents assumptions (problem, 2–3 alternatives, GDD linkage, dependencies, `Status: Proposed`) as a confirm/adjust `question`; no ADR is generated until the user confirms
-5. Step 5 drafts the full template, including the Engine Compatibility table (engine, domain, knowledge risk, references consulted)
-6. `godot-specialist` validates the draft; minor notes go into the Risks section
+5. Step 5 drafts the full template
+6. Step 5.5 records `NOT ASSESSED — no specialist applies`
 7. `technical-director` then spawns with gate TD-ADR and returns APPROVE
 8. GDD sync check prints `GDD sync: checked 1 referenced GDD(s), no naming inconsistencies.` — never silent
 9. "ADR draft is complete. May I write it?" — on yes, writes `docs/architecture/adr-0003-rendering-approach.md` with `Status: Proposed`
@@ -89,9 +90,9 @@ In every mode the written ADR has `Status: Proposed`.
 11. Closing output includes the fixed notice to run `/architecture-review` in a fresh session, and "Run `/architecture-decision accept ADR-0003` when the decision is settled"
 
 **Assertions:**
-- [ ] `VERSION.md` is read before any other step, and the knowledge-gap warning is shown for the HIGH-risk domain
+- [ ] Step 1 records `NOT ASSESSED — no reference set for this stack` before any other step
 - [ ] Assumptions are confirmed via `question` before the ADR is generated; Status is shown as `Proposed`, never asked
-- [ ] The engine specialist validation runs before TD-ADR (sequential, not parallel)
+- [ ] Step 5.5 records `NOT ASSESSED — no specialist applies` before TD-ADR is spawned (sequential, not parallel)
 - [ ] One "May I write" approval covers the whole ADR; the file is `docs/architecture/adr-0003-rendering-approach.md`
 - [ ] The written ADR has `Status: Proposed` even though TD-ADR returned APPROVE
 - [ ] The GDD sync check reports the clean result for `visual-effects.md` in one line
@@ -109,7 +110,7 @@ In every mode the written ADR has `Status: Proposed`.
 **Input:** `/architecture-decision rendering-approach`
 
 **Expected behavior:**
-1. TD-ADR spawns with the draft, engine version, domain and related ADRs
+1. TD-ADR spawns with the draft, domain and related ADRs
 2. The CONCERNS are shown to the user verbatim with the standard options from `director-gates.md`: `Revise flagged items` / `Accept and proceed` / `Discuss further`
 3. The user picks `Revise flagged items`; only then are the Decision or Alternatives sections revised (Step 5.6)
 4. The unresolved point is presented as its own `question` with options from the review plus "Different approach — I'll describe it"
@@ -117,7 +118,7 @@ In every mode the written ADR has `Status: Proposed`.
 6. The ADR is written with `Status: Proposed`
 
 **Assertions:**
-- [ ] TD-ADR receives the ADR draft/path, engine version and domain as context
+- [ ] TD-ADR receives the ADR draft/path and domain as context
 - [ ] The CONCERNS are shown verbatim and the user chooses Revise / Accept / Discuss — the draft is not revised before that choice
 - [ ] Each unresolved decision is a separate `question` with a free-text escape option
 - [ ] The ADR is written only after the "May I write" approval, with `Status: Proposed`
@@ -127,28 +128,25 @@ In every mode the written ADR has `Status: Proposed`.
 ### Case 3: Lean and Solo Modes — TD-ADR skipped; checks that cannot run say so
 
 **Fixture:**
-- Scenario (a): `project.yaml` has `modes.review_mode: lean` and `engine.name: Godot`
-- Scenario (b): same project, invoked with `--review solo`
-- Scenario (c): invoked with `--review solo` on a project with no engine configured — `engine.name` unset and `.opencode/docs/technical-preferences.md` still `[TO BE CONFIGURED]`; at Step 1's prompt the user carries on without running `/setup-engine`
+- Scenario (a): `project.yaml` has `modes.review_mode: lean`
+- Scenario (b): the same project, invoked with `--review solo`
 - `design/gdd/` holds no GDD, so the ADR's GDD Requirements Addressed names none
 
-**Input:** (a) `/architecture-decision save-format` (b) and (c) `/architecture-decision save-format --review solo`
+**Input:** (a) `/architecture-decision save-format` (b) `/architecture-decision save-format --review solo`
 
 **Expected behavior:**
-1. (a) and (b): the engine specialist validation (Step 5.5) runs
+1. (a) and (b): validation Step 5.5 records `NOT ASSESSED — no specialist applies`
 2. (a) Output notes "TD-ADR skipped — Lean mode." and proceeds to the GDD sync check
-3. (b) and (c): Output notes "TD-ADR skipped — Solo mode." and proceeds to the GDD sync check
-4. (c) No engine specialist is spawned, and the output records `Engine validation: NOT ASSESSED — no engine configured (engine.name unset in project.yaml)`
-5. The GDD sync check prints `GDD sync: NOT ASSESSED — [the ADR names no GDDs]`, not the clean one-line result
-6. "May I write it?" is still asked before the file is written
-7. The ADR is written with `Status: Proposed`
+3. (b) Output notes "TD-ADR skipped — Solo mode." and proceeds to the GDD sync check
+4. The GDD sync check prints `GDD sync: NOT ASSESSED — [the ADR names no GDDs]`, not the clean one-line result
+5. "May I write it?" is still asked before the file is written
+6. The ADR is written with `Status: Proposed`
 
 **Assertions:**
 - [ ] `technical-director` is not spawned in lean or solo mode
 - [ ] The skip note names the gate and the mode ("TD-ADR skipped — Lean mode." / "— Solo mode.")
 - [ ] The `--review solo` argument overrides the resolved `review_mode` for the run
-- [ ] (a) and (b): the engine specialist validation still runs
-- [ ] (c) With no engine configured, the output says engine validation was NOT ASSESSED instead of passing silently
+- [ ] (a) and (b): Step 5.5 records `NOT ASSESSED — no specialist applies`
 - [ ] With no GDD named, the GDD sync check reports NOT ASSESSED, not a clean result
 - [ ] "May I write" is asked before the file is written, and Status is `Proposed`
 
@@ -208,7 +206,7 @@ In every mode the written ADR has `Status: Proposed`.
 ### Case 6: Retrofit — Missing Status answered `Accepted`
 
 **Fixture:**
-- `docs/architecture/adr-0004-input-mapping.md` exists with Context, Decision, Consequences, Engine Compatibility and GDD Requirements Addressed, but no `## Status` and no `## ADR Dependencies`
+- `docs/architecture/adr-0004-input-mapping.md` exists with Context, Decision, Consequences and GDD Requirements Addressed, but no `## Status` and no `## ADR Dependencies`
 - ADR-0001 is `Accepted`
 - One file under `production/epics/*/story-*.md` names `ADR-0004` and has `> **Status**: Blocked`
 
@@ -231,14 +229,14 @@ In every mode the written ADR has `Status: Proposed`.
 
 ## Protocol Compliance
 
-- [ ] Engine context (`VERSION.md`) is loaded first and stamped into the Engine Compatibility table
+- [ ] Step 1 records `NOT ASSESSED — no reference set for this stack` before any other step
 - [ ] Assumptions are confirmed via `question` before the ADR is generated
 - [ ] "May I write" is asked once for the whole ADR before writing; the registry update has its own approval
 - [ ] TD-ADR runs only in full mode; lean/solo print a skip note naming the gate and mode
 - [ ] TD-ADR CONCERNS are shown verbatim with `Revise flagged items` / `Accept and proceed` / `Discuss further`, never revised without the user's choice
 - [ ] A TD-ADR `NOT ASSESSED` answer names the missing input and is never presented as an approval
 - [ ] Authoring always writes `Status: Proposed`; `Accepted` is set only by acceptance mode after its dependency check and explicit user confirmation — directly through `accept`, or when retrofit hands it an `Accepted` answer
-- [ ] Engine validation and the GDD sync check each report `NOT ASSESSED` when they cannot run, never a silent pass
+- [ ] The Step 5.5 validation and the GDD sync check each report `NOT ASSESSED` when they cannot run, never a silent pass
 - [ ] Authoring does not unblock stories; it lists the stories still waiting on the ADR
 - [ ] Ends with next-step handoff: `/architecture-review` in a fresh session, and `/architecture-decision accept ADR-NNNN`
 
@@ -248,7 +246,7 @@ In every mode the written ADR has `Status: Proposed`.
 
 - Retrofit is fixture-tested only for a missing Status answered `Accepted`
   (Case 6); the other answers (`Proposed`, `Deprecated`, `Superseded`) and the
-  retrofit of Engine Compatibility and GDD Requirements Addressed are not.
+  retrofit of GDD Requirements Addressed are not.
 - The acceptance-mode refusals for a missing `## Status`, an absent or `UNKNOWN`
   dependency section, and an already-Accepted or Superseded ADR are not
   individually fixture-tested.

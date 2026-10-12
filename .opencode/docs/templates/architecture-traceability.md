@@ -6,7 +6,6 @@
 ## Document Status
 
 - **Last Updated**: [YYYY-MM-DD]
-- **Engine**: [e.g. Godot 4.6]
 - **GDDs Indexed**: [N]
 - **ADRs Indexed**: [M]
 - **Last Review**: [link to docs/architecture/architecture-review-[date].md]
@@ -26,7 +25,7 @@
 
 <!-- One row per technical requirement extracted from a GDD.
      A "technical requirement" is any GDD statement that implies a specific
-     architectural decision: data structures, performance constraints, engine
+     architectural decision: data structures, performance constraints, platform
      capabilities needed, cross-system communication, state persistence. -->
 
 | Req ID | GDD | System | Requirement Summary | ADR(s) | Status | Notes |
@@ -68,9 +67,9 @@ Requirements with no ADR coverage, prioritised by layer (Foundation first):
 
 <!-- For each ADR, which GDD requirements does it address? -->
 
-| ADR | Title | GDD Requirements Addressed | Engine Risk |
-|-----|-------|---------------------------|-------------|
-| ADR-0001 | [title] | TR-combat-001, TR-combat-002 | HIGH |
+| ADR | Title | GDD Requirements Addressed |
+|-----|-------|----------------------------|
+| ADR-0001 | [title] | TR-combat-001, TR-combat-002 |
 
 ---
 

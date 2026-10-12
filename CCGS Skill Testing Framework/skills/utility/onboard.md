@@ -42,11 +42,11 @@ in its allowed tools) and no director gates apply.
 
 ## Test Cases
 
-### Case 1: Happy Path — Programmer Role on a Godot Project
+### Case 1: Happy Path — Programmer Role
 
 **Fixture:**
 - `AGENTS.md` exists
-- `project.yaml` has `engine.name: Godot`, so the code root is `src/`
+- The code root is `src/`
 - `src/` holds game code; `.opencode/agents/gameplay-programmer.md` exists
 - `production/sprints/sprint-005.md` exists; git log has recent commits
 - `modes.automation` is unset (defaults to `collaborative`)
@@ -132,14 +132,12 @@ in its allowed tools) and no director gates apply.
 
 **Fixture:**
 - `AGENTS.md` exists; `.opencode/agents/gameplay-programmer.md` exists
-- `project.yaml` has no `engine.name`, technical-preferences has
-  `[TO BE CONFIGURED]`, and both `src/` and `Assets/` exist (ambiguous tree)
+- The project tree has no `src/`, so the code root is unresolved
 
 **Input:** `/onboard gameplay-programmer`
 
 **Expected behavior:**
-1. Skill tries to resolve the code root and finds it unresolved (two candidate
-   roots, no engine set)
+1. Skill tries to resolve the code root and finds it unresolved (`src/` is absent)
 2. It does not default to `src/`
 3. The code-dependent sections (Project Architecture, Key Files) are written as
    `NOT ASSESSED — code root unresolved` rather than filled from a guess — the

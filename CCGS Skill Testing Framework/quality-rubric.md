@@ -160,9 +160,9 @@ They have a PR-SPRINT or PR-MILESTONE gate at specific mode thresholds.
 ### `utility`
 
 **Skills**: start, help, brainstorm, onboard, adopt, hotfix, prototype, localize,
-launch-checklist, release-checklist, smoke-check, soak-test, test-setup, test-helpers,
+launch-checklist, release-checklist, smoke-check, soak-test, test-setup,
 regression-suite, qa-plan, bug-triage, bug-report, playtest-report, asset-spec,
-reverse-document, project-stage-detect, setup-engine, skill-test, skill-improve,
+reverse-document, project-stage-detect, skill-test, skill-improve,
 day-one-patch, and any other skills not in categories above
 
 Utility skills pass the 7 standard static checks. If they happen to spawn director
@@ -216,20 +216,6 @@ writer, world-builder
 | **S2 — No binding cross-domain decisions** | Does not unilaterally decide matters owned by another specialist |
 | **S3 — Defers correctly** | Out-of-domain requests are redirected to the correct agent, not refused silently |
 
-### `engine`
-
-**Agents**: godot-specialist, godot-gdscript-specialist, godot-csharp-specialist,
-godot-shader-specialist, godot-gdextension-specialist, unity-specialist, unity-ui-specialist,
-unity-shader-specialist, unity-dots-specialist, unity-addressables-specialist,
-unreal-specialist, ue-blueprint-specialist, ue-gas-specialist, ue-umg-specialist,
-ue-replication-specialist
-
-| Metric | PASS criteria |
-|---|---|
-| **E1 — Version-aware** | References engine version from `docs/engine-reference/` before suggesting API calls; flags post-cutoff risk |
-| **E2 — File routing** | Routes file types to the correct sub-specialist (e.g., `.gdshader` → godot-shader-specialist, not godot-gdscript-specialist) |
-| **E3 — Engine-specific patterns** | Enforces engine-specific idioms (e.g., GDScript static typing, C# attribute exports, Blueprint function libraries) |
-
 ### `qa`
 
 **Agents**: qa-tester
@@ -248,5 +234,5 @@ analytics-engineer, economy-designer, localization-lead
 | Metric | PASS criteria |
 |---|---|
 | **O1 — Domain ownership clear** | Agent description clearly states what it owns (pipeline, releases, economy, etc.) |
-| **O2 — Defers implementation** | Does not write game logic or engine code; delegates to appropriate specialist |
+| **O2 — Defers implementation** | Does not write game logic or core systems code; delegates to appropriate specialist |
 | **O3 — Toolset matches role** | `permissions:` in frontmatter match the operational (not coding) nature of the role |

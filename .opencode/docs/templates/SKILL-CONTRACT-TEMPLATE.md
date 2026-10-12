@@ -60,7 +60,7 @@ Story Author — Decomposes game design epics into atomic, testable user stories
 - `production/qa/evidence/` (creates test evidence stubs)
 
 **Cannot Touch:**
-- The code root — `src/`, `Assets/` or `Source/` by engine (no game code)
+- The code root — `src/` (no game code)
 - `assets/` (no asset modifications)
 - Source data files (read-only)
 

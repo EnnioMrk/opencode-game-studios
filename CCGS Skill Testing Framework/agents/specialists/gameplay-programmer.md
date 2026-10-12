@@ -2,7 +2,7 @@
 
 ## Agent Summary
 Domain: Game mechanics code, player systems, combat implementation, and interactive features.
-Does NOT own: UI implementation (ui-programmer), AI behavior trees (ai-programmer), engine/rendering systems (engine-programmer).
+Does NOT own: UI implementation (ui-programmer), AI behavior trees (ai-programmer), core/rendering systems (engine-programmer).
 No gate IDs assigned.
 
 ---
@@ -12,7 +12,7 @@ No gate IDs assigned.
 - [ ] `description:` field is present and domain-specific (references game mechanics / player systems)
 - [ ] Toolset (ported to `permissions:` — see PORTING.md): includes Read, Write, Edit, Bash, Glob, Grep — excludes tools only needed by orchestration agents
 - [ ] Model tier is `inherit` — recorded in `PORTING.md` (OpenCode agents inherit the session model unless `model:` is pinned; tiers: `.opencode/docs/model-tiers.md`)
-- [ ] Agent definition does not claim authority over UI, AI behavior, or engine/rendering code
+- [ ] Agent definition does not claim authority over UI, AI behavior, or core/rendering code
 
 ---
 
@@ -21,7 +21,7 @@ No gate IDs assigned.
 ### Case 1: In-domain request — appropriate output
 **Input:** "Implement a melee combo system where three consecutive light attacks chain into a finisher."
 **Expected behavior:**
-- Produces code or a code scaffold following the project's language (GDScript/C#) and coding standards
+- Produces code or a code scaffold following the project's language and coding standards
 - Models the combo as a state machine with an explicit transition table, and keeps the input-window check and finisher trigger as logic unit tests can drive without the full game running (logic separated from presentation)
 - References the relevant GDD section if one is provided in context
 - Does NOT implement UI feedback or enemy reactions: emits events/signals for them instead of referencing UI code, leaving the UI side to `ui-programmer` and enemy reactions to `ai-programmer`
@@ -66,7 +66,7 @@ No gate IDs assigned.
 - [ ] Stays within declared domain (mechanics, player systems, combat)
 - [ ] Redirects out-of-domain requests to correct agent (ui-programmer, ai-programmer, engine-programmer)
 - [ ] Returns structured findings (code scaffold, method signatures, inline comments) not freeform opinions
-- [ ] Does not modify engine-level systems without lead-programmer approval, and does not write networking code (delegates to network-programmer)
+- [ ] Does not modify core systems without lead-programmer approval, and does not write networking code (delegates to network-programmer)
 - [ ] Flags ADR violations rather than overriding them silently
 - [ ] Makes gameplay values data-driven, never hardcoded
 - [ ] Asks "May I write this to [filepath]?" naming the file before writing
@@ -75,6 +75,6 @@ No gate IDs assigned.
 
 ## Coverage Notes
 - Combo system test (Case 1) should be validated with a unit test in `tests/unit/gameplay/`
-- Threading escalation (Case 3) verifies the agent does not over-reach into engine territory
+- Threading escalation (Case 3) verifies the agent does not over-reach into core-systems territory
 - ADR conflict (Case 4) confirms the agent respects the architecture governance process
 - Cases 1 and 5 together verify the agent implements to spec rather than improvising

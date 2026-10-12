@@ -72,12 +72,11 @@ are fixed."
 run. Do not hand off to QA on this result:
 
 [Name each check that could not execute, and why: suite unconfirmed NOT RUN,
-`PlayMode: NOT RUN`, zero tests executed, runner not installed, engine
-executable not found, no build, build not launched this session, platform
-unavailable]
+zero tests executed, runner not installed, no test command found, no build,
+build not launched this session, platform unavailable]
 
 [For each, the one thing that would make it runnable — e.g. 'confirm the suite
-result from your IDE or CI', 'run `/setup-engine`', 'set `engine.path`',
+result from your IDE or CI', 'set `commands.test`',
 'produce a build', 'launch the build and play the checks'.]
 
 Re-run `/smoke-check` once any of those is resolved."

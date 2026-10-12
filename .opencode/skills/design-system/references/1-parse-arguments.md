@@ -100,8 +100,8 @@ every list below as "`## Summary`, plus:".
   defines no such value. **The `Category` in `systems-index.md` is a hint, not
   the test** — `Gameplay`, `Economy` and `Progression` systems almost always
   qualify, and a `Core`, `UI` or `Persistence` system that defines a numeric rule
-  qualifies too. If the Detailed Design states a quantity that is not a constant
-  of the engine, Formulas is required. **Player Fantasy and Tuning Knobs skipped**
+  qualifies too. If the Detailed Design states a quantity that is not a fixed
+  constant, Formulas is required. **Player Fantasy and Tuning Knobs skipped**
   unless `workflow_overrides` force them (`tuning_knobs: true` forces Tuning Knobs)
 
   > **Do not gate this on a category token.** A rule of the form "required when

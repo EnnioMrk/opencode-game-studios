@@ -122,4 +122,4 @@ Before drafting anything:
 
 Route each recommendation to the owner of that system: technical-artist for
 rendering optimizations (LOD, occlusion, batching, atlasing), engine-programmer
-for engine systems and hot-path code, and the programmer who owns any other system.
+for core systems and hot-path code, and the programmer who owns any other system.

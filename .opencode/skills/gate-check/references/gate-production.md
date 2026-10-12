@@ -36,7 +36,6 @@
       (not just GDDs — stories must embed GDD req ID + ADR reference)
 - [ ] **Vertical Slice is COMPLETE**, not just scoped — the build demonstrates the full core loop end-to-end. At least one complete [start → challenge → resolution] cycle works.
 - [ ] Architecture document has no unresolved open questions in Foundation or Core layers
-- [ ] All ADRs have Engine Compatibility sections stamped with the engine version
 - [ ] All ADRs have ADR Dependencies sections (even if all fields are "None")
 - [ ] Manual validation confirms GDDs + architecture + epics are coherent
       (run `/review-all-gdds` and `/architecture-review` if not done recently)

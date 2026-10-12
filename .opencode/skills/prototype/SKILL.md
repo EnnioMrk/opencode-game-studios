@@ -1,5 +1,5 @@
 ---
-description: "Concept prototype before GDDs — throwaway HTML, Engine or Paper build, PROCEED/PIVOT/KILL/NOT ASSESSED. After /brainstorm and /setup-engine."
+description: "Concept prototype before GDDs — throwaway HTML or Paper build, PROCEED/PIVOT/KILL/NOT ASSESSED. After /brainstorm."
 name: prototype
 ---
 
@@ -15,8 +15,8 @@ block → defaults in `.opencode/docs/config-resolution.md`.
 This is the **concept prototype** — a fast, throwaway build that answers one question:
 *"Is this core idea actually fun to interact with?"*
 
-**Default use** — run right after `/brainstorm` and `/setup-engine`, before writing
-GDDs or architecture docs. Its verdict determines whether the concept is worth the
+**Default use** — run right after `/brainstorm`, before writing GDDs or
+architecture docs. Its verdict determines whether the concept is worth the
 investment of full design documentation.
 
 **Mid-production?** You can also run this at any stage to test a specific mechanic,
@@ -79,7 +79,7 @@ before committing to Production, run `/vertical-slice` instead.
 - Total effort is hard-capped at 1 day (concept prototypes test one mechanic)
 - Test ONE mechanic — if scope grows, stop and simplify the question
 - No polish. No menus, no game over, no music, no UI unless it IS the mechanic
-- If stuck after 2 hours of engine iteration, reframe the question or switch paths
+- If stuck after 2 hours of iteration, reframe the question or switch paths
 - **3 PIVOT iterations → force a KILL decision.** If this is the third time the
   same concept has produced a PIVOT verdict, the concept likely doesn't work.
   Ask: "Is this the right idea, or am I in the sunk cost trap?" A new concept

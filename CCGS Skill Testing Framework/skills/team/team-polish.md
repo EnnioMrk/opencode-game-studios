@@ -5,7 +5,7 @@
 Orchestrates the polish team through a six-phase pipeline: performance assessment
 (performance-analyst, whose report carries the optimisation list with an owner per
 item) → optimization (the list implemented by its owners in the active set —
-engine-programmer for engine-level root causes, tools-programmer for a content
+engine-programmer for low-level root causes, tools-programmer for a content
 tool; performance-analyst writes no game code) → visual polish
 (technical-artist, parallel with Phase 2) → audio polish (sound-designer, parallel
 with Phase 2) → hardening (qa-tester) → sign-off (orchestrator collects all results
@@ -21,7 +21,7 @@ write exception (no per-write prompt), and the orchestrator states that nothing
 reads `production/polish/` yet. The code, shader, audio and asset changes of
 Phases 2–4 are outside that exception: one ask covers the whole set. Uses
 `question` at each phase transition. Engine-programmer is spawned
-conditionally only when Phase 1 identifies engine-level root causes.
+conditionally only when Phase 1 identifies low-level root causes.
 
 ---
 
@@ -32,7 +32,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 - [ ] Contains verdict keywords: READY FOR RELEASE, NOT ASSESSED, NEEDS MORE WORK — and states that NOT ASSESSED ranks above READY FOR RELEASE and below NEEDS MORE WORK
 - [ ] Contains "File Write Protocol" section
 - [ ] File writes are delegated to sub-agents — orchestrator does not write files directly
-- [ ] Names a destination per agent under `production/polish/`: `[area]-report-[date].md` (performance-analyst), `[area]-render-notes-[date].md` (technical-artist), `[area]-engine-fixes-[date].md` (engine-programmer), `[area]-tool-fixes-[date].md` (tools-programmer), `[area]-audio-notes-[date].md` (sound-designer), `[area]-verification-[date].md` (qa-tester)
+- [ ] Names a destination per agent under `production/polish/`: `[area]-report-[date].md` (performance-analyst), `[area]-render-notes-[date].md` (technical-artist), `[area]-lowlevel-fixes-[date].md` (engine-programmer), `[area]-tool-fixes-[date].md` (tools-programmer), `[area]-audio-notes-[date].md` (sound-designer), `[area]-verification-[date].md` (qa-tester)
 - [ ] Sub-agents write those named `production/` paths without a per-write prompt (bounded exception), and must ask for any write outside it; implementation files (code, shaders, audio, assets) are outside it — each agent lists the files it will create or change, and the skill asks once for the set before any is written — one ask for the whole Phase 2–4 set, never one per phase
 - [ ] The `small` and `studio` sets include `engine-programmer`; at `individual` no programmer is active and the report names the optimisation list as handed to `/dev-story`
 - [ ] Defines a phase gate as a decision point the pipeline itself lists, whatever the `automation` mode, and claims no director spawn at phase gates
@@ -42,7 +42,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 - [ ] Phase 0 resolves `team.size`, and the skill requires a one-line active-set announcement before Phase 1
 - [ ] Phase 3 (visual polish) and Phase 4 (audio polish) are explicitly run in parallel with Phase 2
 - [ ] Phase 1's report carries the optimisation list with an owner per item; performance-analyst writes no game code in any phase
-- [ ] engine-programmer is conditionally spawned in Phase 2 only when Phase 1 identifies engine-level root causes
+- [ ] engine-programmer is conditionally spawned in Phase 2 only when Phase 1 identifies low-level root causes
 - [ ] Phase 6 sign-off compares metrics against budgets before issuing verdict
 - [ ] Phase 6 lists every remaining issue with its severity, the measured gap where there is one (e.g. "3 ms over budget") and a recommendation
 
@@ -66,7 +66,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 1. Before any spawn, one line announces the active set for `team.size: small` (the full pipeline)
 2. Phase 1: performance-analyst is spawned; profiles the combat system, measures frame budget, checks memory usage; writes `production/polish/combat-report-[date].md` showing all metrics within budget
 3. `question` presents performance report; user approves before Phases 2, 3, and 4 begin
-4. Phase 2: the report's optimisation list holds only minor rendering items (e.g., draw call batching), owned by technical-artist, so they join its Phase 3 brief; no engine-level root cause was identified, so engine-programmer is not spawned; performance-analyst changes no code
+4. Phase 2: the report's optimisation list holds only minor rendering items (e.g., draw call batching), owned by technical-artist, so they join its Phase 3 brief; no low-level root cause was identified, so engine-programmer is not spawned; performance-analyst changes no code
 5. Phases 3 and 4 are launched in parallel alongside Phase 2:
    - Phase 3: technical-artist reviews VFX for quality, optimizes particle systems, adds screen shake and visual juice; writes `production/polish/combat-render-notes-[date].md`
    - Phase 4: sound-designer reviews audio events for completeness, checks mix levels, adds ambient audio layers; writes `production/polish/combat-audio-notes-[date].md`
@@ -83,7 +83,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 - [ ] performance-analyst is spawned first in Phase 1 before any other agents
 - [ ] `question` appears after Phase 1 output and before Phases 2/3/4 launch
 - [ ] Phases 3 and 4 Agent calls are issued at the same time as Phase 2 (not after Phase 2 completes)
-- [ ] engine-programmer is NOT spawned when Phase 1 finds no engine-level root causes
+- [ ] engine-programmer is NOT spawned when Phase 1 finds no low-level root causes
 - [ ] performance-analyst edits no code, shader or asset in any phase
 - [ ] Implementation files of Phases 2–4 are listed by each agent and asked for in one `question` for the whole set — not once per phase — before any is edited
 - [ ] qa-tester (Phase 5) is not launched until the parallel phases complete and user approves
@@ -102,7 +102,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 - Resolved config block: `team.size: small`, `automation: collaborative`
 - Feature being polished: `particle-storm` VFX system
 - Phase 1 identifies a frame budget violation: particle-storm costs 12ms on target hardware (budget is 6ms for this system)
-- Phase 1's optimisation list assigns the particle work to technical-artist and an engine-level particle-update hot path to engine-programmer; after both are applied the cost is 9ms — still over the 6ms budget
+- Phase 1's optimisation list assigns the particle work to technical-artist and a particle-update hot path to engine-programmer; after both are applied the cost is 9ms — still over the 6ms budget
 - Phase 2 cannot fully resolve the violation without a fundamental design change
 
 **Input:** `/team-polish particle-storm`
@@ -110,7 +110,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 **Expected behavior:**
 1. Phase 1: performance-analyst identifies the 12ms frame cost vs. 6ms budget; reports "FRAME BUDGET VIOLATION: particle-storm costs 12ms, budget is 6ms", with an optimisation list naming each item's owner
 2. `question` presents the violation; user chooses to proceed with optimization attempt
-3. Phase 2: engine-programmer implements the engine-level item and technical-artist the particle items (after the one ask for the set); the re-profile reads 9ms — reduced but still over budget: "Optimization reduced cost to 9ms (was 12ms) — 3ms over budget. No further gains achievable without design changes."
+3. Phase 2: engine-programmer implements the low-level item and technical-artist the particle items (after the one ask for the set); the re-profile reads 9ms — reduced but still over budget: "Optimization reduced cost to 9ms (was 12ms) — 3ms over budget. No further gains achievable without design changes."
 4. Phases 3 and 4 run in parallel with Phase 2 (visual and audio polish)
 5. Phase 5: qa-tester runs regression and edge case tests; all pass
 6. Phase 6: orchestrator collects results; frame budget violation (9ms vs 6ms budget) remains unresolved
@@ -149,35 +149,35 @@ conditionally only when Phase 1 identifies engine-level root causes.
 
 ---
 
-### Case 4: Engine-Level Bottleneck — engine-programmer spawned conditionally in Phase 2
+### Case 4: Low-Level Bottleneck — engine-programmer spawned conditionally in Phase 2
 
 **Fixture:**
 - Resolved config block: `team.size: small`, `automation: collaborative`
 - Feature being polished: `open-world` environment streaming
-- Phase 1 identifies a performance bottleneck with a root cause in the rendering pipeline: "draw call overhead is caused by the engine's scene tree traversal in the spatial indexer — this is an engine-level issue, not a game code issue"
+- Phase 1 identifies a performance bottleneck with a root cause below the game code: "draw call overhead is caused by the rendering pipeline's per-frame traversal — this is a low-level issue, not a game code issue"
 - Performance budgets are defined; the rendering overhead exceeds target frame budget
 
 **Input:** `/team-polish open-world`
 
 **Expected behavior:**
-1. Phase 1: performance-analyst profiles the environment; identifies frame budget violation; root cause analysis points to engine-level rendering pipeline (spatial indexer traversal overhead)
-2. Phase 1 output explicitly classifies the root cause as engine-level
-3. `question` presents the performance report including the engine-level root cause; user approves before Phase 2
-4. Phase 2: engine-programmer (in the `small` set) is spawned for the engine-level rendering item on the optimisation list, writing `production/polish/open-world-engine-fixes-[date].md`; performance-analyst writes no code
-5. Phases 3 and 4 also run in parallel with Phase 2 (visual and audio polish); engine-programmer lists the engine files it will change along with the other agents' files, and one ask covers the set
-6. engine-programmer addresses the spatial indexer traversal after the yes; provides profiler validation showing the fix reduces overhead
-7. Phase 5: qa-tester runs regression tests including tests for the engine-level change
+1. Phase 1: performance-analyst profiles the environment; identifies frame budget violation; root cause analysis points to the low-level rendering pipeline
+2. Phase 1 output explicitly classifies the root cause as low-level
+3. `question` presents the performance report including the low-level root cause; user approves before Phase 2
+4. Phase 2: engine-programmer (in the `small` set) is spawned for the low-level rendering item on the optimisation list, writing `production/polish/open-world-lowlevel-fixes-[date].md`; performance-analyst writes no code
+5. Phases 3 and 4 also run in parallel with Phase 2 (visual and audio polish); engine-programmer lists the low-level files it will change along with the other agents' files, and one ask covers the set
+6. engine-programmer addresses the per-frame traversal after the yes; provides profiler validation showing the fix reduces overhead
+7. Phase 5: qa-tester runs regression tests including tests for the low-level change
 8. Phase 6: orchestrator collects all results; if metrics are now within budget, verdict is READY FOR RELEASE; if not, NEEDS MORE WORK
 
 **Assertions:**
-- [ ] engine-programmer is NOT spawned in Phase 2 unless Phase 1 explicitly identifies an engine-level root cause
-- [ ] engine-programmer is spawned in Phase 2 when Phase 1 identifies an engine-level root cause
+- [ ] engine-programmer is NOT spawned in Phase 2 unless Phase 1 explicitly identifies a low-level root cause
+- [ ] engine-programmer is spawned in Phase 2 when Phase 1 identifies a low-level root cause
 - [ ] engine-programmer's Phase 2 Agent call is issued alongside the Phase 3 and 4 calls (not sequentially), and performance-analyst is not re-spawned to change code
 - [ ] engine-programmer edits nothing before the one ask for the Phase 2–4 implementation set is answered yes
 - [ ] Phases 3 and 4 also run in parallel with Phase 2 (not deferred until Phase 2 completes)
 - [ ] engine-programmer's output includes profiler validation of the fix
-- [ ] qa-tester in Phase 5 runs regression tests that cover the engine-level change
-- [ ] Verdict correctly reflects whether all metrics including the engine fix now meet budgets
+- [ ] qa-tester in Phase 5 runs regression tests that cover the low-level change
+- [ ] Verdict correctly reflects whether all metrics including the fix now meet budgets
 
 ---
 
@@ -240,7 +240,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 **Fixture:**
 - Resolved config block: `team.size: individual`, `automation: collaborative`
 - Budgets committed in `project.yaml` (as in Case 1)
-- Feature being polished: `crafting-menu`; Phase 1 finds a draw-call overrun owned by technical-artist and a script hot path in the crafting logic owned by gameplay-programmer — no engine-level root cause
+- Feature being polished: `crafting-menu`; Phase 1 finds a draw-call overrun owned by technical-artist and a script hot path in the crafting logic owned by gameplay-programmer — no low-level root cause
 
 **Input:** `/team-polish crafting-menu`
 
@@ -266,7 +266,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 - [ ] Phase 1 (assessment) must complete before any other phase begins
 - [ ] In `collaborative` mode, `question` is used after every phase output before the next phase launches
 - [ ] Phases 3 and 4 are launched in parallel with Phase 2 whenever their agents are in the active set (not deferred)
-- [ ] engine-programmer is only spawned when Phase 1 explicitly identifies engine-level root causes, and only at `small` or `studio`
+- [ ] engine-programmer is only spawned when Phase 1 explicitly identifies low-level root causes, and only at `small` or `studio`
 - [ ] performance-analyst produces the optimisation list and never implements it; an item whose owner is not active is named as handed to `/dev-story`
 - [ ] Phase 2–4 implementation files are asked for once, as a set — not once per phase
 - [ ] No files are written by the orchestrator directly — all writes are delegated to sub-agents
@@ -278,7 +278,7 @@ conditionally only when Phase 1 identifies engine-level root causes.
 - [ ] At `team.size: individual`, sound-designer's audio polish and qa-tester's hardening are named as not run, so the verdict is NOT ASSESSED unless a known problem makes it NEEDS MORE WORK
 - [ ] NEEDS MORE WORK verdict always lists specific remaining issues with severity, the measured gap where there is one, and a recommendation
 - [ ] Next Steps handoff references `/release-checklist` (on success), `/sprint-plan update` and a `/team-polish` re-run (on failure), `/gate-check` before handing off to release, and, on NOT ASSESSED, supplying the missing budgets or phases before a re-run
-- [ ] At `team.size: studio`, Phase 5's qa-tester is told to find how the polished feature breaks rather than confirm it holds, and the report says the adversarial pass ran; no engine specialist is added
+- [ ] At `team.size: studio`, Phase 5's qa-tester is told to find how the polished feature breaks rather than confirm it holds, and the report says the adversarial pass ran
 
 ---
 

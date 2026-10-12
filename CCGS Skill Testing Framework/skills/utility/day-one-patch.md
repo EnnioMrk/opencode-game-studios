@@ -25,7 +25,7 @@ fix. Targeted and broader tests run with `commands.test` from `project.yaml`
 (unset → `Tests: NOT RUN` per fix, and the broader regression NOT ASSESSED).
 Config/data fixes are made directly, after a "May I edit" ask naming the file and
 the value change. `qa-lead` decides the QA scope (`/smoke-check`, or the affected
-systems' tests in the engine's test root); the patch QA verdict must be PASS or PASS WITH WARNINGS to
+systems' tests under the test root); the patch QA verdict must be PASS or PASS WITH WARNINGS to
 proceed — FAIL defers the fix to 1.1 and NOT ASSESSED is never a pass. The patch
 record is written to `production/releases/day-one-patch-[version].md` after a
 "May I write" ask. No director gates are spawned.

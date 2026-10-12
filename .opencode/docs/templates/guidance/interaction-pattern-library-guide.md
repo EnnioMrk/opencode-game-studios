@@ -14,7 +14,7 @@ authoring — never all three at once.
 
 Each guidance file contains the full reference specification for its patterns —
 When to Use / When NOT to Use rationale, complete state tables with timing and
-audio values, accessibility requirements, and engine implementation notes. Use
+audio values, accessibility requirements, and implementation notes. Use
 them as the worked-example source when filling the corresponding skeleton stubs
 in the template. The Pattern Catalog Index, Animation Standards, Sound
 Standards, and Open Questions sections remain in the template itself.

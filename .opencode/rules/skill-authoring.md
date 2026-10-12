@@ -47,8 +47,8 @@ Over-running a check costs minutes. Under-running one ships the category unrun.
 ### 3. A skipped step announces itself
 
 In the output, not only in the source. If a phase, category, or agent did not run
-— wrong engine, missing config, unavailable input, a `team.size` that collapses
-the pipeline — the artifact must say so by name. A silent skip and a successful
+— missing config, unavailable input, a `team.size` that collapses the
+pipeline — the artifact must say so by name. A silent skip and a successful
 one are the same artifact.
 
 A rule enforced in the body and never surfaced in the output is, to the reader,
@@ -56,9 +56,8 @@ identical to no rule at all.
 
 ### 4. Never assert what you cannot source — and wire the gap to the verdict
 
-Where this repo pins external facts (`docs/engine-reference/**`), do not fill a
-gap from training data. Write the gap down instead: `NOT SOURCEABLE — <what> is
-not covered by <path>`.
+Where this repo pins external facts, do not fill a gap from training data. Write
+the gap down instead: `NOT SOURCEABLE — <what> is not covered by <path>`.
 
 **Flagging alone is not enough.** A named gap that does not reach the verdict is
 just a comment. Wire it: a category with no sourced inputs must force obligation
@@ -80,9 +79,9 @@ keep a list, record *why* derivation failed and state the obligation to extend i
 
 Two further gate rules:
 
-- **Assert something that cannot be true by accident.** A check for the word
-  "unity" is satisfied by a file path, and case-insensitively by "community".
-  Assert a distinctive token instead.
+- **Assert something that cannot be true by accident.** A check for a banned
+  substring is satisfied by the word `community` — in a file path or in prose,
+  case-insensitively. Assert a distinctive token instead.
 - **A gate you have not watched fail is not a gate.** Break the thing it guards,
   confirm it fails, restore. One mutation per tool invocation — a batch that
   times out leaves the repo holding a broken file, and `trap … EXIT` does not

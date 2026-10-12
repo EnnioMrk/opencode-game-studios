@@ -67,21 +67,12 @@ rather than restart.
    [B], revise the named field, show before/after, re-ask; repeat until [A]. Then
    write `design/game-brief.md` from the template, creating directories as needed.
    Honor `modes.automation` for this write as elsewhere in the framework.
-4. **Next steps** (short — this is the point). **Read `engine.name` from
-   `project.yaml` first and list `/setup-engine` only if it is absent or empty:**
-   1. *(only when `engine.name` is absent or empty)* "`/setup-engine` — configure
-      the engine (required before code)"
-   2. "`/create-stories` — turn the brief's MVP list into implementable stories. The
+4. **Next steps** (short — this is the point):
+   1. "`/create-stories` — turn the brief's MVP list into implementable stories. The
       epic is implicit at `minimal`; there is no separate `/create-epics` or
       `/sprint-plan` — the brief's build order is the plan."
-   3. "`/dev-story` — first line of game code"
+   2. "`/dev-story` — first line of game code"
 
-   > **Why the condition.** `/start`'s `minimal` path runs `/setup-engine`
-   > *before* `/brainstorm`, and `/setup-engine` Section 2 states that a missing
-   > brief is expected because the brief is authored afterwards. Listing engine
-   > setup unconditionally here tells a user who just followed that path to go
-   > back and redo step one — the only skill in the four-step path that assumes
-   > it runs first.
    Then output a one-line summary (pitch + MVP feature count + `design/game-brief.md`).
 
 Verdict: **COMPLETE** — game brief created; next stop is code. Do NOT run Phases 1–5,
@@ -333,19 +324,8 @@ Ground the concept in reality:
 
 - **Target platform**: Use `question` — "What platforms are you targeting for this game?"
   Options: `PC (Steam / Epic)` / `Mobile (iOS / Android)` / `Console` / `Web / Browser` / `Multiple platforms`
-  Record the answer — it directly shapes the engine recommendation and will be passed to `/setup-engine`.
-  Note platform implications if relevant (e.g., mobile means Unity is strongly preferred; console means Godot has limitations; web means Godot exports cleanly).
-
-- **Engine experience**: Use `question` — "Do you already have an engine you work in?"
-  Options: `Godot` / `Unity` / `Unreal Engine 5` / `No preference — help me decide`
-  - **This decision always prompts regardless of `modes.automation` —
-    including `autonomous` mode.** Engine choice is a project-wide
-    architectural commitment that downstream tooling depends on and is
-    effectively irreversible mid-project, so this skill guards it
-    unconditionally (it is NOT left to the configurable
-    `automation_always_ask` list). The model must NOT silently pick an engine.
-  - If they pick an engine → record it as their preference and move on. Do NOT second-guess it.
-  - If "No preference" → tell them: "Run `/setup-engine` after this session — it will walk you through the full decision based on your concept and platform target." Do not make a recommendation here.
+  Record the answer.
+  Note platform implications if relevant.
 - **Art pipeline**: What's the art style and how labor-intensive is it?
 - **Content scope**: Estimate level/area count, item count, gameplay hours
 - **MVP definition**: What's the absolute minimum build that tests "is the
@@ -360,7 +340,7 @@ Ground the concept in reality:
 
 **After identifying biggest technical risks, spawn `technical-director` via `Agent` using gate TD-FEASIBILITY (`.opencode/docs/director-gates/td-feasibility.md`) before scope tiers are defined.**
 
-Pass: core loop description, platform target, engine choice (or "undecided"), list of identified technical risks.
+Pass: core loop description, platform target, list of identified technical risks.
 
 Present the assessment to the user. If HIGH RISK, offer to revisit scope before finalising. If CONCERNS, note them and continue. If NOT ASSESSED, name the missing input and record feasibility as not assessed in the concept's risks — never as VIABLE.
 
@@ -421,26 +401,24 @@ If yes, generate the document using the template at `.opencode/docs/templates/ga
    pre-production pipeline). List ALL steps — do not abbreviate or truncate:
 
 **Path A — Design-First** (recommended if the concept is well-defined):
-   1. "Run `/setup-engine` to configure the engine and populate version-aware reference docs"
-   2. "Run `/art-bible` to create the visual identity specification — do this BEFORE writing GDDs. **The art bible is required before the Technical Setup gate.** It gates asset production and shapes technical architecture decisions (rendering, VFX, UI systems)."
-   3. "Use `/design-review design/gdd/game-concept.md` to validate concept completeness before going downstream"
-   4. "Discuss vision with the `creative-director` agent for pillar refinement"
-   5. "Decompose the concept into individual systems with `/map-systems` — maps dependencies, assigns priorities, and creates the systems index"
-   6. "Author per-system GDDs with `/design-system` — guided, section-by-section GDD writing for each system identified in step 5"
-   7. "Plan the technical architecture with `/create-architecture` — produces the master architecture blueprint and Required ADR list"
-   8. "Record key architectural decisions with `/architecture-decision (×N)` — write one ADR per decision in the Required ADR list from `/create-architecture`"
-   9. "Run `/architecture-review` — bootstraps the TR registry and Requirements Traceability Matrix from your GDDs and ADRs (required before the Pre-Production gate)"
-   10. "Validate readiness to advance with `/gate-check` — phase gate before committing to production"
+   1. "Run `/art-bible` to create the visual identity specification — do this BEFORE writing GDDs. **The art bible is required before the Technical Setup gate.** It gates asset production and shapes technical architecture decisions (rendering, VFX, UI systems)."
+   2. "Use `/design-review design/gdd/game-concept.md` to validate concept completeness before going downstream"
+   3. "Discuss vision with the `creative-director` agent for pillar refinement"
+   4. "Decompose the concept into individual systems with `/map-systems` — maps dependencies, assigns priorities, and creates the systems index"
+   5. "Author per-system GDDs with `/design-system` — guided, section-by-section GDD writing for each system identified in step 4"
+   6. "Plan the technical architecture with `/create-architecture` — produces the master architecture document and Required ADR list"
+   7. "Record key architectural decisions with `/architecture-decision (×N)` — write one ADR per decision in the Required ADR list from `/create-architecture`"
+   8. "Run `/architecture-review` — bootstraps the TR registry and Requirements Traceability Matrix from your GDDs and ADRs (required before the Pre-Production gate)"
+   9. "Validate readiness to advance with `/gate-check` — phase gate before committing to production"
 
 **Path B — Prototype-First** (use if the core mechanic is unproven or the concept needs validation):
-   1. "Run `/setup-engine` to configure the engine"
-   2. "Run `/prototype [core-mechanic]` — validate the core idea is fun before writing any GDDs (1–3 days throwaway code)"
-   3. "If prototype PROCEEDS: run `/art-bible`, then continue with Path A steps 5–10 above, using prototype learnings to inform your GDDs"
-   4. "If prototype PIVOTS: return to `/brainstorm` with the learnings and reshape the concept"
-   5. "After full design and architecture, build the `/vertical-slice` to validate production readiness before committing to sprints"
+   1. "Run `/prototype [core-mechanic]` — validate the core idea is fun before writing any GDDs (1–3 days throwaway code)"
+   2. "If prototype PROCEEDS: run `/art-bible`, then continue with Path A steps 4–9 above, using prototype learnings to inform your GDDs"
+   3. "If prototype PIVOTS: return to `/brainstorm` with the learnings and reshape the concept"
+   4. "After full design and architecture, build the `/vertical-slice` to validate production readiness before committing to sprints"
 
 7. **Output a summary** with the chosen concept's elevator pitch, pillars,
-   primary player type, engine recommendation, biggest risk, and file path.
+   primary player type, biggest risk, and file path.
 
 Verdict: **COMPLETE** — game concept created and handed off for next steps.
 
@@ -460,10 +438,9 @@ append this notice to the current response before continuing:
 ## Recommended Next Steps
 
 After the game concept is written, follow the pre-production pipeline in order:
-1. `/setup-engine` — configure the engine and populate version-aware reference docs
-2. `/art-bible` — establish visual identity before writing any GDDs
-3. `/map-systems` — decompose the concept into individual systems with dependencies
-4. `/design-system [first-system]` — author per-system GDDs in dependency order
-5. `/create-architecture` — produce the master architecture blueprint
-6. `/architecture-review` — bootstrap TR registry and Requirements Traceability Matrix
-7. `/gate-check pre-production` — validate readiness for Pre-Production (the `systems-design` and `technical-setup` gates come first, at their own phase boundaries)
+1. `/art-bible` — establish visual identity before writing any GDDs
+2. `/map-systems` — decompose the concept into individual systems with dependencies
+3. `/design-system [first-system]` — author per-system GDDs in dependency order
+4. `/create-architecture` — produce the master architecture document
+5. `/architecture-review` — bootstrap TR registry and Requirements Traceability Matrix
+6. `/gate-check pre-production` — validate readiness for Pre-Production (the `systems-design` and `technical-setup` gates come first, at their own phase boundaries)

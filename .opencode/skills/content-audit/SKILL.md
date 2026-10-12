@@ -148,42 +148,26 @@ the two happened — a reader cannot tell from a green result.
 For each content type found in Phase 1, scan the relevant directories to count
 what has been implemented. Use Glob and Grep to locate files.
 
-**On Unreal, content lives in `Content/`** — maps and data assets both — and the
-code root (`Source/<Module>/`) holds only C++. So on Unreal, every `assets/…` glob
-below also runs under `Content/` (`*.uasset` in place of the data extensions),
-and levels are `Content/**/*.umap`. Skipping this finds zero levels on every
-Unreal project and reports them NOT STARTED.
-
-**On Unity, content lives under `Assets/`** (compare the case exactly —
-`.opencode/docs/code-root-resolution.md`), and rarely in a `data/` folder. So on
-Unity every `assets/…` glob below also runs under `Assets/`, without requiring
-a `data/` segment — for items, `Assets/**/items/**`, `Assets/**/Items/**` and
-`Assets/**/*Item*.asset` — and data files include `.asset` (ScriptableObjects)
-and `.prefab`. Skipping this finds zero items, abilities, quests and dialogue
-on a Unity project and reports them NOT STARTED.
-
 **Levels / Areas / Maps:**
-- Glob `assets/**/*.tscn`, `assets/**/*.unity`, `assets/**/*.umap`
-- Glob the **code root** for scene files: `*.tscn` (Godot), `*.unity` (Unity); on Unreal, `Content/**/*.umap` instead (above). Resolve the root per `.opencode/docs/code-root-resolution.md`. **If the code root is unresolved, report `NOT ASSESSED — code root unresolved` rather than zero hits.**
-- Look for scene files in subdirectories named `levels/`, `areas/`, `maps/`,
-  `worlds/`, `stages/`
+- Look for level, map or scene definition files in the asset root and the code root, in subdirectories named `levels/`, `areas/`, `maps/`,
+  `worlds/`, `stages/` — resolve the code root per `.opencode/docs/code-root-resolution.md`. **If the code root is unresolved, report `NOT ASSESSED — code root unresolved` rather than zero hits.**
 - Count unique files that appear to be level/scene definitions (not UI scenes)
 
 **Enemies / Characters / NPCs:**
 - Glob `assets/data/**/enemies/**`, `assets/data/**/characters/**`
 - Glob `<code root>/**/enemies/**`, `<code root>/**/characters/**`
-- Look for `.json`, `.tres`, `.asset`, `.yaml` data files defining entity stats
-- Look for scene/prefab files in character subdirectories
+- Look for `.json`, `.yaml` data files defining entity stats
+- Look for character definition files in character subdirectories
 
 **Items / Equipment / Loot:**
 - Glob `assets/data/**/items/**`, `assets/data/**/equipment/**`,
   `assets/data/**/loot/**`
-- Look for `.json`, `.tres`, `.asset` data files
+- Look for `.json` data files
 
 **Abilities / Skills / Spells:**
 - Glob `assets/data/**/abilities/**`, `assets/data/**/skills/**`,
   `assets/data/**/spells/**`
-- Look for `.json`, `.tres`, `.asset` data files
+- Look for `.json` data files
 
 **Dialogue / Conversations / Cutscenes:**
 - Glob `assets/**/*.dialogue`, `assets/**/*.csv`, `assets/**/*.ink`
@@ -193,8 +177,8 @@ on a Unity project and reports them NOT STARTED.
 - Glob `assets/data/**/quests/**`, `assets/data/**/missions/**`
 - Look for `.json`, `.yaml` definition files
 
-**Engine-specific notes (acknowledge in the report):**
-- Counts are approximations — the skill cannot perfectly parse every engine
+**Scan caveats (acknowledge in the report):**
+- Counts are approximations — the skill cannot perfectly parse every file
   format or distinguish editor-only files from shipped content
 - Scene files may include both gameplay content and system/UI scenes; the scan
   counts all matches and notes this caveat

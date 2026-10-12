@@ -36,10 +36,10 @@ primary advantage over ad-hoc design — it arrives informed.
 > required-*reads* branch here follows the project tier.
 >
 > **Then derive `Category`, `Layer` and `Priority` from the brief, once, here.**
-> Six later steps are keyed on the systems index you just skipped — §2e's engine
-> domain, Section A's and Section B's recommended options, the Visual/Audio
+> Five later steps are keyed on the systems index you just skipped — Section A's
+> and Section B's recommended options, the Visual/Audio
 > REQUIRED table, §6 specialist routing, and §5-pre's Quick reference — and none
-> of them has an absent-index branch. An overridden system reaches all six at
+> of them has an absent-index branch. An overridden system reaches all five at
 > `standard` or `full`, so "skip the index" leaves them with no input at all.
 > Derive from the brief instead:
 >
@@ -145,95 +145,7 @@ If any upstream dependencies are undesigned, warn:
 
 ### 2e: Technical Feasibility Pre-Check
 
-Before asking the user to begin designing, load engine context and surface any
-constraints or knowledge gaps that will shape the design.
-
-**Step 1 — Determine the engine domain for this system:**
-Map the system's category (from systems-index.md) to an engine domain:
-
-Keyed on the `Category` column of `systems-index.md`. All nine categories
-`templates/systems-index.md` defines appear here; where a category spans several
-engine domains, pick the row matching what the system actually does and say
-which you picked.
-
-| `Category` | Engine Domain |
-|-----------|--------------|
-| `Gameplay` | **Physics** for combat / collision / movement; **Navigation** for AI and pathfinding; **Scripting** for rule-only systems with no engine surface |
-| `Core` | **Core** — scene management, state, resource loading; **Input** for controls and keybinding |
-| `UI` | UI |
-| `Audio` | Audio |
-| `Narrative` | Scripting — dialogue, quests, cutscenes |
-| `Progression` | Scripting — save-adjacent rule logic, no dedicated domain |
-| `Economy` | Scripting — data and rule logic, no dedicated domain |
-| `Persistence` | Core — save/load, settings, serialization |
-| `Meta` | Core — analytics, tutorials, accessibility plumbing |
-
-> Animation, Rendering and Networking are engine domains with no category of
-> their own: a system needing them will be `Gameplay` or `Core`. Name the domain
-> you read the reference for, whichever row you came in on.
-
-**Step 2 — Read engine context (if available):**
-- Identify the engine and version: read `engine.name` and `engine.version` from `project.yaml`. Resolve each field independently — if its key is absent or empty (including when `project.yaml` has no `engine:` block), fall back to `.opencode/docs/technical-preferences.md` (a `[TO BE CONFIGURED]` value means not set)
-- If engine is configured, read `docs/engine-reference/[engine]/VERSION.md`
-- Read `docs/engine-reference/[engine]/modules/[domain].md` if it exists.
-  **If it does not exist, say so by name** — *"no engine reference for `[domain]`
-  under `docs/engine-reference/[engine]/modules/`; feasibility not checked against
-  the pinned engine"* — and carry that into §5-pre. A silent skip here is
-  indistinguishable from a feasibility check that ran and found nothing wrong,
-  which is the failure `.opencode/rules/skill-authoring.md` obligation 3 exists to
-  stop.
-
-  > **This is not a rare branch.** The domain table above names `Scripting` and
-  > `Core` for five of the nine categories (`Narrative`, `Progression`, `Economy`
-  > → Scripting; `Persistence`, `Meta` → Core), plus a sub-row each under
-  > `Gameplay` and `Core`. The Godot reference ships `animation, audio, input,
-  > navigation, networking, physics, rendering, ui` — **there is no
-  > `scripting.md` and no `core.md`**. So the majority of non-`Gameplay` systems
-  > hit the absent branch every time, and `if it exists` turned that into
-  > silence. Either the reference gains those two files or the check reports it;
-  > until the former, do the latter.
-- Read `docs/engine-reference/[engine]/breaking-changes.md` for domain-relevant entries
-- Find the domain-matching ADRs without reading every ADR to learn the field you
-  filter on — grep the Domain field first, then read only the matches:
-  ```
-  Grep pattern="\*\*Domain\*\*" glob="docs/architecture/adr-*.md" output_mode="content"
-  ```
-  Read only the ADRs whose Domain matches this system's category (its `## Decision`
-  and `## Engine Compatibility` sections); skip the rest.
-
-**Step 3 — Present the Feasibility Brief:**
-
-If engine reference docs exist, present before starting design:
-
-```
-## Technical Feasibility Brief: [System Name]
-Engine: [name + version]
-Domain: [domain]
-
-### Known Engine Capabilities (verified for [version])
-- [capability relevant to this system]
-- [capability 2]
-
-### Engine Constraints That Will Shape This Design
-- [constraint from engine-reference or existing ADR]
-
-### Knowledge Gaps (verify before committing to these)
-- [post-cutoff feature this design might rely on — mark HIGH/MEDIUM risk]
-
-### Existing ADRs That Constrain This System
-- ADR-XXXX: [decision summary] — means [implication for this GDD]
-  (or "None yet")
-```
-
-If no engine reference docs exist (engine not yet configured), show a short note:
-> "No engine configured yet — skipping technical feasibility check. Run
-> `/setup-engine` before moving to architecture if you haven't already."
-
-**Step 4 — Ask before proceeding:**
-
-Use `question`:
-- "Any constraints to add before we begin, or shall we proceed with these noted?"
-  - Options: "Proceed with these noted", "Add a constraint first", "I need to check the engine docs — pause here"
+NOT ASSESSED — no reference set for this stack.
 
 ---
 

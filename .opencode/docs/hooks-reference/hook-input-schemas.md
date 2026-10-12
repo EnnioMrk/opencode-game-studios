@@ -40,8 +40,8 @@ matcher of `Bash|PowerShell` covers both.
 {
   "tool_name": "Write",
   "tool_input": {
-    "file_path": "src/gameplay/health.gd",
-    "content": "extends Node\n..."
+    "file_path": "src/gameplay/health.ts",
+    "content": "let health = 100\n..."
   }
 }
 ```
@@ -52,9 +52,9 @@ matcher of `Bash|PowerShell` covers both.
 {
   "tool_name": "Edit",
   "tool_input": {
-    "file_path": "src/gameplay/health.gd",
-    "old_string": "var health = 100",
-    "new_string": "var health: int = 100"
+    "file_path": "src/gameplay/health.ts",
+    "old_string": "let health = 100",
+    "new_string": "let health: number = 100"
   }
 }
 ```
@@ -65,7 +65,7 @@ matcher of `Bash|PowerShell` covers both.
 {
   "tool_name": "Read",
   "tool_input": {
-    "file_path": "src/gameplay/health.gd"
+    "file_path": "src/gameplay/health.ts"
   }
 }
 ```

@@ -28,8 +28,7 @@ If no subcommand is provided, output usage and stop. Verdict: **FAIL** — missi
 
 ## Phase 2A: Scan Mode
 
-Search the **code root** (resolve per `.opencode/docs/code-root-resolution.md`:
-`src/`, `Assets/` or `Source/` by engine) for debt indicators:
+Search the **code root** — `src/` (resolve per `.opencode/docs/code-root-resolution.md`) for debt indicators:
 
 - `TODO` comments (count and categorize)
 - `FIXME` comments (these are bugs disguised as debt)

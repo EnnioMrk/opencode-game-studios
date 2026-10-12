@@ -1,5 +1,5 @@
 ---
-description: "Traceability matrix mapping GDD requirements to ADRs. Finds gaps, cross-ADR conflicts, engine compatibility. PASS/CONCERNS/NOT ASSESSED/FAIL."
+description: "Traceability matrix mapping GDD requirements to ADRs. Finds gaps, cross-ADR conflicts. PASS/CONCERNS/NOT ASSESSED/FAIL."
 name: architecture-review
 ---
 
@@ -8,15 +8,13 @@ name: architecture-review
 # Architecture Review
 
 The architecture review validates that the complete body of architectural decisions
-covers all game design requirements, is internally consistent, and correctly targets
-the project's pinned engine version. It is the quality gate between Technical Setup
-and Pre-Production.
+covers all game design requirements and is internally consistent. It is the quality
+gate between Technical Setup and Pre-Production.
 
 **Argument modes:**
 - **No argument / `full`**: Full review — all phases
 - **`coverage`**: Traceability only — which GDD requirements have no ADR
 - **`consistency`**: Cross-ADR conflict detection only
-- **`engine`**: Engine compatibility audit only
 - **`single-gdd [path]`**: Review architecture coverage for one specific GDD
 - **`rtm`**: Requirements Traceability Matrix — extends the standard matrix
   to include story file paths and test file paths; outputs
@@ -51,9 +49,9 @@ Every `question` call follows `.opencode/docs/automation-modes.md`
 
 **Read `references/4-conflicts.md` now and follow it** — this phase's steps are in that file, not here. Read it again if the conversation was compacted or resumed during this phase.
 
-## Phase 5: Engine Compatibility Cross-Check
+## Phase 5: Compatibility Cross-Check
 
-**Read `references/5-engine.md` now and follow it** — this phase's steps are in that file, not here. Read it again if the conversation was compacted or resumed during this phase.
+NOT ASSESSED — no reference set for this stack.
 
 ## Phase 6: Architecture Document Coverage
 

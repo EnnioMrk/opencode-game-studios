@@ -127,7 +127,7 @@
 
 | Feature | Target Tier | Scope | Status | Implementation Notes |
 |---------|-------------|-------|--------|---------------------|
-| Subtitles for all spoken dialogue | Basic | All voiced content | Not Started | 100% coverage — no exceptions. Include narration, in-engine dialogue, radio/environmental dialogue heard from a distance. Test subtitle sync against voice acting timing. |
+| Subtitles for all spoken dialogue | Basic | All voiced content | Not Started | 100% coverage — no exceptions. Include narration, in-game dialogue, radio/environmental dialogue heard from a distance. Test subtitle sync against voice acting timing. |
 | Closed captions for gameplay-critical SFX | Comprehensive | Identified SFX list (below) | Not Started | Not all SFX need captions — only those that communicate state the player cannot infer visually. See the SFX audit table below. |
 | Mono audio option | Comprehensive | Global audio output | Not Started | Folds stereo/spatial audio to mono. Preserves volume balance between channels rather than summing to full volume on both sides. Essential for players with single-sided deafness. |
 | Independent volume controls | Basic | Music / SFX / Voice / UI audio buses | Not Started | Four independent sliders minimum. Persist to player profile. Range: 0–100%, default 80%. Expose in both main settings and the pause menu. |
@@ -155,7 +155,7 @@
 | Steam (PC) | Steam Accessibility Features / SDL | [Controller input remapping via Steam Input, subtitle support] | Not Started | Steam Input allows system-level remapping independent of in-game remapping. In-game remapping still required for keyboard/mouse. |
 | iOS | UIAccessibility / VoiceOver | [VoiceOver support for menus if mobile port planned] | N/A | Only required if mobile release is in scope. |
 | Android | AccessibilityService / TalkBack | [TalkBack support for menus if mobile port planned] | N/A | Only required if mobile release is in scope. |
-| PC (Screen Reader) | JAWS / NVDA / Windows Narrator | [Menu navigation announcements] | Not Started | Requires UI elements to expose accessible names and roles via platform UI layer. Godot 4.5+ AccessKit integration covers this for supported control types. Verify against engine-reference/godot/ docs. |
+| PC (Screen Reader) | JAWS / NVDA / Windows Narrator | [Menu navigation announcements] | Not Started | Requires UI elements to expose accessible names and roles via the platform UI layer. |
 
 ---
 

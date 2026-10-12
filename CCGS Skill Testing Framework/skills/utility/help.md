@@ -14,7 +14,7 @@ and in Production reads `production/sprint-status.yaml`.
 
 When `workflow` resolves to `minimal` (the default, because `modes.rigor`
 defaults to `minimal`) it skips the phase ladder, reads the session checkpoint
-(Step 3), and walks the minimal path (Step 4m): engine →
+(Step 3), and walks the minimal path (Step 4m):
 `design/game-brief.md` → stories → `/dev-story` ↔ `/story-done`. The optional
 argument is **what the user just finished or is stuck
 on** — the skill uses it to advance past the named step, and confusion language
@@ -85,13 +85,13 @@ None. `/help` is a read-only navigation skill. No director gates apply.
 
 ---
 
-### Case 2: Concept Stage — engine configured, no concept document
+### Case 2: Concept Stage — no concept document
 
 **Fixture:**
-- `project.yaml` sets `project.stage: Concept`, `modes.rigor: full`, and
-  `engine.name: "Godot"` (`full`, because at `standard` the art bible is
-  required only when visual-asset stories exist — `.opencode/docs/workflow-modes.md`
-  — and a Concept-stage project has no stories to decide it by)
+- `project.yaml` sets `project.stage: Concept` and `modes.rigor: full`
+  (`full`, because at `standard` the art bible is required only when
+  visual-asset stories exist — `.opencode/docs/workflow-modes.md` — and a
+  Concept-stage project has no stories to decide it by)
 - No `design/gdd/game-concept.md`, no `design/art/art-bible.md`, no
   `design/gdd/systems-index.md`, no sprint files
 
@@ -99,16 +99,16 @@ None. `/help` is a read-only navigation skill. No director gates apply.
 
 **Expected behavior:**
 1. Skill maps `Concept` to the catalog phase `concept`
-2. `artifact-check.sh --phase concept` reports `engine-setup` PRESENT (matched by
-   `engine.name` in `project.yaml`) and `game-concept`, `art-bible`, `map-systems` ABSENT
-3. `✓ Done` lists Engine Setup
+2. `artifact-check.sh --phase concept` reports `game-concept`, `art-bible` and
+   `map-systems` ABSENT
+3. `✓ Done` reports nothing yet — no Concept step is complete
 4. `→ Next up (REQUIRED)` is **Game Concept Document** with command `/brainstorm`
 5. `Coming up after that` lists Art Bible (`/art-bible`) and Systems Map (`/map-systems`)
 6. Verdict is COMPLETE
 
 **Assertions:**
 - [ ] Heading reads `## Where You Are: Concept`
-- [ ] Engine Setup is shown under `✓ Done` (not reported missing)
+- [ ] `✓ Done` reports nothing yet (no Concept step is complete)
 - [ ] `→ Next up` is Game Concept Document via `/brainstorm`
 - [ ] `/art-bible` and `/map-systems` appear under "Coming up after that", in that order
 - [ ] No Production-stage skill (e.g. `/dev-story`, `/sprint-plan`) is suggested
@@ -181,8 +181,8 @@ None. `/help` is a read-only navigation skill. No director gates apply.
 ### Case 5: Director Gate Check — minimal path, no gate and no gate-check route
 
 **Fixture:**
-- `project.yaml` has `engine.name: "Godot"` and no `modes` block (`modes.rigor`
-  defaults to `minimal`, so `workflow` resolves to `minimal`)
+- `project.yaml` has no `modes` block (`modes.rigor` defaults to `minimal`, so
+  `workflow` resolves to `minimal`)
 - `design/game-brief.md` exists
 - `production/epics/core/story-001.md` is `Status: Complete`,
   `story-002.md` is `Status: In Progress`, `story-003.md` is `Status: Ready`

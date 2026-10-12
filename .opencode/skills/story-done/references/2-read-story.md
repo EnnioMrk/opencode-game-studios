@@ -14,7 +14,6 @@ Read the full story file. Extract and hold in context:
 - **Acceptance Criteria** — the complete list (every checkbox item)
 - **Implementation files** — files listed under "files to create/modify"
 - **Story Type** — the `Type:` field from the story header (Logic / Integration / Visual/Feel / UI / Config/Data)
-- **Engine notes** — any engine-specific constraints noted
 - **Definition of Done** — if present, the story-level DoD
 - **Estimated vs actual scope** — if an estimate was noted
 

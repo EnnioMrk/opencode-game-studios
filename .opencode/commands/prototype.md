@@ -1,5 +1,5 @@
 ---
-description: "Concept prototype before GDDs — throwaway HTML, Engine or Paper build, PROCEED/PIVOT/KILL/NOT ASSESSED. After /brainstorm and /setup-engine."
+description: "Concept prototype before GDDs — throwaway HTML or Paper build, PROCEED/PIVOT/KILL/NOT ASSESSED. After /brainstorm."
 ---
 !`bash ".opencode/hooks/yaml-helper.sh" resolve_config --keys review_mode,automation,workflow`
 

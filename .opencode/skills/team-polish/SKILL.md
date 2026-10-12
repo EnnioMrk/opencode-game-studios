@@ -37,7 +37,7 @@ below), and the agents that work at them are team members, not director gates.
 **`team.size`**: which agents are active (orthogonal to review_mode gate-depth and workflow docs).
 - **`individual`** (default): `performance-analyst` + `technical-artist`. Other agents consulted via these two, not spawned separately. No programmer is active, so the optimisation list's programmer items are not implemented in this run — the report names the list as handed to `/dev-story` (Phase 2).
 - **`small`**: + `sound-designer` + `qa-tester` + `engine-programmer`, and `tools-programmer` when Phase 1 traces a cause to a content authoring tool (the full pipeline as documented).
-- **`studio`**: the `small` set, `engine-programmer` included, + an adversarial review pass: Phase 5's qa-tester is told "your job is not to confirm this holds — find how it breaks", and the report says the pass ran. This pipeline has no engine specialist to widen; engine-level work stays with `engine-programmer`.
+- **`studio`**: the `small` set, `engine-programmer` included, + an adversarial review pass: Phase 5's qa-tester is told "your job is not to confirm this holds — find how it breaks", and the report says the pass ran.
 A non-core agent needed at `individual` routes through the nearest active core agent with an informational note. **"Phase gate" means any phase that ends in an `question` decision point this pipeline itself lists** — a transition under Decision Points above, or a **Gate** step written into the pipeline below — **whatever the `automation` mode.** `guided` and `autonomous` change how a gate is passed (it auto-advances, or is recorded with `log_decision`), not whether it is one, so bounded-exception condition (3) below holds at it in every mode. An agent restricted to "phase gates only" is spawned at those points and no others. This active-set scoping applies throughout the pipeline below: any phase that names an agent outside the active set routes through the nearest core agent rather than spawning it.
 
 **Announce the active set before Phase 1 — never let the collapse be silent.**
@@ -67,7 +67,7 @@ enforced.**
 
 ## Team Composition
 - **performance-analyst** — Profiling, memory analysis, frame budget, and the optimisation list — it writes no game code
-- **engine-programmer** — Implements the optimisation list's engine-level items: rendering pipeline, memory, resource loading, hot paths (invoke when performance-analyst identifies low-level root causes)
+- **engine-programmer** — Implements the optimisation list's core-systems items: rendering pipeline, memory, resource loading, hot paths (invoke when performance-analyst identifies low-level root causes)
 - **technical-artist** — VFX polish, shader optimization, visual quality
 - **sound-designer** — Audio polish, mixing, ambient layers, feedback sounds
 - **tools-programmer** — Content pipeline tool verification, editor tool stability, automation fixes (Phase 2, when Phase 1 traces a cause to a content authoring tool)
@@ -77,7 +77,7 @@ enforced.**
 
 Use the `Agent` tool to spawn each team member as a subagent:
 - `subagent_type: performance-analyst` — Profiling, memory analysis, the optimisation list
-- `subagent_type: engine-programmer` — Engine-level fixes from the optimisation list: rendering, memory, resource loading
+- `subagent_type: engine-programmer` — Core-systems fixes from the optimisation list: rendering, memory, resource loading
 - `subagent_type: technical-artist` — VFX polish, shader optimization, visual quality
 - `subagent_type: sound-designer` — Audio polish, mixing, ambient layers
 - `subagent_type: tools-programmer` — Content pipeline and editor tool fixes from the optimisation list
@@ -94,7 +94,7 @@ Use the `Agent` tool to spawn each team member as a subagent:
 |---|---|
 | performance-analyst | `production/polish/[area]-report-[date].md` |
 | technical-artist | `production/polish/[area]-render-notes-[date].md` |
-| engine-programmer | `production/polish/[area]-engine-fixes-[date].md` |
+| engine-programmer | `production/polish/[area]-core-fixes-[date].md` |
 | tools-programmer | `production/polish/[area]-tool-fixes-[date].md` |
 | sound-designer | `production/polish/[area]-audio-notes-[date].md` |
 | qa-tester | `production/polish/[area]-verification-[date].md` |
@@ -123,12 +123,12 @@ Delegate to **performance-analyst**:
 - Identify performance bottlenecks and frame budget violations
 - Measure memory usage and check for leaks
 - Benchmark against target hardware specs
-- Output: performance report with the prioritized **optimisation list** — for each item, the change, its expected gain against the budget, and its owner (technical-artist for rendering-side changes, engine-programmer for engine systems and hot paths, tools-programmer for a content authoring tool, otherwise the programmer who owns the system)
+- Output: performance report with the prioritized **optimisation list** — for each item, the change, its expected gain against the budget, and its owner (technical-artist for rendering-side changes, engine-programmer for core systems and hot paths, tools-programmer for a content authoring tool, otherwise the programmer who owns the system)
 
 ### Phase 2: Optimization
 performance-analyst writes no game code ("recommend and assign", its agent file),
 so Phase 2 implements its Phase 1 list through the owners in the active set:
-- **engine-programmer** — spawned only when Phase 1 identified engine-level root causes (rendering pipeline, resource loading, memory allocator, hot paths in core loops): implement those items, fix allocation pressure, verify gameplay behavior is unchanged. Output: engine-level fixes with before/after metrics and profiler validation
+- **engine-programmer** — spawned only when Phase 1 identified core-systems root causes (rendering pipeline, resource loading, memory allocator, hot paths in core loops): implement those items, fix allocation pressure, verify gameplay behavior is unchanged. Output: core-systems fixes with before/after metrics and profiler validation
 - **tools-programmer** — only when Phase 1 traced a cause to a content authoring tool: fix the tool. Output: tool fixes with before/after metrics
 - **technical-artist** — rendering-side items (draw calls, overdraw, particles, shaders, LOD) join its Phase 3 brief
 
@@ -165,7 +165,7 @@ Delegate to **qa-tester**:
 - Test all edge cases: boundary conditions, rapid inputs, unusual sequences
 - Soak test: run the feature for extended periods checking for degradation
 - Stress test: maximum entities, worst-case scenarios
-- Regression test: verify polish changes haven't broken existing functionality — each Phase 2–4 change by name, engine-level fixes included
+- Regression test: verify polish changes haven't broken existing functionality — each Phase 2–4 change by name, core-systems fixes included
 - Test on minimum spec hardware (if available)
 - Output: test results with any remaining issues
 

@@ -10,7 +10,7 @@ implementation and produces a READY / NEEDS WORK / BLOCKED / NOT ASSESSED verdic
 ### Files That Must Exist
 | File | Required Fields / Sections | Read-Only? |
 |------|---------------------------|-----------|
-| `production/epics/[epic-slug]/story-NNN-[slug].md` | All header fields (`Status:`, `Layer:`, `Type:`, `Manifest Version:`), `## Context` (GDD path, TR-ID, ADR reference, Engine Notes, Control Manifest Rules), `## Acceptance Criteria`, `## Test Evidence`, `## Dependencies`, `## Out of Scope` | Yes |
+| `production/epics/[epic-slug]/story-NNN-[slug].md` | All header fields (`Status:`, `Layer:`, `Type:`, `Manifest Version:`), `## Context` (GDD path, TR-ID, ADR reference, Control Manifest Rules), `## Acceptance Criteria`, `## Test Evidence`, `## Dependencies`, `## Out of Scope` | Yes |
 | `docs/architecture/control-manifest.md` | `Manifest Version:` date in header, layer rules | Yes (if exists) |
 | `docs/architecture/tr-registry.yaml` | `id`, `status` fields per TR entry | Yes (if exists) |
 | `docs/architecture/adr-NNNN-[slug].md` (all ADRs referenced in stories) | `Status:` field | Yes |

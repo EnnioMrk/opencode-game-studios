@@ -51,7 +51,7 @@ its allowed tools) and no director gates apply.
 - `production/sprints/sprint-003.md` is the most recent sprint and references 4
   story files, each with acceptance criteria and a declared Type: Logic,
   Integration, Visual/Feel, UI
-- The stories reference GDDs in `design/gdd/`; `engine.name: Godot`
+- The stories reference GDDs in `design/gdd/`
 - `qa.level: standard`; `modes.automation: collaborative`
 
 **Input:** `/qa-plan sprint`

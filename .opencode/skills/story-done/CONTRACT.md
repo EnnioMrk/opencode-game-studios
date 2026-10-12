@@ -63,7 +63,7 @@ verdict set at all, so a reader had nothing to branch on.
 - Session state always records the final verdict and the next recommended story path
 
 ## Immutability Rules
-- READS but does NOT modify: `docs/architecture/tr-registry.yaml`, `docs/architecture/adr-NNNN-[slug].md` (Decision + Consequences only), GDD sections, `docs/architecture/control-manifest.md`, source files under the code root — `src/`, `Assets/` or `Source/` by engine (Grep only) — and test files under the engine's test root (existence checked with Glob; never run or edited)
+- READS but does NOT modify: `docs/architecture/tr-registry.yaml`, `docs/architecture/adr-NNNN-[slug].md` (Decision + Consequences only), GDD sections, `docs/architecture/control-manifest.md`, source files under the code root — `src/` (Grep only) — and test files under the test root — `tests/` (existence checked with Glob; never run or edited)
 - MODIFIES: the story `.md` file (status + completion notes), `production/sprint-status.yaml` (if exists), `production/session-state/active.md` (the `<!-- CHECKPOINT -->` block, overwritten), `docs/tech-debt-register.md` (append a row, and update its `Last updated:` and `Total items:` lines, only with user approval)
 - Does NOT write to the code root or the test root under any circumstances
 

@@ -99,7 +99,7 @@ design/art/art-bible.md` (Section 1's full option list is below). Choosing it is
 the approval to write that section; no section is written without it, fresh or
 retrofit.
 
-Extract performance budgets and the engine for asset standard constraints: read `performance.*` and `engine.name` from `project.yaml`; for any key absent or empty (including when `project.yaml` has no `performance` or `engine` block), fall back to `.opencode/docs/technical-preferences.md`.
+Extract performance budgets for asset standard constraints: read `performance.*` from `project.yaml`; for any key absent or empty (including when `project.yaml` has no `performance` block), fall back to `.opencode/docs/technical-preferences.md`.
 
 ---
 
@@ -276,7 +276,7 @@ Write the approved section to file.
 
 **Agent delegation**: Spawn in parallel:
 - **`art-director`**: File format preferences, naming convention direction, texture resolution tiers, LOD level expectations, export settings philosophy
-- **`technical-artist`**: Engine-specific hard constraints — poly count budgets per asset category, texture memory limits, material slot counts, importer constraints, anything from the performance budgets (`performance.*` in `project.yaml`, falling back to `.opencode/docs/technical-preferences.md`)
+- **`technical-artist`**: Technical hard constraints — poly count budgets per asset category, texture memory limits, material slot counts, importer constraints, anything from the performance budgets (`performance.*` in `project.yaml`, falling back to `.opencode/docs/technical-preferences.md`)
 
 If any art preference conflicts with a technical constraint (e.g., art-director wants 4K textures but performance budget requires 2K for mobile), surface the conflict explicitly with both positions — the ideal and the constrained standard, and the tradeoff. Do NOT silently resolve it — use `question` to let the user pick (options: the ideal standard, the constrained standard, or document both and let per-asset judgment apply). Ambiguity in asset standards is where production costs are born.
 
@@ -339,7 +339,6 @@ after Section 4 must not read like a finished bible.
 
 Before presenting next steps, check project state:
 - Does `design/gdd/systems-index.md` exist? → map-systems is done, skip that option
-- Is an engine configured — `engine.name` present in `project.yaml`, or a configured Engine field (not `[TO BE CONFIGURED]`) in `.opencode/docs/technical-preferences.md`? → setup-engine is done, skip that option
 - Does `design/gdd/` contain any `*.md` files? → design-system has been run, skip that option
 - Does `design/gdd/gdd-cross-review-*.md` exist? → review-all-gdds is done
 - Do GDDs exist (check above)? → include /consistency-check option
@@ -352,7 +351,6 @@ At `workflow: minimal`, the pool is `/create-stories` (no stories yet) or
 
 **Option pool — include only if not already done:**
 - `[_] Run /map-systems — decompose the concept into systems before writing GDDs` (skip if systems-index.md exists)
-- `[_] Run /setup-engine — configure the engine (asset standards may need revisiting after engine is set)` (skip if engine configured)
 - `[_] Run /design-system — start the first GDD` (skip if any GDDs exist)
 - `[_] Run /review-all-gdds — cross-GDD consistency check (required before Technical Setup gate)` (skip if gdd-cross-review-*.md exists)
 - `[_] Run /asset-spec — generate per-asset visual specs and AI generation prompts from approved GDDs` (include if GDDs exist)
@@ -390,7 +388,6 @@ Every section follows: **Question → Options → Decision → Draft (from art-d
 
 After the art bible is approved:
 - Run `/map-systems` to decompose the concept into game systems before authoring GDDs
-- Run `/setup-engine` if the engine is not yet configured (asset standards may need revisiting after engine selection)
 - Run `/design-system [first-system]` to start authoring per-system GDDs
 - Run `/consistency-check` once GDDs exist to validate them against the art bible's visual rules
 - Run `/create-architecture` to produce the master architecture document

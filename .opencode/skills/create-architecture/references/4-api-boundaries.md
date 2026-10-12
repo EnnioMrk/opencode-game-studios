@@ -15,10 +15,6 @@ Define the public contracts between modules. For each boundary:
 Write in pseudocode or the project's actual language (from technical preferences).
 These become the contracts programmers implement against.
 
-**Engine awareness check**: If any interface uses engine-specific types (e.g.
-`Node`, `Resource`, `Signal` in Godot), flag the version and verify the type
-exists and has not changed signature in the target engine version.
-
 Get user approval on the API boundaries, then record them in
 `production/session-state/active.md`; they are written at Phase 7.
 

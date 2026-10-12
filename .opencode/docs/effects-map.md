@@ -35,7 +35,7 @@ this file when adding a new setting or changing how a skill responds to one.
 - Skill behavior table — exactly what changes per skill per value
 
 **Coverage scope:** This document covers the skills most affected by each setting.
-Skills not listed (e.g. `ux-review`, `balance-check`, `test-flakiness`, `test-helpers`,
+Skills not listed (e.g. `ux-review`, `balance-check`, `test-flakiness`,
 `test-setup`, `soak-test`, `perf-profile`, `launch-checklist`, `release-checklist`,
 `skill-test`, `skill-improve`, `vertical-slice`) are not meaningfully affected by
 `project.yaml` settings and do not need entries here. Add a skill only when its
@@ -102,7 +102,7 @@ Only the explicitly-set `logic` key is overridden; sibling keys come through fro
 ### Whitelist — which settings can be locally overridden
 
 Only personal-experience settings can be locally overridden. Project-wide facts
-(engine, stage, naming conventions, what's required on disk) are locked to
+(stage, naming conventions, what's required on disk) are locked to
 `project.yaml` because divergence between developers would break team coordination.
 
 The rule for deciding which side a setting belongs on:
@@ -131,7 +131,6 @@ The rule for deciding which side a setting belongs on:
 |---------|----------------------------|
 | `schema_version`, `framework.*` | File metadata, not preferences — **exempt from the report below**, since a `project.local.yaml` carrying `schema_version: 1` is correct as written |
 | `project.name`, `version`, `genre`, `kind`, `stage` | Project identity |
-| `engine.*`, `specialists.*` | Whole team must use same engine |
 | `naming.*` | Code conventions must be consistent across team |
 | `platform.*` | Game facts (what platforms it ships on) |
 | `performance.target_framerate`, `frame_budget_ms`, `draw_call_limit`, `memory_ceiling_mb` | Game budgets, shared targets |
@@ -372,7 +371,7 @@ behavior: strict project defaults for CI, looser developer overrides for local w
 | **gate-check** | Director panel runs in parallel — **width set by `modes.workflow`**, not by this axis | Director panel runs in parallel — same width rule; phase gates always run | Artifact existence checks only, no directors spawned |
 | **design-system** | All section specialists + CD-GDD-ALIGN sign-off gate | Specialists for Sections D and H only (+ G when its knobs interact, + Visual/Audio when visual feedback is central); CD-GDD-ALIGN skipped | No section specialists; CD-GDD-ALIGN skipped |
 | **art-bible** | All section specialists + AD-ART-BIBLE sign-off gate | All section specialists, AD-ART-BIBLE skipped | All section specialists, AD-ART-BIBLE skipped |
-| **architecture-decision** | Engine specialist + TD-ADR gate | Engine specialist; TD-ADR skipped | Engine specialist; TD-ADR skipped |
+| **architecture-decision** | TD-ADR gate | TD-ADR skipped | TD-ADR skipped |
 | **create-architecture** | TD-ARCHITECTURE + LP-FEASIBILITY agents, in parallel | Both skipped | Both skipped |
 | **brainstorm** | CD-PILLARS, AD-CONCEPT-VISUAL, TD-FEASIBILITY, PR-SCOPE | All skipped | All skipped |
 | **map-systems** | TD-SYSTEM-BOUNDARY, PR-SCOPE, CD-SYSTEMS | All skipped | All skipped |
@@ -397,9 +396,9 @@ These skills run the same way at `full`, `lean` and `solo`. None of them takes a
 | Skill | What runs at every level |
 |-------|--------------------------|
 | **review-all-gdds** | Phase 2 consistency pass and Phase 3 design-theory pass, in parallel |
-| **architecture-review** | The primary engine specialist is consulted after the engine audit (recorded as NOT ASSESSED when no engine is configured) |
-| **dev-story** | Core programmer routing, plus the engine specialist when the story involves engine-specific APIs or patterns, and always when engine risk is HIGH |
-| **code-review** | Language, shader and UI specialists when an engine is configured, plus `qa-tester` for Logic and Integration stories |
+| **architecture-review** | Full traceability matrix over all GDDs and ADRs |
+| **dev-story** | Core programmer routing, at every level |
+| **code-review** | Architectural review of the file or changeset, plus `qa-tester` for Logic and Integration stories |
 | **security-audit** | `security-engineer` is spawned to run the audit |
 
 ---
@@ -442,8 +441,7 @@ pipeline's own review steps run in every mode.
   `art-director` twice with the identical `sections 1–4` brief. Every section is
   still specialist-authored; per-section approval and write-to-file are unchanged.
 - **dev-story** core programmer routing (gameplay-programmer, ui-programmer, etc.)
-  always runs regardless of mode — only the optional engine-specialist escalation
-  for HIGH risk stories is gated.
+  always runs regardless of mode.
 - **hotfix** and **day-one-patch** are exempt — all agents always run.
 - When a gate is skipped, skills emit: `"[GATE-ID] skipped — [mode] mode."` before
   proceeding. This is consistent across all skills.
@@ -542,10 +540,10 @@ working code
 > setting changes what gate-check enforces and what completeness checks
 > validate, not what the user can invoke.
 
-> **`minimal` floor:** Even in minimal mode, engine choice and a filled
-> **`design/game-brief.md`** are required before code starts — the brief's
+> **`minimal` floor:** Even in minimal mode, a filled
+> **`design/game-brief.md`** is required before code starts — the brief's
 > build-order field is the plan, so there is no separate `sprint-plan` step.
-> Both take minutes and prevent real problems downstream. Everything else can
+> It takes minutes and prevents real problems downstream. Everything else can
 > be skipped.
 
 > **Escape hatches via `workflow_overrides`:** Users who want *almost* the
@@ -560,7 +558,7 @@ working code
 |-------|----------------|---------------------|----------|
 | `full` | High | All 8 GDD sections per system, full architecture, all ADRs, art bible, UX specs per screen | Projects where design correctness matters more than speed — teams, commercial titles, learning the full pipeline |
 | `standard` | Balanced | 5 GDD sections per system, one architecture doc, critical ADRs, game concept, systems index | Projects that have outgrown a brief — several interacting systems, or a design someone else has to implement |
-| `minimal` | Low | One-page `design/game-brief.md` + engine choice (build order in the brief = the plan; no separate sprint plan) | **Default.** Get to code fast — small scope, jam projects, or the design already in your head. Raise it when the project grows |
+| `minimal` | Low | One-page `design/game-brief.md` (build order in the brief = the plan; no separate sprint plan) | **Default.** Get to code fast — small scope, jam projects, or the design already in your head. Raise it when the project grows |
 
 **standard required GDD sections:** Overview, Detailed Rules, Edge Cases, Dependencies,
 Acceptance Criteria.
@@ -628,7 +626,7 @@ checklists differ per phase per mode.
 |------|------|----------|---------|
 | Concept → Systems Design | game-concept.md, pillars, Visual Identity Anchor | game-concept.md only | `design/game-brief.md` only (content check, not section check) |
 | Systems Design → Technical Setup | systems-index, all MVP GDDs reviewed (8 sections), cross-GDD review | systems-index, 5-section GDDs reviewed, cross-GDD review optional | Not applicable — no gates between brief and code; the gate PASSes with that note |
-| Technical Setup → Pre-Production | engine, art bible sections 1–4+, 3+ ADRs, architecture, UX specs started | engine, art bible only if visual assets, critical ADRs, architecture | engine configured (required floor) |
+| Technical Setup → Pre-Production | art bible sections 1–4+, 3+ ADRs, architecture, UX specs started | art bible only if visual assets, critical ADRs, architecture | Not applicable — no gates between brief and code; the gate PASSes with that note |
 | Pre-Production → Production | sprint plan, complete art bible, epics, UX specs, control manifest; Vertical Slice + its playtest recommended (absent → CONCERNS) | epics, sprint plan; complete art bible, UX specs, control manifest recommended; Vertical Slice recommended | the brief's Build order + stories under `production/epics/`; the Vertical Slice items drop — the core loop is fun and runs end to end, checked on the current build |
 | Production → Polish | core mechanics, tests, smoke check, QA sign-off, 3+ playtests | core mechanics, smoke check, playable end to end, 1+ playtest, no open S1 bugs | smoke check, playable end to end, no open S1 bugs |
 | Polish → Release | all features, content complete, localization (`/localize qa` per locale), QA, smoke, no open S1–S3 bugs, newest `/security-audit` with no open CRITICAL/HIGH | all features, smoke, no open S1 bugs, the security audit | smoke, no open S1 bugs |
@@ -680,11 +678,11 @@ never softens a verdict — the strictest verdict from whoever ran still wins, a
 
 | Skill | full | standard | minimal |
 |-------|------|----------|---------|
-| **project-stage-detect** | Checks for all doc types; missing art bible or UX specs flagged as gaps | Adjusts expectations — art bible only flagged if visual-asset stories exist; non-core UX specs not flagged | `design/game-brief.md` + engine present = normal state; no gaps flagged for absent GDDs |
+| **project-stage-detect** | Checks for all doc types; missing art bible or UX specs flagged as gaps | Adjusts expectations — art bible only flagged if visual-asset stories exist; non-core UX specs not flagged | `design/game-brief.md` present = normal state; no gaps flagged for absent GDDs |
 | **adopt** | Full format compliance audit across all doc types | Audit scope reduced to required docs only | `design/game-brief.md` format check only |
 | **reverse-document** | Generates full 8-section GDD from code | Generates 5-section GDD from code | Generates `design/game-brief.md` from code |
 | **propagate-design-change** | Full cascading impact analysis across all ADRs | Checks critical ADRs for references only | Not applicable |
-| **help** | Full artifact detection — surfaces all missing docs as next steps | Adjusts "what's missing" to required docs only — optional docs not surfaced as gaps | `design/game-brief.md` + engine present = next step is code |
+| **help** | Full artifact detection — surfaces all missing docs as next steps | Adjusts "what's missing" to required docs only — optional docs not surfaced as gaps | `design/game-brief.md` present = next step is code |
 
 ---
 
@@ -861,7 +859,7 @@ recommend and proceed — the tradeoff between user control and speed
 |---------------|---------|
 | Choosing a system name or document path | "What should we call this system?" |
 | Mutually exclusive design directions | "Real-time or turn-based?" |
-| Any choice that gates downstream work | Engine choice, architecture approach |
+| Any choice that gates downstream work | Architecture approach |
 | Scope changes | "Cut this feature or slip the deadline?" |
 | Any decision that can't be changed without significant rework | Core loop mechanic |
 
@@ -910,7 +908,7 @@ before writing code. In `guided` only genuinely ambiguous decisions stop. In
 or routing questions. In `guided` defaults are applied automatically. In
 `autonomous` recommended defaults are taken without prompting.
 
-`start`, `adopt`, `setup-engine`, `retrospective`, `localize`, `propagate-design-change`,
+`start`, `adopt`, `retrospective`, `localize`, `propagate-design-change`,
 `asset-spec`, `smoke-check`, `qa-plan`, `story-readiness`
 
 ---
@@ -925,7 +923,6 @@ The reasons are noted.
 | **hotfix** | Emergency decisions — user must approve scope and risk before any action |
 | **gate-check** | Results must be reviewed — a gate verdict without user acknowledgement defeats the purpose |
 | **day-one-patch** | Release-critical — every action needs explicit sign-off |
-| **setup-engine** | One-time irreversible choice that affects the entire project |
 
 ---
 
@@ -970,7 +967,7 @@ appends to the existing log.
 | `file_deletions` | Removing a story, deleting a GDD, removing a system, removing a test file |
 | `schema_changes` | Changes to project.yaml, story template, control manifest, ADR template, GDD template |
 | `architecture_decisions` | New ADR creation, ADR replacement, system boundary changes |
-| `version_bumps` | Engine version change, framework version bump, dependency major version change |
+| `version_bumps` | Framework version bump, dependency major version change |
 | `external_calls` | Invoking external APIs (asset gen, AI services) when in autonomous mode |
 
 The list is a YAML list of these strings. Skills check whether the current decision falls into one of the configured categories and prompt regardless of `automation` value.
@@ -984,7 +981,6 @@ The list is a YAML list of these strings. Skills check whether the current decis
 | **scope-check** | `scope_changes` |
 | **propagate-design-change** | `schema_changes`, `architecture_decisions` |
 | **architecture-decision** | `architecture_decisions` |
-| **setup-engine** | `version_bumps`, `schema_changes` |
 | **story-done** | `file_deletions` (when removing/replacing test files) |
 | **asset-spec** | `external_calls` (when calling external generators) |
 
@@ -1080,26 +1076,16 @@ The list is a YAML list of these strings. Skills check whether the current decis
 
 ## testing.framework
 
-**Controls:** Which test framework the project uses — drives test-runner commands and per-engine assumptions in CI
-**Values:** engine-specific (see table)
-**Default:** auto-populated by `/setup-engine` based on engine choice
-**Set by:** `/setup-engine`, `/settings`
-**Read by:** `/test-helpers` — the only skill that references it. `/qa-plan`, `/dev-story`, `/regression-suite`, `/test-setup` and `/smoke-check` do **not** name the key, despite being plausible readers.
+**Controls:** Which test framework the project uses — drives test-runner commands in CI
+**Values:** a test-framework name
+**Default:** `[UNSET]` — the project's own choice
+**Set by:** `/settings`
+**Read by:** no skill — nothing references it. `/qa-plan`, `/dev-story`, `/regression-suite`, `/test-setup` and `/smoke-check` do **not** name the key, despite being plausible readers.
   *(Derived by grep. A helper-based read such as `session_state_enabled()` would not show up, so treat this list as the verified floor, not a ceiling.)*
 
-**Priority chain:** `testing.framework` in `project.yaml` → engine default
+**Priority chain:** `testing.framework` in `project.yaml` → unset
 
 > **Migrated from `technical-preferences.md`.**
-
----
-
-### Engine defaults
-
-| Engine | Default test framework | Alternatives |
-|--------|------------------------|--------------|
-| Godot | `gdunit4` | `godot-test`, `WAT` |
-| Unity | `unity-test-framework` | `nunit`, custom |
-| Unreal | `unreal-automation` | Google Test, custom |
 
 ---
 
@@ -1110,7 +1096,7 @@ The list is a YAML list of these strings. Skills check whether the current decis
 | **qa-plan** | Test plan tailored to framework's idioms (assertion style, fixture pattern, parameterized tests) |
 | **dev-story** | Test framework name passed to programmer subagent in implementation brief |
 | **regression-suite** | Test file naming and discovery patterns match framework conventions |
-| **test-setup** | Scaffolds the right test layout for the engine (gdUnit4 under `addons/gdUnit4/` + `tests/` for Godot; `Assets/Tests/` asmdefs for Unity; `Source/<Module>/Private/Tests/` for Unreal) |
+| **test-setup** | Scaffolds the test framework and layout for the project |
 | **smoke-check** | Invokes framework-appropriate test runner |
 
 ---
@@ -1233,12 +1219,6 @@ closing, or produces a warning and lets work continue — per test type
 > non-null value at standard or minimal level emits a warning at session-start:
 > *"coverage_minimum is set but qa.level is not full — value will not be enforced."*
 
-> **Implementation is engine-specific.** Coverage measurement is different per engine:
-> - Godot: gdunit4 coverage report (markdown export)
-> - Unity: Unity Test Framework coverage (xml export)
-> - Unreal: gcov-style coverage from clang flags
-> CCGS does not unify these — gate-check reads the engine-appropriate report.
-
 ---
 
 ## strict_gate_checks
@@ -1309,9 +1289,9 @@ closing, or produces a warning and lets work continue — per test type
 
 | Value | Active set | Notes |
 |-------|-----------|-------|
-| `individual` | Core 8: `producer`, `game-designer`, `gameplay-programmer`, engine-specialist (engine-driven), `technical-artist`, `sound-designer`, `qa-tester`, `writer`. **Default.** | Directors and lead-* run only on explicit invocation (e.g. via `/architecture-decision`). Specialists outside the core 8 routed through their nearest core agent. Each `team-*` skill names its own set per value, which can sit outside the core 8 (`team-release` runs `release-manager`); each skill's own `team.size` list is authoritative, and the Affected skills table below mirrors it. |
-| `small` | Core 15: directors (CD, TD, PR) + leads (LP, AD, QL, ND) + game-designer + systems-designer + engine-specialist + technical-artist + sound-designer + qa-tester + ux-designer + writer | `team-*` skills add their `small` set (below); most reach their full pipeline only at `studio`. |
-| `studio` | All 49 agents available. Engine sub-specialists (e.g. `unity-dots-specialist` separate from `unity-specialist`) routed when relevant. The adversarial review pass in `team-combat`, `team-ui` and `team-polish`. | Commercial titles, learning the full org chart, large teams with parallel work. |
+| `individual` | Core 7: `producer`, `game-designer`, `gameplay-programmer`, `technical-artist`, `sound-designer`, `qa-tester`, `writer`. **Default.** | Directors and lead-* run only on explicit invocation (e.g. via `/architecture-decision`). Specialists outside the core 7 routed through their nearest core agent. Each `team-*` skill names its own set per value, which can sit outside the core 7 (`team-release` runs `release-manager`); each skill's own `team.size` list is authoritative, and the Affected skills table below mirrors it. |
+| `small` | Core 14: directors (CD, TD, PR) + leads (LP, AD, QL, ND) + game-designer + systems-designer + technical-artist + sound-designer + qa-tester + ux-designer + writer | `team-*` skills add their `small` set (below); most reach their full pipeline only at `studio`. |
+| `studio` | All agents available. The adversarial review pass in `team-combat`, `team-ui` and `team-polish`. | Commercial titles, learning the full org chart, large teams with parallel work. |
 
 ---
 
@@ -1319,17 +1299,17 @@ closing, or produces a warning and lets work continue — per test type
 
 | Skill | individual | small | studio |
 |-------|------|-------|--------|
-| **team-combat** | Single agent (gameplay-programmer) runs the pipeline; ai-programmer escalated only if AI work flagged | Default pipeline as documented | Default + the primary engine specialist may use its sub-specialists + adversarial review pass (Phase 5's qa-tester looks for how it breaks) |
+| **team-combat** | Single agent (gameplay-programmer) runs the pipeline; ai-programmer escalated only if AI work flagged | Default pipeline as documented | Default + adversarial review pass (Phase 5's qa-tester looks for how it breaks) |
 | **team-narrative** | writer only; narrative-director invoked only on explicit pillar conflict | narrative-director + writer, + localization-lead and world-builder at `review_mode: full` | All six narrative agents, whatever the review mode |
-| **team-ui** | ui-programmer + ux-designer | + accessibility-specialist + art-director | + engine UI specialist + adversarial review pass (Phase 4's reviewers look for where it fails its spec) |
-| **team-audio** | sound-designer only | + audio-director + technical-artist + gameplay-programmer | + accessibility-specialist + the primary engine specialist |
+| **team-ui** | ui-programmer + ux-designer | + accessibility-specialist + art-director | + adversarial review pass (Phase 4's reviewers look for where it fails its spec) |
+| **team-audio** | sound-designer only | + audio-director + technical-artist + gameplay-programmer | + accessibility-specialist |
 | **team-level** | level-designer only | + systems-designer + art-director + qa-tester | + narrative-director + world-builder + accessibility-specialist |
 | **team-qa** | qa-tester only; qa-lead invoked at phase gates only | qa-lead + qa-tester pipeline | qa-lead + per-story qa-tester spawn + sign-off |
 | **team-release** | release-manager only | + producer + devops-engineer + qa-lead + community-manager | + security-engineer + analytics-engineer + localization-lead + performance-analyst, and network-programmer when the game is multiplayer |
 | **team-polish** | performance-analyst + technical-artist; no programmer is active, so Phase 2's optimisation list is handed to `/dev-story` | + sound-designer + qa-tester + engine-programmer (implements Phase 2's optimisation list), and tools-programmer when Phase 1 traces a cause to a content authoring tool | engine-programmer, as at small, + adversarial review pass (Phase 5's qa-tester looks for how it breaks) |
 | **team-live-ops** | live-ops-designer + economy-designer | + analytics-engineer + community-manager | + writer + narrative-director |
-| **gate-check** | Panel width is `modes.workflow`'s axis, not this one (gates always run) — `team.size` affects only specialist depth within each director's review | Same as individual for directors; specialists within directors' reviews use small set | Same plus engine sub-specialists |
-| **architecture-decision** | TD-ADR (in `full` review mode) + the primary engine specialist | Same | Same — no sub-specialist or adversarial reviewer at any size |
+| **gate-check** | Panel width is `modes.workflow`'s axis, not this one (gates always run) — `team.size` affects only specialist depth within each director's review | Same as individual for directors; specialists within directors' reviews use small set | Same |
+| **architecture-decision** | TD-ADR (in `full` review mode) | Same | Same — no sub-specialist or adversarial reviewer at any size |
 
 ---
 
@@ -1640,7 +1620,7 @@ Each row is the gate that must be passed to advance FROM that stage.
 |------------|-------------------------------|-------------------|
 | **Concept** | `game-concept.md`, design pillars, Visual Identity Anchor | `Systems Design` |
 | **Systems Design** | `systems-index.md`, all MVP GDDs reviewed, cross-GDD consistency check | `Technical Setup` |
-| **Technical Setup** | Engine configured, art bible sections 1–4 (at `standard`, only if visual stories exist), 3+ ADRs, architecture doc, traceability index, test framework, accessibility and interaction-pattern docs | `Pre-Production` |
+| **Technical Setup** | art bible sections 1–4 (at `standard`, only if visual stories exist), 3+ ADRs, architecture doc, traceability index, test framework, accessibility and interaction-pattern docs | `Pre-Production` |
 | **Pre-Production** | Epics defined, first sprint plan, UX specs, control manifest (a Vertical Slice is recommended, not required) | `Production` |
 | **Production** | Core mechanics implemented, main path playable, smoke check passes, QA sign-off | `Polish` |
 | **Polish** | All features complete, content complete, localization, security audit, no open S1–S3 bugs | `Release` |
@@ -1673,9 +1653,9 @@ required at `standard` and `minimal` levels.
 > No reference anywhere outside this file.
 
 **Controls:** What type of project this is — routes skill subsets
-**Values:** `game` | `tool` | `engine` | `mod` | `library`
+**Values:** `game` | `tool` | `mod` | `library`
 **Default:** `game`
-**Set by:** `/start`, `/setup-engine`
+**Set by:** `/start`
 **Read by:** Many skills (advisory routing — see below)
 
 **Priority chain:** `project.kind` in `project.yaml` → hardcoded default of `game`
@@ -1688,71 +1668,26 @@ required at `standard` and `minimal` levels.
 |-------|---------|-------------------|
 | `game` | Default. Full CCGS framework applies. | Nothing |
 | `tool` | Developer tool, not a game | Skip art bible, narrative, level design, playtesting |
-| `engine` | Custom engine or library underneath games | Skip game-specific concerns entirely (narrative, art, playtest) |
-| `mod` | Mod for an existing game | Skip engine setup; assume parent engine; reduce architecture scope |
+| `mod` | Mod for an existing game | Skip setup; assume the parent game's code; reduce architecture scope |
 | `library` | Reusable library | Emphasize tests + API design; design docs lighter; no asset pipeline |
 
 ---
 
 ### Affected skills
 
-| Skill | game | tool | engine | mod | library |
-|-------|------|------|--------|-----|---------|
-| **brainstorm** | Full game-concept output | Tool concept output (user, problem, solution) | Engine concept (target use cases, scope) | Mod concept (what changes) | Library concept (API surface, target consumers) |
-| **art-bible** | Required at appropriate workflow level | Skipped | Skipped | Optional (depends on visual scope) | Skipped |
-| **map-systems** | Full game systems decomposition | Tool subsystems | Engine subsystems | Modified-system map | Library module map |
-| **playtest-report** | Required at appropriate stages | Skipped or replaced with user testing | Skipped | Required (compatibility testing) | Skipped or replaced with API usage testing |
-| **setup-engine** | Game engine setup | Skipped or replaced with build tool setup | Self-referential — engine IS the project | Parent engine assumed | Skipped or replaced with library scaffolding |
-
----
-
-## engine.name and specialists
-
-**Controls:** Which engine-specific specialist agents are routed to for code
-implementation, review, and architecture validation  
-**Values:** `Godot` | `Unity` | `Unreal`  
-**Default:** `[UNSET]` — must be configured via `/setup-engine`  
-**Set by:** `/setup-engine`  
-**Read by:** `dev-story`, `code-review`, `architecture-decision`, `create-architecture`, `team-combat`, `team-ui`, `team-audio`
-
-> **Currently stored in `technical-preferences.md`**, not `project.yaml`. After
-> YAML expansion, `engine.name` and the specialist routing table move to
-> `project.yaml specialists` block. Skill behavior is unchanged — only the
-> source file changes.
-
-> **This is a project attribute, not a mode.** Engine choice drives specialist
-> routing the same way `platform.multiplayer` drives network routing — skills
-> respond to a fact about the project, not a process preference.
-
----
-
-### Specialist routing by engine
-
-| Engine | Language/code specialist | Shader specialist | UI specialist | Additional specialists |
-|--------|--------------------------|-------------------|---------------|----------------------|
-| **Godot** | `godot-gdscript-specialist` (GDScript) or `godot-csharp-specialist` (C#) — driven by `engine.language` | `godot-shader-specialist` | `godot-specialist` | `godot-gdextension-specialist` |
-| **Unity** | `unity-specialist` | `unity-shader-specialist` | `unity-ui-specialist` | `unity-addressables-specialist`, `unity-dots-specialist` |
-| **Unreal** | `unreal-specialist` | `unreal-specialist` | `ue-umg-specialist` | `ue-gas-specialist`, `ue-blueprint-specialist`, `ue-replication-specialist` |
-| **[UNSET]** | No specialist spawned — warning emitted | No specialist spawned | No specialist spawned | None |
-
----
-
-### Affected skills
-
-| Skill | How engine.name is used |
-|-------|------------------------|
-| **dev-story** | Routes code stories to language specialist. Spawns engine specialist alongside for HIGH engine-risk stories or engine-specific API usage. |
-| **code-review** | Routes review to language, shader, or UI specialist based on file type being reviewed. |
-| **architecture-decision** | Loads `docs/engine-reference/[engine]/VERSION.md` before authoring. Spawns engine specialist to validate ADR for API correctness and post-cutoff compatibility. |
-| **create-architecture** | Includes engine-specific constraints and patterns in architecture doc based on engine choice. |
-| **team-combat / team-ui / team-audio** | Spawn the engine specialist their pipeline names: team-combat the primary engine specialist (from `team.size: small`), team-ui the engine UI specialist (`specialists.ui`, at `studio`), team-audio the primary engine specialist (at `studio`). The other six `team-*` skills spawn none. |
+| Skill | game | tool | mod | library |
+|-------|------|------|-----|---------|
+| **brainstorm** | Full game-concept output | Tool concept output (user, problem, solution) | Mod concept (what changes) | Library concept (API surface, target consumers) |
+| **art-bible** | Required at appropriate workflow level | Skipped | Optional (depends on visual scope) | Skipped |
+| **map-systems** | Full game systems decomposition | Tool subsystems | Modified-system map | Library module map |
+| **playtest-report** | Required at appropriate stages | Skipped or replaced with user testing | Required (compatibility testing) | Skipped or replaced with API usage testing |
 
 ---
 
 ## commands
 
-> **Live since the run-and-observe step.** This block was RESERVED — written by
-> `/setup-engine`, read by nothing — through most of v1.1. `test`, `smoke` and
+> **Live since the run-and-observe step.** This block was RESERVED — read by
+> nothing — through most of v1.1. `test`, `smoke` and
 > `build` gained readers as the parse-check and smoke gates landed; `run` gained
 > its reader last, when `/dev-story` Phase 6 step 4 started launching the game to
 > look at it. The per-skill table at the bottom is now current behaviour, not
@@ -1760,17 +1695,16 @@ implementation, review, and architecture validation
 
 **Controls:** Explicit shell commands to build, test, run, and smoke-test the project
 **Values:** strings — shell-executable commands
-**Default:** `[UNSET]` — populated by `/setup-engine` with engine-typical defaults
-**Set by:** `/setup-engine`, `/settings`
-**Written by:** `/setup-engine`, `/settings`. **Read by:** `test` — `/smoke-check`, `/hotfix` (narrowed to the affected suite), `/bug-report` (verify mode, narrowed to the affected suite), `/day-one-patch` (targeted fix and, when set, the broader regression — NOT ASSESSED if unset), `/dev-story` (Godot parse-check executable resolution), `/test-setup` (the `<Project>.` filter root on Unreal), `project-coherence.sh`; `smoke` — `/dev-story` (Unity parse check), `/smoke-check` (build check when tests are WAIVED); `build` — `/smoke-check` (build check when tests are WAIVED and `smoke` is unset), `project-coherence.sh`; `run` — `/dev-story` (Phase 6 step 4, the run-and-observe step). `/launch-checklist` and `/regression-suite` name these commands but do not run them.
+**Default:** `[UNSET]` — set per project
+**Set by:** `/settings`
+**Written by:** `/settings`. **Read by:** `test` — `/smoke-check`, `/hotfix` (narrowed to the affected suite), `/bug-report` (verify mode, narrowed to the affected suite), `/day-one-patch` (targeted fix and, when set, the broader regression — NOT ASSESSED if unset), `/dev-story` (parse-check resolution), `/test-setup`, `project-coherence.sh`; `smoke` — `/dev-story` (parse check), `/smoke-check` (build check when tests are WAIVED); `build` — `/smoke-check` (build check when tests are WAIVED and `smoke` is unset), `project-coherence.sh`; `run` — `/dev-story` (Phase 6 step 4, the run-and-observe step). `/launch-checklist` and `/regression-suite` name these commands but do not run them.
   *(Derived by grep. A helper-based read would not show up, so treat this list as the verified floor, not a ceiling.)*
 
-**Priority chain:** `commands.*` in `project.yaml` → engine-typical default → no command available
+**Priority chain:** `commands.*` in `project.yaml` → no command available
 
-> **Why explicit:** Without this block, CCGS has to guess engine-typical conventions
-> for invoking the project. Better to be explicit per-project — covers cases where
-> projects customize their build (e.g., a Godot project using gdunit4 for tests but
-> a custom export script for builds).
+> **Why explicit:** Without this block, CCGS has to guess how to invoke the
+> project. Better to be explicit per-project — it covers cases where a project
+> customizes its build.
 
 ---
 
@@ -1781,29 +1715,25 @@ Each command can be a simple string (used on all OSes) or an OS-aware map:
 **Simple form** (one command, used on every OS):
 ```yaml
 commands:
-  build: "godot --headless --export-debug '<PRESET>'"   # ask; see the note below
-  test:  "godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode"
-  run:   "godot --path . --windowed --resolution 1280x720"
-  smoke: "godot --headless --quit-after 5"
+  build: "bun run build"
+  test:  "bun run check"
+  run:   "bun run dev"
+  smoke: "bun run build"
 ```
-
-Note that `build` is the one row the simple form suits least: an export preset
-names a *platform*, so a single build string is portable only for a project that
-builds one platform. The other three rows are genuinely OS-independent.
 
 **OS-aware form** (different commands per OS):
 ```yaml
 commands:
   build:
-    default: "godot --headless --export-debug 'Linux/X11'"
-    windows: "godot.exe --headless --export-debug 'Windows Desktop'"
-    macos:   "godot --headless --export-debug 'macOS'"
+    default: "<the command used on any OS>"
+    windows: "<the Windows variant>"
+    macos:   "<the macOS variant>"
   test:
-    default: "godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode"
+    default: "<the test command>"
   run:
-    default: "godot --path . --windowed --resolution 1280x720"
+    default: "<the windowed launch>"
   smoke:
-    default: "godot --headless --quit-after 5"
+    default: "<the boot check>"
 ```
 
 **Resolution rule:** if the value is a string, use it as-is on any OS. If the
@@ -1817,41 +1747,12 @@ keys are inside the locked file, not a local override).
 
 | Field | Purpose |
 |-------|---------|
-| `build` | Full project build for CI or release. `/smoke-check` runs it only as the WAIVED-path build check when `commands.smoke` is unset; `project-coherence.sh` (which `/smoke-check` runs first) checks the export preset it names, and `/launch-checklist` only asks whether the build produces a valid artifact. |
+| `build` | Full project build for CI or release. `/smoke-check` runs it only as the WAIVED-path build check when `commands.smoke` is unset; `project-coherence.sh` (which `/smoke-check` runs first) checks the command it names, and `/launch-checklist` only asks whether the build produces a valid artifact. |
 | `test` | Run the full test suite. Run by `/smoke-check` and, narrowed to the affected suite, by `/hotfix`, `/bug-report` (verify mode) and `/day-one-patch`; `project-coherence.sh` checks the runner it names. `/regression-suite` does **not** run it. |
-| `run` | Launch the **game** windowed at a fixed resolution — not the editor. Used by `/dev-story` Phase 6 step 4 to observe the feature and retain a screenshot; see `.opencode/docs/run-and-observe.md` for the per-engine capture flags that are appended to it. |
-| `smoke` | Minimal "does it boot?" check. Run by `/dev-story` as the Unity parse check (Phase 6 step 2), and by `/smoke-check` as the build check when `qa.level: minimal` waives tests. |
+| `run` | Launch the **game** windowed at a fixed resolution — not a headless check. Used by `/dev-story` Phase 6 step 4 to observe the feature and retain a screenshot; see `.opencode/docs/run-and-observe.md` for the capture procedure. |
+| `smoke` | Minimal "does it boot?" check. Run by `/dev-story` as the parse check (Phase 6 step 2), and by `/smoke-check` as the build check when `qa.level: minimal` waives tests. |
 
 ---
-
-### Engine defaults
-
-When `/setup-engine` runs, it populates `commands` based on engine choice — except
-the **build** row, which it must **ask** for. The build artifact is named by a
-project-defined string (a Godot export preset, a Unity build target), and no
-engine reference in this repo can source it. See `/setup-engine` §"The Godot
-`build` row must not hardcode `'Linux/X11'`".
-
-| Engine | build | test | run | smoke |
-|--------|-------|------|-----|-------|
-| Godot | `godot --headless --export-debug '<PRESET>'` | `godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode` | `godot --path . --windowed --resolution 1280x720` | `godot --headless --quit-after 5` |
-| Unity | `"<Unity editor>" -batchmode -quit -projectPath . -buildTarget <TARGET> -build<PLATFORM>Player Builds/<Target>/<Game>.exe` | `"<Unity editor>" -batchmode -runTests -projectPath . -testPlatform EditMode -testResults test-results/editmode.xml` | `Builds/<Target>/<Game>.exe -screen-width 1280 -screen-height 720 -screen-fullscreen 0` | `"<Unity editor>" -batchmode -quit -projectPath . -logFile -` |
-| Unreal | `"<UE root>/Engine/Binaries/DotNET/AutomationTool/AutomationTool.exe" BuildCookRun -project="$(pwd -W 2>/dev/null || pwd)/<project>.uproject" -platform=Win64 -build -cook` (confirm per project) | `"<UE root>/Engine/Binaries/Win64/UnrealEditor-Cmd.exe" "$(pwd -W 2>/dev/null || pwd)/<project>.uproject" -ExecCmds="Automation RunTests <project>.; Quit" -unattended -nullrhi -stdout -FullStdOutLogOutput` | `"<UE root>/Engine/Binaries/Win64/UnrealEditor.exe" "$(pwd -W 2>/dev/null || pwd)/<project>.uproject" -game -windowed -ResX=1280 -ResY=720` | `"<UE root>/Engine/Binaries/Win64/UnrealEditor-Cmd.exe" "$(pwd -W 2>/dev/null || pwd)/<project>.uproject" -game -nullrhi -unattended -stdout -ExecCmds="Quit"` |
-
-The Unreal row is Windows'. `/setup-engine` writes the Linux block (`Engine/Build/BatchFiles/RunUAT.sh`,
-`Engine/Binaries/Linux/UnrealEditor`) on Linux, and on macOS only `build`, leaving `test`, `run` and
-`smoke` unset, with a comment in `project.yaml` asking you to set them via `/settings` — see
-`docs/engine-reference/unreal/current-best-practices.md`, "Command Line".
-
-> **`<PRESET>` and `<TARGET>` are placeholders, not values to copy.** A Godot
-> export preset is whatever string the operator typed into `export_presets.cfg`;
-> the shipped defaults are per-platform (`Windows Desktop`, `macOS`, `Web`,
-> `Linux/X11`). Copying a preset name you do not have gives you a build command
-> that fails with `Unknown export preset`; copying one you *do* have, but did not
-> mean, gives you a command that succeeds and builds the wrong platform. The
-> second is the dangerous one. If no presets exist yet — common, since
-> `/setup-engine` usually runs before the project has any — write
-> `[TO BE CONFIGURED]` rather than guessing a name.
 
 Users override per-project as needed via `/settings commands.<field>=<value>` or by editing `project.yaml` directly.
 
@@ -1861,10 +1762,10 @@ Users override per-project as needed via `/settings commands.<field>=<value>` or
 
 | Skill | How `commands` is used |
 |-------|------------------------|
-| **smoke-check** | Runs `commands.test`, or the engine's default when it is unset; on Unreal it builds the editor target first. Critical path for QA hand-off. |
+| **smoke-check** | Runs `commands.test` when it is set. Critical path for QA hand-off. |
 | **launch-checklist** | Emits a checklist **item** asking whether the build produces a valid artifact. It does **not** run `commands.build`; the verification is a human step. |
 | **validate-push.sh** | Does **not** read `commands.*`. It warns on pushes to protected branches (`main`/`master`/`release/*`) and runs no build or smoke command — the block path in it is commented out, so it never fails a push. |
-| **dev-story** | Phase 6 step 2 is the parse check: `.opencode/scripts/godot-parse-check.gd` on Godot, `commands.smoke` on Unity, the editor-target build on Unreal. Phase 6 step 4 runs `commands.run` — the windowed game launch — to observe the feature and retain a screenshot (`.opencode/docs/run-and-observe.md`). |
+| **dev-story** | Phase 6 step 2 is the parse check. Phase 6 step 4 runs `commands.run` — the windowed game launch — to observe the feature and retain a screenshot (`.opencode/docs/run-and-observe.md`). |
 | **regression-suite** | Maps coverage by **globbing test filenames**. It does **not** invoke `commands.test`, so coverage here means "a test file exists", never "a test passed". |
 
 ---
@@ -1873,8 +1774,8 @@ Users override per-project as needed via `/settings commands.<field>=<value>` or
 
 **Controls:** Code naming conventions for the project
 **Values:** see field list below
-**Default:** engine-specific (auto-populated by `/setup-engine`)
-**Set by:** `/setup-engine`, `/settings`
+**Default:** `[UNSET]` — set per project
+**Set by:** `/settings`
 **Read by:** `/adopt`, `/architecture-review`, `/asset-spec`,
 `/create-architecture`, `/create-control-manifest`, `/dev-story`,
 `/vertical-slice` — each reads `naming.*` from `project.yaml` and feeds the
@@ -1889,15 +1790,12 @@ conventions into a brief, manifest or spec. **NOT by `/code-review` and NOT by
 > and `validate-commit.sh` does not warn on violations — neither contains any
 > naming logic. If you need enforcement, it has to be added.
 >
-> **Asset filenames.** `validate-assets.sh` warns when a file under Godot's
+> **Asset filenames.** `validate-assets.sh` warns when a file under
 > `assets/` has an uppercase letter, a space or a hyphen in its name (it expects
 > lowercase with underscores), and it takes no config input. `/asset-spec`
-> specifies asset names from `naming.*`. Unity's `Assets/` and Unreal's `Content/`
-> are not naming-checked: those engines name assets in PascalCase. On Godot-C#,
-> where `/setup-engine` sets `naming.files: PascalCase`, the hook warns on assets
-> named exactly as `/asset-spec` specified them. `naming.files` describes
-> **source** files by its own examples (`PlayerController.cs`), and no key governs
-> asset filenames, so treat the hook's naming warning as advisory there.
+> specifies asset names from `naming.*`. `naming.files` describes
+> **source** files by its own examples, and no key governs
+> asset filenames, so treat the hook's naming warning as advisory.
 
 > **Moved from `technical-preferences.md`**, which is being deleted. Naming
 > conventions are project-level facts shared by everyone on the project, so they
@@ -1907,19 +1805,17 @@ conventions into a brief, manifest or spec. **NOT by `/code-review` and NOT by
 
 ### Fields
 
-| Field | Values | Godot default | Unity default | Unreal default |
-|-------|--------|---------------|---------------|----------------|
-| `classes` | `PascalCase` \| `snake_case` \| `camelCase` | PascalCase | PascalCase | PascalCase |
-| `variables` | `snake_case` \| `camelCase` | snake_case | camelCase | camelCase |
-| `constants` | `SCREAMING_SNAKE` \| `PascalCase` | SCREAMING_SNAKE | SCREAMING_SNAKE | SCREAMING_SNAKE |
-| `signals` (Godot) / `events` (Unity, Unreal) | `past_tense` \| `on_event_name` | past_tense | on_event_name | OnEventName |
-| `files` | `snake_case` \| `PascalCase` \| `kebab-case` | snake_case | PascalCase | PascalCase |
-| `scenes` / `prefabs` | `snake_case` \| `PascalCase` | snake_case | PascalCase | PascalCase |
+| Field | Values |
+|-------|--------|
+| `classes` | `PascalCase` \| `snake_case` \| `camelCase` |
+| `variables` | `snake_case` \| `camelCase` |
+| `constants` | `SCREAMING_SNAKE` \| `PascalCase` |
+| `signals` / `events` | `past_tense` \| `on_event_name` |
+| `files` | `snake_case` \| `PascalCase` \| `kebab-case` |
+| `scenes` | `snake_case` \| `PascalCase` |
 
-> **`signals` vs `events`:** Godot uses signals natively; Unity uses C# events
-> or UnityEvents; Unreal uses delegates and dynamic multicast. The field stays
-> named `signals` in project.yaml for consistency across engines — interpret as
-> "event-like callbacks" regardless of engine.
+> **`signals` vs `events`:** the field stays named `signals` in project.yaml —
+> interpret it as "event-like callbacks".
 
 ---
 
@@ -2192,8 +2088,8 @@ the `<!-- CHECKPOINT -->` block; the others append a SESSION EXTRACT.
 **Controls:** Tracks which CCGS version created or last touched this project
 **Values:** `framework.version` (semver string) + `framework.last_upgraded` (ISO date)
 **Default:** stamped in the template's `project.yaml` at each release
-**Set by:** the template; `/start` (Phase 3c), `/setup-engine` and `/gate-check` write the block into a `project.yaml` they create, and `migrate-v1-config.sh` (which `/adopt` runs) writes `framework.version` into the one it builds
-**Read by:** no skill branches on it — it is file metadata, not a behavioural setting. It appears in `/start`, `/gate-check`, `/settings` and `/setup-engine` as part of the `project.yaml` block they **write or display**, and in `yaml-helper.sh`.
+**Set by:** the template; `/start` (Phase 3c) and `/gate-check` write the block into a `project.yaml` they create, and `migrate-v1-config.sh` (which `/adopt` runs) writes `framework.version` into the one it builds
+**Read by:** no skill branches on it — it is file metadata, not a behavioural setting. It appears in `/start`, `/gate-check` and `/settings` as part of the `project.yaml` block they **write or display**, and in `yaml-helper.sh`.
   *(The four skills above were verified to name it; whether each reads it or merely emits it was NOT separated, so this says 'appears in', not 'read by'.)*
 
 ---
@@ -2242,12 +2138,10 @@ A project is detected as needing migration when:
 |---------------|-------------|
 | `production/stage.txt` (single line) | `project.stage` |
 | `production/review-mode.txt` (single line) | `modes.review_mode` |
-| `.opencode/docs/technical-preferences.md` → "Engine & Language" section | `engine.name`, `engine.version`, `engine.language`, `engine.rendering`, `engine.physics` |
 | `technical-preferences.md` → "Input & Platform" section | `platform.targets`, `platform.primary_input`, `platform.gamepad_support`, `platform.touch_support` |
 | `technical-preferences.md` → "Naming Conventions" section | `naming.classes`, `naming.variables`, `naming.constants`, `naming.signals`, `naming.files`, `naming.scenes` |
 | `technical-preferences.md` → "Performance Budgets" section | `performance.target_framerate`, `performance.frame_budget_ms`, `performance.draw_call_limit`, `performance.memory_ceiling_mb` |
 | `technical-preferences.md` → "Testing" section | `testing.framework`, `qa.coverage_minimum` (bare number only — prose is reported for manual entry) |
-| `technical-preferences.md` → "Engine Specialists" section | `specialists.code`, `specialists.shader`, `specialists.ui`, `specialists.additional` |
 
 **Value rename — `review_mode: none` → `solo`.** v1.0 used `none` for the "no
 director reviews" tier; v1.1 renamed that tier to `solo` (the enum is
@@ -2302,8 +2196,8 @@ User reads the report before running `--finalize`.
 
 ## Complete example `project.yaml`
 
-A full project.yaml with every setting, showing sensible defaults for a solo
-Godot project. Use this as the reference shape when authoring or migrating.
+A full project.yaml with every setting. Use this as the reference shape when
+authoring or migrating.
 
 ```yaml
 schema_version: 1
@@ -2317,7 +2211,7 @@ project:
   genre: "ARPG"
   version: "0.1.0"
   stage: Concept             # Concept | Systems Design | Technical Setup | Pre-Production | Production | Polish | Release
-  kind: game                 # game | tool | engine | mod | library
+  kind: game                 # game | tool | mod | library
 
 modes:
   review_mode: lean          # full | lean | solo
@@ -2343,7 +2237,7 @@ docs:
   density: balanced          # terse | balanced | thorough
 
 testing:
-  framework: gdunit4         # engine-specific — auto-populated by /setup-engine
+  framework: bun             # the project's test runner
   strict:
     logic: true              # unit test failures BLOCK story closure
     integration: true        # integration test failures BLOCK
@@ -2369,24 +2263,11 @@ platform:
   touch_support: "None"      # Full | Partial | None
   cert_tier: none            # none | itch | steam | console
 
-engine:
-  name: "Godot"              # Godot | Unity | Unreal — set by /setup-engine
-  version: "4.6"
-  language: "GDScript"       # GDScript | C# | C++ | Blueprint
-  rendering: "Forward+"
-  physics: "Jolt"
-
-specialists:                 # auto-populated by /setup-engine
-  code: "godot-gdscript-specialist"
-  shader: "godot-shader-specialist"
-  ui: "godot-specialist"
-  additional: ["godot-gdextension-specialist"]
-
 naming:
   classes: PascalCase        # PascalCase | snake_case | camelCase
   variables: snake_case
   constants: SCREAMING_SNAKE
-  signals: past_tense        # past_tense | on_event_name (engine-interpreted)
+  signals: past_tense        # past_tense | on_event_name
   files: snake_case
   scenes: snake_case
 
@@ -2405,10 +2286,10 @@ performance:
   enforce: warn              # warn | block | off
 
 commands:                    # simple string OR OS-aware map per command
-  build: "godot --headless --export-debug '<PRESET>'"   # your export_presets.cfg name
-  test: "godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode"
-  run: "godot --path . --windowed --resolution 1280x720"
-  smoke: "godot --headless --quit-after 5"
+  build: "bun run build"
+  test: "bun run check"
+  run: "bun run dev"
+  smoke: "bun run build"
 
 features:
   session_state: on          # off | on

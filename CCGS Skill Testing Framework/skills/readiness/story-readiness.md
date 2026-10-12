@@ -47,7 +47,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
   - `ADR: ADR-0003`; `docs/architecture/adr-0003-inventory.md` has `## Status` Accepted
   - `Type: Logic`, an `## Acceptance Criteria` section with 3 testable items, and a `## Test Evidence` section naming the test path
   - An estimate, an Out of Scope statement, and `Dependencies: None`
-  - Engine notes (or "N/A — no engine API involved"), the relevant manifest rules, and a performance note
+  - Reference notes (`NOT ASSESSED — no reference set for this stack`), the relevant manifest rules, and a performance note
   - A `Manifest Version:` equal to the one in `docs/architecture/control-manifest.md`
   - No TBD / UNRESOLVED markers and no asset paths
 - A sprint plan in `production/sprints/` lists other stories
@@ -95,7 +95,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 - [ ] Output explicitly names ADR-0005 as the blocker
 - [ ] Output says to wait for the ADR's acceptance before implementing
 - [ ] Skill does not output READY regardless of other checks passing
-- [ ] Variant — same story at `modes.workflow: standard`, with `| **Layer** | Feature |` in ADR-0005's `## Engine Compatibility` table (non-critical): the story references the Proposed ADR, so the verdict is still BLOCKED — a referenced Proposed ADR blocks at every tier, because `/dev-story` stops on it
+- [ ] Variant — same story at `modes.workflow: standard`, with a `**Layer**: Feature` row in ADR-0005 (non-critical): the story references the Proposed ADR, so the verdict is still BLOCKED — a referenced Proposed ADR blocks at every tier, because `/dev-story` stops on it
 - [ ] Variant — the same non-critical ADR at `standard`, now `Accepted`, with the story's `Manifest Version:` older than the control manifest's: the stale version is listed under Gaps as advisory, with its `Fix:` line, and the verdict is READY — an advisory gap does not downgrade it
 
 ---
@@ -203,7 +203,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 - Story `production/epics/ui/story-003-shop-panel.md` has `Type: UI`, a
   `GDD: design/gdd/shop.md` reference quoting the requirement it implements, two
   testable acceptance criteria naming what the shop panel shows, "No ADR applies —
-  pure layout", engine notes, an estimate, an Out of Scope statement,
+  pure layout", an estimate, an Out of Scope statement,
   `Dependencies: None` and a performance note — and no `## Test Evidence` section,
   nor any other mention of where a screenshot will go
 - No TBD / UNRESOLVED markers and no asset paths

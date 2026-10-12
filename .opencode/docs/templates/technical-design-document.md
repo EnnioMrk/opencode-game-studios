@@ -8,19 +8,16 @@
 - **Related ADR**: [ADR-XXXX if applicable]
 - **Related Design Doc**: [Link to game design doc this implements]
 
-## Engine API Surface
+## API Surface
 
 | Field | Value |
 |-------|-------|
-| **Engine** | [e.g. Godot 4.6 / Unity 6 / Unreal Engine 5.7] |
-| **APIs Depended On** | [Specific classes/methods/nodes used, version-pinned — e.g. `CharacterBody3D.move_and_slide() (Godot 4.x)`] |
-| **References Consulted** | [engine-reference docs read before writing this — e.g. `docs/engine-reference/godot/modules/physics.md`] |
-| **Post-Cutoff Features Used** | [Features from engine versions beyond LLM training cutoff, or "None"] |
-| **Unverified Assumptions** | [API behaviours assumed but not yet tested against the target version, or "None"] |
-| **Engine Upgrade Risk** | [LOW / MEDIUM / HIGH — how fragile is this design if the engine version changes?] |
+| **APIs Depended On** | [Specific classes/methods used, version-pinned] |
+| **References Consulted** | [Project or library docs read before writing this] |
+| **Unverified Assumptions** | [Behaviours assumed but not yet tested, or "None"] |
 
 > **Rule**: If any **Unverified Assumptions** are listed, this document cannot be marked
-> as Accepted until those assumptions are validated in the actual engine environment.
+> as Accepted until those assumptions are validated in the running app.
 
 ## Overview
 [2-3 sentence summary of what this system does and why it exists]

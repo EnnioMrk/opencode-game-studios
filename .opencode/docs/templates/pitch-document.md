@@ -119,7 +119,6 @@ player action."]
 | Launch | [Date] | Release build |
 
 **Team Size**: [X people, roles]
-**Engine**: [Godot / Unity / Unreal]
 **Estimated Budget**: [Range if applicable]
 
 ---

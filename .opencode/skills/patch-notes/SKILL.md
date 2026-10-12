@@ -45,9 +45,8 @@ before Phase 2 and stop if it fails.
 > a repo-level stop does not.
 
 Corroborate before you proceed, cheaply: the Game commits should name systems
-that appear in `design/` and the code root (`src/`, `Assets/` or `Source/`). If
-they name a product those directories
-never mention, that is the real wrong-history signal — stop.
+that appear in `design/` and the code root (`src/`). If they name a product those
+directories never mention, that is the real wrong-history signal — stop.
 
 If **no** commit in the range is this game's, say so and stop:
 

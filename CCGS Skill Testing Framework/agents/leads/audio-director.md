@@ -2,7 +2,7 @@
 
 ## Agent Summary
 **Domain owned:** Sonic identity — sound palette, music direction and emotional mapping, audio event architecture, mix strategy, adaptive audio design, audio asset specifications and naming.
-**Does NOT own:** Visual design (art-director), audio engine code (gameplay-programmer / engine-programmer), audio middleware changes (technical-director approval), narrative story content (narrative-director), UX interaction flows (ux-designer).
+**Does NOT own:** Visual design (art-director), audio implementation code (gameplay-programmer / engine-programmer), audio middleware changes (technical-director approval), narrative story content (narrative-director), UX interaction flows (ux-designer).
 **Gate IDs handled:** None. No director gate is assigned to audio-director (`AD-` gates belong to art-director). Design-review verdicts come from the `/design-review` skill, which spawns audio-director as a specialist that returns findings.
 
 ---

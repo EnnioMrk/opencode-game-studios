@@ -13,7 +13,7 @@
 Once all sections are approved, write the complete document to
 `docs/architecture/architecture.md`.
 
-In an update (Phase 0e `[A]`, or a focus-area argument), write only the chosen
+In an update (Phase 0c `[A]`, or a focus-area argument), write only the chosen
 sections instead, replacing each in place with `Edit`, and raise `Version`; the
 ask below then names those sections and the version change.
 
@@ -31,12 +31,8 @@ The document structure:
 ## Document Status
 - Version: [N]
 - Last Updated: [date]
-- Engine: [name + version]
 - GDDs Covered: [list]
 - ADRs Referenced: [list]
-
-## Engine Knowledge Gap Summary
-[Condensed from Phase 0d inventory — HIGH/MEDIUM risk domains and their implications]
 
 ## System Layer Map
 [From Phase 1]
@@ -77,7 +73,7 @@ After writing the master architecture document, perform an explicit sign-off bef
 
 **Step 1 — Spawn `technical-director` via `Agent` using gate TD-ARCHITECTURE (`.opencode/docs/director-gates/td-architecture.md`):**
 
-Pass: the architecture document path (`docs/architecture/architecture.md`), the Technical Requirements Baseline (TR-IDs and count), the ADR list with statuses, and the Engine Knowledge Gap Inventory from Phase 0d. Issue this call and Step 2's before waiting for either result.
+Pass: the architecture document path (`docs/architecture/architecture.md`), the Technical Requirements Baseline (TR-IDs and count), and the ADR list with statuses. Issue this call and Step 2's before waiting for either result.
 
 **Step 2 — Spawn `lead-programmer` via `Agent` using gate LP-FEASIBILITY (`.opencode/docs/director-gates/lp-feasibility.md`):**
 

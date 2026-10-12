@@ -41,7 +41,7 @@ None. Estimation is an advisory informational skill; no gates are invoked.
 ### Case 1: Happy Path — Clear task in a documented system with existing patterns
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`, so the code root is `src/`
+- The code root is `src/`
 - `design/gdd/combat.md` documents melee hit detection
 - `src/combat/` holds the melee attack code; similar collision code already exists there
 - `production/sprints/sprint-003.md` through `sprint-005.md` record completed combat tasks
@@ -71,7 +71,6 @@ None. Estimation is an advisory informational skill; no gates are invoked.
 ### Case 2: High Uncertainty — New subsystem, no architecture decided
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`
 - `src/` holds no source files for an online or matchmaking subsystem
 - `design/gdd/online.md` describes the lobby with open "TBD" requirements, and says the networking approach (transport, host model) is not yet decided
 
@@ -96,7 +95,7 @@ None. Estimation is an advisory informational skill; no gates are invoked.
 ### Case 3: No Sprint Velocity Data — Estimate still produced, gap stated
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`; `src/core/` holds the inventory code the save touches
+- `src/core/` holds the inventory code the save touches
 - `design/gdd/save-load.md` documents the save system clearly
 - `production/sprints/` is empty — no historical sprints
 
@@ -121,7 +120,6 @@ None. Estimation is an advisory informational skill; no gates are invoked.
 ### Case 4: Vague Task — Clarification before estimating
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`
 - Project has GDDs and source code under `src/`; sprint history exists
 
 **Input:** `/estimate make combat feel better`
@@ -143,7 +141,7 @@ None. Estimation is an advisory informational skill; no gates are invoked.
 ### Case 5: Gate Compliance — No gate; estimates are informational
 
 **Fixture:**
-- `project.yaml`: `engine.name: godot`, `modes.review_mode: full`
+- `project.yaml`: `modes.review_mode: full`
 - Task relates to a documented system with medium complexity; its code is under `src/`
 
 **Input:** `/estimate Add item pickup with inventory stacking`

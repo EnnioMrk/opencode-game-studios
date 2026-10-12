@@ -24,9 +24,6 @@ Recommended path (in order, `standard`/`full`):
    in the Tuning Knobs and Formulas sections
 6. `/review-all-gdds` — cross-system consistency check
 
-**Note:** If you used the HTML path and feel is still uncertain, consider running
-a quick engine path prototype targeting feel before writing GDDs.
-
 **If PIVOT:**
 
 Before routing to the next prototype, capture the carry-forward note. Ask these

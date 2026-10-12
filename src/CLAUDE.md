@@ -2,12 +2,6 @@
 
 When writing or editing game code in this directory, follow these standards.
 
-## Engine Version Warning
-
-The LLM's training data predates the pinned engine version.
-**Always check `docs/engine-reference/` before using any engine API.**
-Do not guess at post-cutoff API signatures — look them up first.
-
 ## Coding Standards
 
 - All public APIs require doc comments
@@ -20,11 +14,9 @@ Do not guess at post-cutoff API signatures — look them up first.
 
 ## File Routing
 
-Match the engine-specialist agent to the file type being written.
-`/setup-engine` records which specialist handles code, shaders and UI in the
-`specialists` block of `project.yaml`.
-
-When in doubt, use `specialists.code` from `project.yaml`.
+Match the specialist agent to the file type being written — `gameplay-programmer`
+for gameplay code, `ui-programmer` for UI, `technical-artist` for shaders and
+visual work.
 
 ## Tests
 

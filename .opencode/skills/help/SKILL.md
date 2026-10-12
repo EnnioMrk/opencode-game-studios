@@ -140,10 +140,9 @@ against the working tree and reports one line per step. Map its statuses:
 
 Do not re-derive any of this with Glob/Grep. `any_of` in particular is a list of
 **alternatives** — one match is enough — and hand-evaluating it has already
-produced a false "incomplete" once: `engine-setup` is satisfied by `engine.name`
-in `project.yaml` **or** by the legacy `Engine:` line in
-`.opencode/docs/technical-preferences.md`, and the script reports which alternative
-matched (`alt=`/`match=`).
+produced a false "incomplete" once: a setting that migrated can legitimately
+live in either the new or the legacy location, and the script reports which
+alternative matched (`alt=`/`match=`).
 
 **`NO_CHECK` never means done.** The script prints a `NO_CHECK:` total before the
 rows; if most of a phase is NO_CHECK, say that plainly rather than implying the
@@ -172,7 +171,7 @@ Label these differently — show what's been detected, then note it may be ongoi
 
 ## Step 4m: The Minimal Path (`workflow: minimal` only)
 
-At `minimal` the route is the catalog's `paths.minimal`, not a phase: engine →
+At `minimal` the route is the catalog's `paths.minimal`, not a phase:
 `design/game-brief.md` → stories → `/dev-story` ↔ `/story-done`. Resolve it in
 one call:
 
@@ -184,11 +183,10 @@ Map the statuses exactly as in Step 4. `implement` and `story-done` are
 `NO_CHECK` by design — the story status lines below are their check. The next
 step is the first of these that applies:
 
-1. `engine-setup` not PRESENT → `/setup-engine`
-2. `game-brief` not PRESENT → `/brainstorm` (at `minimal` it writes the one-page brief)
-3. `create-stories` not PRESENT → `/create-stories` with no argument (at
+1. `game-brief` not PRESENT → `/brainstorm` (at `minimal` it writes the one-page brief)
+2. `create-stories` not PRESENT → `/create-stories` with no argument (at
    `minimal` it builds the stories straight from the brief's MVP list)
-4. Stories exist → the list below was printed by `.opencode/scripts/story-status.sh`
+3. Stories exist → the list below was printed by `.opencode/scripts/story-status.sh`
    before you read this skill: one line per unfinished story, **already in
    the route's order** — `IN_REVIEW`, then `IN_PROGRESS`, then `TODO` (a
    `Ready` or `Not Started` story) in build order — then `BLOCKED`, `OTHER`,
@@ -301,7 +299,7 @@ names no finished story, so ✓ Done gives their count, not their titles:
 **In progress:** [from active.md, if any]
 
 ### ✓ Done
-- Engine: [engine] · Game brief · [N] stories
+- Game brief · [N] stories
 
 ### → Next up
 **[Story NNN: title]** — [what it delivers]

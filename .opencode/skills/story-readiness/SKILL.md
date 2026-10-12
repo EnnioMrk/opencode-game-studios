@@ -204,11 +204,11 @@ items pass or are explicitly marked N/A with a stated reason.
 > advisory unless they concern a **critical** ADR; at `minimal` the rest of this
 > section is N/A.
 >
-> At `standard`, an advisory item — a stale manifest version, missing engine notes
-> or manifest rules for a non-critical ADR — is written up like a NEEDS WORK item,
+> At `standard`, an advisory item — a stale manifest version, or missing
+> manifest rules for a non-critical ADR — is written up like a NEEDS WORK item,
 > under Gaps with its `Fix:` line, but it never BLOCKS and does not by itself
 > downgrade READY. An ADR is critical
-> when the `**Layer**` row of its `## Engine Compatibility` table says
+> when its `**Layer**` row says
 > Foundation, or when that row is missing — when in doubt, treat it as critical
 > (`.opencode/docs/workflow-modes.md`). Read the rows once, alongside the Section 2
 > status scan: `Grep pattern="\*\*Layer\*\*" glob="docs/architecture/adr-*.md" output_mode="content"`.
@@ -248,10 +248,7 @@ items pass or are explicitly marked N/A with a stated reason.
     entries changed, then update the story's `Manifest Version:` to current.
   - Auto-pass if either the story has no `Manifest Version:` field OR the manifest
     does not exist.
-- [ ] **Engine notes present**: For any post-cutoff engine API this story
-  is likely to touch, implementation notes or a verification requirement are
-  included. If the story clearly does not touch engine APIs (e.g., it is a
-  pure data/config change), "N/A — no engine API involved" is acceptable.
+- [ ] **Reference notes present**: `NOT ASSESSED — no reference set for this stack`.
 - [ ] **Control manifest rules noted**: Relevant layer rules from the control
   manifest are referenced, OR "N/A — manifest not yet created" is stated.
   This item auto-passes if `docs/architecture/control-manifest.md` does not
@@ -283,7 +280,7 @@ items pass or are explicitly marked N/A with a stated reason.
 
 - [ ] **Referenced assets exist**: Scan the story text for asset path patterns
   (paths containing `assets/`, or file extensions `.png`, `.jpg`, `.svg`,
-  `.wav`, `.ogg`, `.mp3`, `.glb`, `.gltf`, `.tres`, `.tscn`, `.res`).
+  `.wav`, `.ogg`, `.mp3`, `.glb`, `.gltf`).
   - For each asset path found: use Glob to check whether the file exists.
   - If any referenced asset does not exist: **NEEDS WORK** — note the missing
     path(s). (The story references assets that have not been created yet.

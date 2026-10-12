@@ -8,7 +8,7 @@
 **In this file:**
 
 - The ADR template
-- 5.5 Engine Specialist Validation
+- 5.5 Validation
 - 5.6 Technical Director Strategic Review, with the review mode check
 - 5.7 GDD Sync Check: found, none found, could not check
 - Write approval
@@ -27,8 +27,8 @@ Following this format:
 
 ## Last Verified
 [YYYY-MM-DD — when this ADR was last confirmed accurate against the current
-engine version and design. Update this date when you re-read and confirm it is
-still correct, even if nothing changed.]
+design. Update this date when you re-read and confirm it is still correct, even
+if nothing changed.]
 
 ## Decision Makers
 [Who was involved in this decision]
@@ -38,17 +38,6 @@ still correct, even if nothing changed.]
 tiered context loading — a skill scanning 20 ADRs uses this to decide whether to
 read the full decision. Be specific: name the system, the problem, and the
 chosen approach.]
-
-## Engine Compatibility
-
-| Field | Value |
-|-------|-------|
-| **Engine** | [e.g. Godot 4.6] |
-| **Domain** | [Physics / Rendering / UI / Audio / Navigation / Animation / Networking / Core / Input] |
-| **Knowledge Risk** | [LOW / MEDIUM / HIGH — from VERSION.md] |
-| **References Consulted** | [List engine-reference docs read, e.g. `docs/engine-reference/godot/modules/physics.md`] |
-| **Post-Cutoff APIs Used** | [Any APIs from post-LLM-cutoff versions this decision depends on, or "None"] |
-| **Verification Required** | [Specific behaviours to test before shipping, or "None"] |
 
 ## ADR Dependencies
 
@@ -140,24 +129,16 @@ to implement it.]
 - [Links to related design documents]
 ```
 
-5.5. **Engine Specialist Validation** — Before saving, spawn the **primary engine specialist** via `Agent` to validate the drafted ADR:
-   - Resolve the primary specialist: `<engine>-specialist` derived from `engine.name` in `project.yaml` (Godot→`godot-specialist`, Unity→`unity-specialist`, Unreal→`unreal-specialist`); if `engine.name` is absent or empty, read the Primary line of the `## Engine Specialists` section in `.opencode/docs/technical-preferences.md`
-   - If no engine is configured (neither source yields an engine), skip this step **Record ``Engine validation: NOT ASSESSED — no engine configured (`engine.name` unset in `project.yaml`)`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed; the reader cannot tell engine guidance was never sought.
-   - Spawn `subagent_type: [primary specialist]` with: the ADR's Engine Compatibility section, Decision section, Key Interfaces, and the engine reference docs path. Ask them to:
-     1. Confirm the proposed approach is idiomatic for the pinned engine version
-     2. Flag any APIs or patterns that are deprecated or changed post-training-cutoff
-     3. Identify engine-specific risks or gotchas not captured in the current ADR draft
-   - If the specialist identifies a **blocking issue** (wrong API, deprecated approach, engine version incompatibility): revise the Decision and Engine Compatibility sections accordingly, then confirm the changes with the user before proceeding
-   - If the specialist finds **minor notes** only: incorporate them into the ADR's Risks subsection
+5.5. **Validation** — NOT ASSESSED — no specialist applies.
 
 **Review mode check** — apply before spawning TD-ADR:
 - `solo` → skip. Note: "TD-ADR skipped — Solo mode." Proceed to Step 5.7 (GDD sync check).
 - `lean` → skip (not a PHASE-GATE). Note: "TD-ADR skipped — Lean mode." Proceed to Step 5.7 (GDD sync check).
 - `full` → spawn as normal.
 
-5.6. **Technical Director Strategic Review** — After the engine specialist validation, spawn `technical-director` via `Agent` using gate **TD-ADR** (`.opencode/docs/director-gates/td-adr.md`):
-   - Pass: the ADR file path (or draft content), engine version, domain, any existing ADRs in the same domain
-   - The TD validates architectural coherence (is this decision consistent with the whole system?) — distinct from the engine specialist's API-level check
+5.6. **Technical Director Strategic Review** — After the draft is complete, spawn `technical-director` via `Agent` using gate **TD-ADR** (`.opencode/docs/director-gates/td-adr.md`):
+   - Pass: the ADR file path (or draft content), domain, any existing ADRs in the same domain
+   - The TD validates architectural coherence (is this decision consistent with the whole system?)
    - On CONCERNS: show them to the user verbatim and ask with the standard options from `director-gates.md` — `Revise flagged items` / `Accept and proceed` / `Discuss further`. Revise the flagged Decision or Alternatives sections only on `Revise flagged items`.
    - On REJECT: show the blockers verbatim and revise the Decision or Alternatives sections before proceeding.
    - A revised draft still reaches the user through the write approval below; nothing is written before it. A `NOT ASSESSED` answer is not an approval — name the missing input (`director-gates.md`).

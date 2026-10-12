@@ -14,7 +14,7 @@
 **Before running artifact checks**, read `docs/consistency-failures.md` if it exists.
 Extract entries whose Domain matches the target phase (e.g., if checking
 Systems Design → Technical Setup, pull entries in Economy, Combat, or any GDD domain;
-if checking Technical Setup → Pre-Production, pull entries in Architecture, Engine).
+if checking Technical Setup → Pre-Production, pull entries in Architecture).
 Carry these as context — recurring conflict patterns in the target domain warrant
 increased scrutiny on those specific checks.
 
@@ -72,11 +72,9 @@ does not turn on.
 > and nothing verifies. Check its claims against the repo, and raise any that the
 > tree contradicts:
 >
-> - It reports a passing automated suite → the engine's test root must actually
->   contain test files and the project must have a runner. "24 passed, 0 failed"
->   in a repo with no test files under that root — `tests/unit/` and
->   `tests/integration/` on Godot, `Assets/Tests/` on Unity,
->   `Source/<Module>/Private/Tests/` on Unreal — and no runner is a finding, not
+> - It reports a passing automated suite → the test root must actually contain
+>   test files and the project must have a runner. "24 passed, 0 failed" in a
+>   repo with no test files under `tests/` and no runner is a finding, not
 >   evidence.
 > - It marks a critical path PASS → the code for that path must exist in the code
 >   root. A PASS on "banking ends the run" with no banking code is a finding.
@@ -110,12 +108,11 @@ ASSESSED for this gate, never passed.
   **resolved in Phase 1** (`resolve_config` merges `project.local.yaml` over
   `project.yaml`; reading the file directly would drop a local override), per
   test type:
-  - **Logic** — unit-level failures (`tests/unit/` on Godot, Edit Mode on
-    Unity), gated by `testing.strict.logic`.
-  - **Integration** — failures in `tests/integration/` on Godot, Play Mode on
-    Unity, gated by `testing.strict.integration`. On Unreal, where one root
-    (`Source/<Module>/Private/Tests/`) holds both, classify a failure by its
-    story's Type, or apply the stricter of the two levels when that is unknown.
+  - **Logic** — unit-level failures, gated by `testing.strict.logic`.
+  - **Integration** — integration-level failures, gated by
+    `testing.strict.integration`. Where one test root holds both types,
+    classify a failure by its story's Type, or apply the stricter of the two
+    levels when that is unknown.
   - For each type: take `testing.strict.<type>` from that block; use it only
     if its value is `true` or `false` (case-insensitive). If the key is absent,
     empty, or holds any other value, read `testing.strict` as a plain boolean

@@ -1,7 +1,7 @@
 # Concept Prototype Report: [Concept Name]
 
 > **Date**: [YYYY-MM-DD]
-> **Prototype Path**: [HTML / Engine / Paper]
+> **Prototype Path**: [HTML / Paper]
 > **Concept File**: design/gdd/game-concept.md, or design/game-brief.md (if either exists)
 
 ---
@@ -23,7 +23,7 @@
 
 [What was built, how long it took, what shortcuts were taken deliberately.]
 
-**Path chosen:** [HTML / Engine / Paper]
+**Path chosen:** [HTML / Paper]
 **Reason for path:** [Why this path was appropriate for this hypothesis]
 
 **Shortcuts taken (intentional):**
@@ -42,8 +42,7 @@ directly where possible.]
 
 | Metric | Value |
 |--------|-------|
-| Path used | [HTML / Engine / Paper] |
-| Iterations to playable | [N — Engine path only; N/A otherwise] |
+| Path used | [HTML / Paper] |
 | Prototype duration | [e.g., 4 hours] |
 | Playtesters | [N internal / N external] |
 | Feel assessment | [Specific — "response felt sluggish at 200ms" not "felt bad"] |
@@ -65,9 +64,6 @@ directly where possible.]
 - **Assumptions confirmed:** [What the concept doc assumed that proved true]
 - **Assumptions disproved:** [What the concept doc assumed that proved wrong]
 - **Emergent mechanics:** [Behaviors that appeared during testing worth formalizing]
-
-> Note: If HTML path was used and feel is uncertain, consider an engine prototype
-> targeting feel specifically before committing to GDDs.
 
 **Next steps:**
 1. `/design-review design/gdd/game-concept.md`

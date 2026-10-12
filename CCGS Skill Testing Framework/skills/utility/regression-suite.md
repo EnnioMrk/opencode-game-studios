@@ -35,7 +35,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 - [ ] Has ≥2 phase headings
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED, NOT ASSESSED
 - [ ] Contains "May I write" language before writing `tests/regression-suite.md`
-- [ ] Has a next-step handoff (`/test-helpers` for HIGH gaps, `/regression-suite audit` on drift, `/test-flakiness` for quarantined tests)
+- [ ] Has a next-step handoff (`/regression-suite audit` on drift, `/test-flakiness` for quarantined tests)
 
 ---
 
@@ -71,14 +71,14 @@ in its allowed tools) and no director gates apply.
 4. The report shows the per-system table and a non-exempt coverage rate
 5. Skill asks "May I write/update `tests/regression-suite.md` with the current
    regression suite manifest?"; on approval audit rewrites the full manifest
-6. Verdict is COMPLETE; for the HIGH gap it suggests `/test-helpers`
+6. Verdict is COMPLETE.
 
 **Assertions:**
 - [ ] Each criterion gets one of COVERED / PARTIAL / MISSING / EXEMPT, matching the fixture
 - [ ] The HUD criterion is EXEMPT and excluded from the coverage rate
 - [ ] The damage-formula gap is HIGH PRIORITY with a `tests/unit/combat/` path
 - [ ] The manifest is written only after the "May I write/update" ask
-- [ ] Verdict is COMPLETE and `/test-helpers` is suggested
+- [ ] Verdict is COMPLETE
 
 ---
 

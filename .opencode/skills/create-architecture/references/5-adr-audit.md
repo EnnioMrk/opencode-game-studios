@@ -5,22 +5,18 @@
 
 ## Phase 5: ADR Audit + Traceability Check
 
-Review all existing ADRs from Phase 0c against both the architecture built in
-Phases 1-4 AND the Technical Requirements Baseline from Phase 0b.
+Review all existing ADRs from Phase 0b against both the architecture built in
+Phases 1-4 AND the Technical Requirements Baseline from Phase 0a.
 
 ### ADR Quality Check
 
 For each ADR:
-- [ ] Does it have an Engine Compatibility section?
-- [ ] Is the engine version recorded?
-- [ ] Are post-cutoff APIs flagged?
 - [ ] Does it have a "GDD Requirements Addressed" section?
 - [ ] Does it conflict with the layer/ownership decisions made in this session?
-- [ ] Is it still valid for the pinned engine version?
 
-| ADR | Engine Compat | Version | GDD Linkage | Conflicts | Valid |
-|-----|--------------|---------|-------------|-----------|-------|
-| ADR-0001: [title] | ✅/❌ | ✅/❌ | ✅/❌ | None/[conflict] | ✅/⚠️ |
+| ADR | GDD Linkage | Conflicts |
+|-----|-------------|-----------|
+| ADR-0001: [title] | ✅/❌ | None/[conflict] |
 
 ### Traceability Coverage Check
 

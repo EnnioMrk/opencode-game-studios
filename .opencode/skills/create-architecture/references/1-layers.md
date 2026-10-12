@@ -16,10 +16,10 @@ game architecture layers are:
 ├─────────────────────────────────────────────┤
 │  CORE LAYER                                 │  ← physics, input, combat, movement
 ├─────────────────────────────────────────────┤
-│  FOUNDATION LAYER                           │  ← engine integration, save/load,
-│                                             │    scene management, event bus
+│  FOUNDATION LAYER                           │  ← save/load, scene management,
+│                                             │    event bus
 ├─────────────────────────────────────────────┤
-│  PLATFORM LAYER                             │  ← OS, hardware, engine API surface
+│  PLATFORM LAYER                             │  ← OS, hardware, platform API surface
 └─────────────────────────────────────────────┘
 ```
 
@@ -31,9 +31,5 @@ For each GDD system, ask:
 Present the proposed layer assignment and ask for approval before proceeding to
 the next section. Record the approved layer map in
 `production/session-state/active.md`; it goes into the document at Phase 7.
-
-**Engine awareness check**: For each system assigned to the Core and Foundation
-layers, flag if it touches a HIGH or MEDIUM risk engine domain. Show the relevant
-engine reference excerpt inline.
 
 ---

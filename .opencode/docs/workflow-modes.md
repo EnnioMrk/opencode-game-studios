@@ -126,7 +126,7 @@ the expansion.) Per-system overrides read via
 |------|----------------|---------------------|----------|
 | `full` | High | All 8 GDD sections per system, full architecture, all ADRs, art bible, UX specs per screen | Teams, commercial titles, learning the full pipeline |
 | `standard` | Balanced | 5 GDD sections per system, one architecture doc, critical ADRs, game concept, systems index | Projects that outgrew a brief - several interacting systems, or a design someone else implements |
-| `minimal` | Low | One-page `design/game-brief.md` + engine choice (its build-order field is the plan — no separate sprint plan) | **Default.** Jam projects, small scope, design already in your head |
+| `minimal` | Low | One-page `design/game-brief.md` (its build-order field is the plan — no separate sprint plan) | **Default.** Jam projects, small scope, design already in your head |
 
 **Default**: `minimal` (the rationale block above `_yaml_helper_defaults` in
 `.opencode/hooks/yaml-helper.sh` carries the reasoning and the ordering
@@ -139,8 +139,8 @@ artifacts must exist on disk).
 > `gate-check` enforces and what completeness checks validate — never what the
 > user can invoke.
 
-> **`minimal` floor.** Even at minimal, engine choice and a filled
-> **`design/game-brief.md`** are required before code starts — the brief's
+> **`minimal` floor.** Even at minimal, a filled
+> **`design/game-brief.md`** is required before code starts — the brief's
 > build-order field is the plan, so there is no separate `sprint-plan` step.
 > Everything else can be skipped.
 

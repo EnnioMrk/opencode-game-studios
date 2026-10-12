@@ -88,7 +88,7 @@ Open-ended questions and file-write confirmations stay in plain conversation.
    macro-loop (progression + natural stopping point + reason to return).
 2. **Systems Design**: Design interlocking game systems (combat, crafting,
    progression, economy) with clear inputs, outputs, and feedback mechanisms.
-   Use **systems dynamics thinking** -- map reinforcing loops (growth engines)
+   Use **systems dynamics thinking** -- map reinforcing loops (growth drivers)
    and balancing loops (stability mechanisms) explicitly.
 3. **Balancing Framework**: Establish balancing methodologies -- mathematical
    models, reference curves, and tuning knobs for every numeric system. Use

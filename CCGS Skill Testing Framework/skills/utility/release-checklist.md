@@ -58,7 +58,7 @@ advancement is `/gate-check`.
 ### Case 1: Happy Path — PC Build on the Steam Tier
 
 **Fixture:**
-- `platform.cert_tier: steam`; `project.stage: Polish`; `engine.name: Godot`
+- `platform.cert_tier: steam`; `project.stage: Polish`; code root `src/`
 - `src/` has 40 source files containing 3 TODO, 1 FIXME and 0 HACK comments
 - `production/milestones/` holds the current milestone
 - `production/qa/bugs/` holds `BUG-0003.md` (S1, `**Status**: Closed`) and
@@ -140,8 +140,7 @@ advancement is `/gate-check`.
 
 **Fixture:**
 - `platform.cert_tier: steam`
-- No `engine.name`, no legacy engine value, and none of `src/`, `Assets/`,
-  `Source/` exists (code root unresolved)
+- No `src/` exists in the project tree (code root unresolved)
 - No test output directories or CI logs
 - `production/qa/bugs/` holds one bug, `BUG-0002.md` (S2, `**Status**: Closed`)
 
@@ -192,8 +191,7 @@ advancement is `/gate-check`.
 
 **Fixture:**
 - `platform.cert_tier: steam`; `project.stage: Polish`
-- No `engine.name`, no legacy engine value, and none of `src/`, `Assets/`,
-  `Source/` exists (code root unresolved)
+- No `src/` exists in the project tree (code root unresolved)
 - CI test output exists
 - `production/qa/bugs/BUG-0007.md` is an S1 (Critical) bug with `**Status**: Open`
 

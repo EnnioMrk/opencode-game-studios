@@ -59,7 +59,7 @@ If two rows fit, spawn the union of their Primary agents and say why.
 
 | System type | Primary Agent | Supporting Agent(s) |
 |----------------|---------------|---------------------|
-| **Foundation/Infrastructure** (event bus, save/load, scene mgmt, service locator) | `systems-designer` | `gameplay-programmer` (feasibility), `engine-programmer` (engine integration) |
+| **Foundation/Infrastructure** (event bus, save/load, scene mgmt, service locator) | `systems-designer` | `gameplay-programmer` (feasibility), `engine-programmer` (core systems) |
 | Combat, damage, health | `game-designer` | `systems-designer` (formulas), `ai-programmer` (enemy AI), `art-director` (hit feedback visual direction, VFX intent) |
 | Economy, loot, crafting | `economy-designer` | `systems-designer` (curves), `game-designer` (loops) |
 | Progression, XP, skills | `game-designer` | `systems-designer` (curves), `economy-designer` (sinks) |

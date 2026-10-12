@@ -28,8 +28,7 @@ fi
 [ -n "$CCGS_ROOT" ] && cd "$CCGS_ROOT" 2>/dev/null || true
 
 # OpenCode PostToolUse hook: Validates asset files after Write/Edit
-# Checks JSON validity of data files and, in Godot's assets/, naming conventions.
-# Asset roots per engine: Godot assets/, Unity Assets/, Unreal Content/.
+# Checks JSON validity of data files and, under assets/, naming conventions.
 #
 # Exit behavior:
 #   exit 0 = success or advisory warnings only
@@ -83,7 +82,7 @@ shopt -u nocasematch
 
 # Only check files under an asset root.
 case "$REL_PATH" in
-    assets/*|Assets/*|Content/*) ;;
+    assets/*) ;;
     *) exit 0 ;;
 esac
 
@@ -91,10 +90,8 @@ FILENAME=$(basename "$REL_PATH")
 WARNINGS=""   # Style/convention issues -- exit 0 with advisory message
 ERRORS=""     # Build-breaking issues -- exit 2 so the model hears about it
 
-# ADVISORY: naming convention -- lowercase with underscores, the Godot
-# convention, so only in Godot's assets/. Unity and Unreal name assets in
-# PascalCase with type prefixes; warning on every one of them trains the user
-# to ignore this hook. Naming issues warn, never block.
+# ADVISORY: naming convention -- lowercase with underscores, the convention
+# under assets/. Naming issues warn, never block.
 # Uses grep -E (POSIX) not grep -P (Perl) for Windows Git Bash compatibility
 case "$REL_PATH" in
     assets/*)
@@ -103,10 +100,10 @@ case "$REL_PATH" in
         fi ;;
 esac
 
-# BLOCKING: Check JSON validity for data files, in any engine's data folder --
+# BLOCKING: Check JSON validity for data files under the asset root --
 # the same set validate-commit.sh blocks on.
 # Invalid JSON will break runtime loading -- this is a build-breaking error
-if echo "$REL_PATH" | grep -qE '^(assets|Assets|Content)/(.*/)?[Dd]ata/.*\.[Jj][Ss][Oo][Nn]$'; then
+if echo "$REL_PATH" | grep -qE '^assets/(.*/)?[Dd]ata/.*\.[Jj][Ss][Oo][Nn]$'; then
     FILE_PATH="$REL_PATH"
     if [ -f "$FILE_PATH" ]; then
         # Find a working Python command

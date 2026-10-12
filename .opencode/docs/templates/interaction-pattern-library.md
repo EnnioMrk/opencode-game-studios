@@ -6,8 +6,6 @@
 > **Author**: [ux-designer]
 > **Last Updated**: [Date]
 > **Version**: [1.0]
-> **Engine**: [Godot 4.6 / Unity 6 / Unreal Engine 5]
-> **UI Framework**: [Godot Control nodes / Unity UI Toolkit / Unreal UMG]
 > **Related Documents**:
 > - `design/art/art-bible.md` — visual standards (colors, typography, iconography)
 > - `design/accessibility-requirements.md` — accessibility commitments per feature
@@ -45,7 +43,7 @@ or before the screen spec that introduces it.
 
 **If you are implementing a screen**: When a screen spec says "use [PatternName]
 pattern," find it in this document for the complete specification. The
-implementation notes section contains engine-specific guidance. The accessibility
+implementation notes section contains implementation guidance. The accessibility
 section contains the requirements that are non-negotiable.
 
 **If you are reviewing a screen spec**: Verify that all interactive elements
@@ -132,7 +130,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Keyboard, gamepad, screen reader, colorblind, and touch-target requirements]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -151,7 +149,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Same baseline as Button (Primary); note cancel-input mapping in dialogs]
 
-**Implementation Notes**: [Engine-specific guidance; consistent Primary/Secondary positioning]
+**Implementation Notes**: [Implementation guidance; consistent Primary/Secondary positioning]
 
 ---
 
@@ -173,7 +171,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Screen reader must announce the destructive nature]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -192,7 +190,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Activation inputs, screen reader switch role/state rules, state label requirements]
 
-**Implementation Notes**: [Engine-specific guidance; motion-reduction behavior]
+**Implementation Notes**: [Implementation guidance; motion-reduction behavior]
 
 ---
 
@@ -211,7 +209,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Keyboard step/large-step/min-max inputs, screen reader value announcements, numeric value display requirement]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -230,7 +228,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [List navigation, combobox role, expanded/collapsed announcements, positioning rules]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -249,7 +247,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Focus cycling rules, listitem role and position announcements, minimum row height]
 
-**Implementation Notes**: [Engine-specific guidance; scroll-into-view on focus]
+**Implementation Notes**: [Implementation guidance; scroll-into-view on focus]
 
 ---
 
@@ -268,7 +266,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Grid dimensions and row/column position announcements, keyboard-reachable tooltips]
 
-**Implementation Notes**: [Engine-specific guidance; custom D-pad cell navigation]
+**Implementation Notes**: [Implementation guidance; custom D-pad cell navigation]
 
 ---
 
@@ -290,7 +288,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Dialog role and required title, Escape/Enter mappings, motion-reduction overrides]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -313,7 +311,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Inherits Modal Dialog; alert-dialog announcement; default focus on Cancel is required]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -332,7 +330,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Announcement without focus, motion-reduction fallback, minimum auto-dismiss timing, never sole channel for actionable info]
 
-**Implementation Notes**: [Engine-specific guidance; queue management and layer ordering]
+**Implementation Notes**: [Implementation guidance; queue management and layer ordering]
 
 ---
 
@@ -351,7 +349,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Content accessible without hover, required appearance delay, contrast requirements]
 
-**Implementation Notes**: [Engine-specific guidance; screen-edge repositioning]
+**Implementation Notes**: [Implementation guidance; screen-edge repositioning]
 
 ---
 
@@ -370,7 +368,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Progressbar role, numeric value + percentage announcements, numeric label requirement, motion-reduction overrides]
 
-**Implementation Notes**: [Engine-specific guidance; indeterminate-mode implementation]
+**Implementation Notes**: [Implementation guidance; indeterminate-mode implementation]
 
 ---
 
@@ -389,7 +387,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Standard editing shortcuts, textbox role, visible label requirement (placeholder is not a label)]
 
-**Implementation Notes**: [Engine-specific guidance; virtual keyboard handling]
+**Implementation Notes**: [Implementation guidance; virtual keyboard handling]
 
 ---
 
@@ -408,7 +406,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [ARIA tab panel pattern (tab/tablist/tabpanel), active-tab distinction beyond color]
 
-**Implementation Notes**: [Engine-specific guidance; shoulder-button shortcut handling]
+**Implementation Notes**: [Implementation guidance; shoulder-button shortcut handling]
 
 ---
 
@@ -427,7 +425,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Auto-scroll to keep focused items in view, scroll position announcements, scrollbar as required indicator]
 
-**Implementation Notes**: [Engine-specific guidance; ensure-visible on focus change]
+**Implementation Notes**: [Implementation guidance; ensure-visible on focus change]
 
 ---
 
@@ -453,7 +451,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Non-color alternatives for stack counts and quality tiers; keyboard-reachable tooltip; locked-state announcement]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -471,7 +469,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Numeric alternatives for cooldown/charge information; names and descriptions exposed to screen readers]
 
-**Implementation Notes**: [Engine-specific guidance]
+**Implementation Notes**: [Implementation guidance]
 
 ---
 
@@ -489,7 +487,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Numeric value access; non-color backups for threshold states]
 
-**Implementation Notes**: [Engine-specific guidance; ghost-bar technique]
+**Implementation Notes**: [Implementation guidance; ghost-bar technique]
 
 ---
 
@@ -509,7 +507,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Subtitles on by default, configurable typewriter speed, no auto-advance, navigable choices with position announcements]
 
-**Implementation Notes**: [Engine-specific guidance; dialogue data format]
+**Implementation Notes**: [Implementation guidance; dialogue data format]
 
 ---
 
@@ -527,7 +525,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Text label alongside button icon; positioning must not overlap critical HUD]
 
-**Implementation Notes**: [Engine-specific guidance; input-method-aware icon swapping]
+**Implementation Notes**: [Implementation guidance; input-method-aware icon swapping]
 
 ---
 
@@ -547,7 +545,7 @@ update this document before or simultaneously with any implementation change.
 
 **Accessibility**: [Supplementary-only feedback; disable option; game fully playable when disabled]
 
-**Implementation Notes**: [Engine-specific guidance; object pooling]
+**Implementation Notes**: [Implementation guidance; object pooling]
 
 ---
 
@@ -574,7 +572,7 @@ These three patterns define how screens enter and exit the navigation stack.
 
 **Motion reduction**: [Fallback behavior]
 
-**Implementation Notes**: [Engine-specific guidance; screen stack manager and return-focus storage]
+**Implementation Notes**: [Implementation guidance; screen stack manager and return-focus storage]
 
 ---
 
@@ -725,8 +723,8 @@ These three patterns define how screens enter and exit the navigation stack.
 
 | Question | Owner | Deadline | Resolution |
 |----------|-------|----------|-----------|
-| [Does the engine's accessibility node system support screen reader announcements for toast notifications without requiring focus? Verify against engine-reference/godot/ for Godot 4.6.] | [ux-designer] | [Before first menu implementation] | [Unresolved] |
+| [Does the UI accessibility layer support screen reader announcements for toast notifications without requiring focus?] | [ux-designer] | [Before first menu implementation] | [Unresolved] |
 | [What is the platform-correct confirm/cancel button mapping for Nintendo Switch release? Nintendo first-party convention differs from Xbox/PlayStation.] | [producer] | [Before platform certification submission] | [Unresolved] |
-| [Should damage numbers be pooled as Label3D nodes or rendered in a SubViewport? Verify performance budget in coordination with technical-director.] | [lead-programmer, ux-designer] | [Before combat HUD implementation] | [Unresolved] |
+| [Should damage numbers be pooled as reusable elements or rendered in a dedicated overlay? Verify performance budget in coordination with technical-director.] | [lead-programmer, ux-designer] | [Before combat HUD implementation] | [Unresolved] |
 | [What is the maximum number of simultaneous toast notifications before the queue becomes visually overwhelming? Needs playtesting.] | [ux-designer] | [First playtesting session] | [Unresolved] |
 | [Add question] | [Owner] | [Deadline] | [Resolution] |

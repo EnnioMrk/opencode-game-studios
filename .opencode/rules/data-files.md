@@ -1,8 +1,6 @@
 ---
 paths:
   - "assets/data/**/*.json"
-  - "Assets/**/{Data,data}/**/*.json"
-  - "Content/**/{Data,data}/**/*.json"
 ---
 
 # Data File Rules
@@ -12,18 +10,12 @@ paths:
 - Every data file must have a documented schema (either JSON Schema or documented in the corresponding design doc)
 - Numeric values must include comments or companion docs explaining what the numbers mean
 - Use consistent key naming: **`snake_case` for keys within JSON files**, matching
-  the `[system]_[name].json` file convention one line above and the engine idiom
-  every other standard in this repo uses.
+  the `[system]_[name].json` file convention one line above.
 
-  > **On Unity and Unreal this costs you a mapping layer — budget for it rather
-  > than changing the keys.** `JsonUtility` binds by *exact field name*, and C#
-  > fields are `camelCase` per `naming.variables`, so a snake_case file cannot bind
-  > directly to the type that consumes it. Use a private nested DTO whose fields
-  > are the wire format and which maps once into your real type, or take a
-  > dependency that supports a naming policy (Newtonsoft `SnakeCaseNamingStrategy`,
-  > `System.Text.Json` `JsonNamingPolicy`). Do **not** switch the file to camelCase
-  > to avoid the DTO: keys are the cross-engine contract. Write the DTO and
-  > document it as a wire-format boundary — that is the intended shape.
+  > **A consumer whose field names differ costs you a mapping layer — budget for
+  > it rather than changing the keys.** Do **not** switch the file to `camelCase`
+  > to avoid the mapping: keys are the contract. Write the mapping and document it
+  > as a wire-format boundary — that is the intended shape.
 - No orphaned data entries — every entry must be referenced by code or another data file
 - Version data files when making breaking schema changes
 - Include sensible defaults for all optional fields

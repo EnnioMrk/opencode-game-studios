@@ -89,11 +89,10 @@ Full-read a story only when its Test Evidence section is missing or ambiguous.
 
 ### Step 3b-2 — Load test files
 
-Glob the engine's test root (`.opencode/docs/directory-structure.md`): Godot
-`tests/unit/**/*_test.*` and `tests/integration/**/*_test.*`; Unity
-`Assets/Tests/**/*Tests.cs`; Unreal `Source/*/Private/Tests/**/*.cpp`. With no
-engine configured, say the test index could not be built rather than reading an
-empty glob as "no tests". Build an index: system → [test file paths].
+Glob the test root (`.opencode/docs/directory-structure.md`) — this project's
+tests are `tests/*.test.ts`, run by `bun test`. If the glob matches nothing, say
+the test index could not be built rather than reading an empty glob as "no
+tests". Build an index: system → [test file paths].
 
 For each test file path from Step 3b-1, confirm via Glob whether the file
 actually exists. Note MISSING if the stated path does not exist.
@@ -114,7 +113,7 @@ Extended matrix format:
 
 | TR-ID | GDD | Requirement | ADR | Story | Test File | Test Status |
 |-------|-----|-------------|-----|-------|-----------|-------------|
-| TR-combat-001 | combat.md | Hitbox < 1 frame | ADR-0003 | story-001-hitbox.md | tests/unit/combat/hitbox_test.gd | COVERED |
+| TR-combat-001 | combat.md | Hitbox < 1 frame | ADR-0003 | story-001-hitbox.md | tests/hitbox.test.ts | COVERED |
 | TR-combat-002 | combat.md | Combo window | — | story-002-combo.md | — | NONE (Visual/Feel) |
 | TR-inventory-001 | inventory.md | Persistent storage | ADR-0005 | — | — | NO STORY |
 ```

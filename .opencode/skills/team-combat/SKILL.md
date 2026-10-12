@@ -45,7 +45,7 @@ those five sections and tell the user it is optional at this workflow level.
 **`team.size`**: which agents are active (orthogonal to review_mode gate-depth and workflow docs).
 - **`individual`** (default): `gameplay-programmer` runs the pipeline; escalate `ai-programmer` only if the feature flags AI work. Other Team Composition agents are consulted via the gameplay-programmer, not spawned separately.
 - **`small`**: the full Team Composition pipeline below, as documented.
-- **`studio`**: full pipeline + engine sub-specialists + an adversarial review pass. *Engine sub-specialists*: the primary engine specialist's prompt says it may hand parts of its review to the sub-specialists its `permissions:` allow-list names (for example `ue-gas-specialist` for abilities); below `studio` it answers alone. *Adversarial review pass*: Phase 5's qa-tester is told "your job is not to confirm this works — find how it breaks", and the report says the pass ran.
+- **`studio`**: full pipeline + an adversarial review pass: Phase 5's qa-tester is told "your job is not to confirm this works — find how it breaks", and the report says the pass ran.
 A non-core agent needed at `individual` routes through the nearest active core agent with an informational note. **"Phase gate" means any phase that ends in an `question` decision point this pipeline itself lists** — a transition under Decision Points above, or a **Gate** step written into the pipeline below — **whatever the `automation` mode.** `guided` and `autonomous` change how a gate is passed (it auto-advances, or is recorded with `log_decision`), not whether it is one, so bounded-exception condition (3) below holds at it in every mode. An agent restricted to "phase gates only" is spawned at those points and no others. This active-set scoping applies throughout the pipeline below: any phase that names an agent outside the active set routes through the nearest core agent rather than spawning it.
 
 **Announce the active set before Phase 1 — never let the collapse be silent.**
@@ -79,7 +79,6 @@ enforced.**
 - **ai-programmer** — Implement NPC/enemy AI behavior for the feature
 - **technical-artist** — Create VFX, shader effects, and visual feedback
 - **sound-designer** — Define audio events, impact sounds, and ambient combat audio
-- **engine specialist** (primary) — Validate architecture and implementation patterns are idiomatic for the engine (the primary specialist is `<engine>-specialist` from `engine.name` — Godot→`godot-specialist`, Unity→`unity-specialist`, Unreal→`unreal-specialist`; fall back to the Primary line of `## Engine Specialists` in `technical-preferences.md`)
 - **qa-tester** — Write test cases and validate the implementation
 
 ## How to Delegate
@@ -90,7 +89,6 @@ Use the `Agent` tool to spawn each team member as a subagent:
 - `subagent_type: ai-programmer` — Implement NPC/enemy AI behavior
 - `subagent_type: technical-artist` — Create VFX, shader effects, visual feedback
 - `subagent_type: sound-designer` — Define audio events, impact sounds, ambient audio
-- `subagent_type: [primary engine specialist]` — Engine idiom validation for architecture and implementation
 - `subagent_type: qa-tester` — Write test cases and validate implementation
 
 **Brief each agent — do not dump context.** Read the shared inputs **once** and pass a distilled brief inline: the lines each agent actually needs, never a file path for a document you have already read (an agent handed a path re-reads the whole file). Pass a path only for a document you have not read and only that agent needs.
@@ -104,7 +102,6 @@ names one; most are fixed by the skill that already reads them:
 |---|---|---|
 | 1 game-designer (draft) | `production/combat/[feature]-gdd-draft.md` | this skill — you write the final `design/gdd/[feature].md` (Phase 1) |
 | 2 gameplay-programmer | `docs/architecture/[feature]-sketch.md` | see note below |
-| 2 engine specialist | `docs/architecture/[feature]-engine-notes.md` | see note below |
 | 3 gameplay-programmer, ai-programmer, technical-artist | the code root and `assets/` — the files the Phase 3 approval lists | outside the bounded exception: asked once for the set (File Write Protocol) |
 | 3 sound-designer | `production/combat/[feature]-audio-events.md` | this skill |
 | 5 qa-tester (test cases) | `production/qa/test-cases/[feature]-cases.md` | `/team-qa` Phase 4 |
@@ -116,9 +113,9 @@ Phase 6 is a spoken status report, not an artifact — no path, and none needed.
 > Recovery Protocol below says "a named artifact that is not on disk is a failed
 > phase" — a check that cannot run when no path was named.
 >
-> **The two `docs/architecture/` entries are a judgement call, not a convention.**
+> **The `docs/architecture/` entry is a judgement call, not a convention.**
 > That directory holds ADRs (`adr-NNNN-*.md`); a sketch is a precursor to one, not
-> one itself, and **nothing in the repo reads either file**. Say so when
+> one itself, and **nothing in the repo reads the file**. Say so when
 > reporting, so the sketch is understood as a record rather than an input to a
 > later gate.
 
@@ -147,13 +144,7 @@ Delegate to **gameplay-programmer** (with **ai-programmer** if AI is involved):
 - Identify integration points with existing systems
 - Output: architecture sketch with file list and interface definitions
 
-Then spawn the **primary engine specialist** to validate the proposed architecture:
-- Is the class/node/component structure idiomatic for the pinned engine? (e.g., Godot node hierarchy, Unity MonoBehaviour vs DOTS, Unreal Actor/Component design)
-- Are there engine-native systems that should be used instead of custom implementations?
-- Any proposed APIs that are deprecated or changed in the pinned engine version?
-- Output: engine architecture notes — incorporate into the architecture before Phase 3 begins
-
-If no engine is configured, skip the specialist spawn. **Record ``Engine validation: NOT ASSESSED — no engine configured (`engine.name` unset in `project.yaml`)`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed.
+**Record ``Architecture validation: NOT ASSESSED — no specialist applies`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed.
 
 Use `question`:
 - Prompt: "Architecture sketch complete. Approve to proceed with parallel implementation."
@@ -246,10 +237,10 @@ A summary report covering: design completion status, implementation status per t
 
 Verdict: **COMPLETE** — combat feature designed, implemented, and validated.
 
-If the engine validation was skipped (Phase 2, no engine configured), the verdict
-says so — never a plain COMPLETE:
+Architecture validation is `NOT ASSESSED — no specialist applies` (Phase 2), so the
+verdict says so — never a plain COMPLETE:
 
-Verdict: **COMPLETE — engine validation NOT ASSESSED ([reason])** — combat feature designed, implemented, and validated; the engine specialist never reviewed the architecture.
+Verdict: **COMPLETE — Architecture validation NOT ASSESSED** — combat feature designed, implemented, and validated.
 
 Verdict: **NEEDS WORK** — every phase ran, but Phase 5 validation left failures or open bugs unresolved; the report lists each with its owner.
 

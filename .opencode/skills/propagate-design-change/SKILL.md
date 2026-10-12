@@ -119,10 +119,9 @@ below still runs.
 Read ADRs in `docs/architecture/` **per the resolved tier**:
 - **`full`** — read **all** ADRs.
 - **`standard`** — read only **critical (Foundation-layer) ADRs** plus any ADR
-  that references the changed GDD. An ADR is critical when the `**Layer**` row of
-  its `## Engine Compatibility` table says `Foundation`, or when it has no
-  `**Layer**` row — when in doubt, treat it as critical
-  (`.opencode/docs/workflow-modes.md`). Read every row in one call:
+  that references the changed GDD. An ADR is critical when its `**Layer**` row
+  says `Foundation`, or when it has no `**Layer**` row — when in doubt, treat it
+  as critical (`.opencode/docs/workflow-modes.md`). Read every row in one call:
   `Grep pattern="\*\*Layer\*\*" glob="docs/architecture/adr-*.md" output_mode="content"`,
   and count an ADR that Grep does not list as critical.
 - **`minimal`** — **not applicable**: there are no ADRs to cascade. Report "No ADR

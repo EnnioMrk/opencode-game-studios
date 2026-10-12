@@ -132,7 +132,7 @@ specific sub-topics, additional context or coordination may be needed:
 | Topic | Coordinate with |
 |-------|----------------|
 | Visual aesthetics, color, layout feel | `art-director` — UX spec defines zones; art defines how they look |
-| Implementation feasibility (engine constraints) | `ui-programmer` — before finalizing component inventory |
+| Implementation feasibility (framework constraints) | `ui-programmer` — before finalizing component inventory |
 | Gameplay data requirements | `game-designer` — when data ownership is unclear |
 | Narrative/lore visible in the UI | `narrative-director` — for flavor text, item names, lore panels |
 | Accessibility tier decisions | Recorded by this session (`/ux-design accessibility`; the user picks the tier) against the criteria `accessibility-specialist` defines and audits — consult it when a requirement's criterion is unclear |

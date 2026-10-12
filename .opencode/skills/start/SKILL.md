@@ -22,7 +22,7 @@ only.
 > expansion permanently. Verified: `rigor: minimal` plus a `review-mode.txt`
 > containing `lean` resolves to `lean`, not the expected `solo`.
 
-This skill is the entry point for new users. It does NOT assume you have a game idea, an engine preference, or any prior experience. It asks first, then routes you to the right workflow.
+This skill is the entry point for new users. It does NOT assume you have a game idea or any prior experience. It asks first, then routes you to the right workflow.
 
 ---
 
@@ -31,8 +31,7 @@ This skill is the entry point for new users. It does NOT assume you have a game 
 `modes.automation` is set yet, so `/start` runs collaboratively — it is
 creating the config. Its core onboarding questions (starting point, rigor,
 automation) are project-shaping and always prompt regardless
-of mode. Engine choice is **not** among them — it is deferred to
-`/setup-engine`, which Phase 4 hands off to.
+of mode.
 If `/start` is re-run on an already-configured project, the resolved mode
 applies per `.opencode/docs/automation-modes.md`.
 
@@ -41,9 +40,8 @@ applies per `.opencode/docs/automation-modes.md`.
 Before asking anything, silently gather context so you can tailor your guidance. Do NOT show these results unprompted — they inform your recommendations, not the conversation opener.
 
 Check:
-- **Engine configured?** Read `engine.name` from `project.yaml`; if that key is absent or empty (including when `project.yaml` has no `engine:` block), fall back to `.opencode/docs/technical-preferences.md` (an Engine field of `[TO BE CONFIGURED]`, or no file, means not set). The engine is configured if either source yields a real engine name.
 - **Game concept exists?** Check for `design/gdd/game-concept.md` (or `design/game-brief.md` at the `minimal` tier).
-- **Source code exists?** Resolve the code root from the `engine.name` read above (`src/` Godot, `Assets/` Unity, `Source/` Unreal; full order in `.opencode/docs/code-root-resolution.md`), then Glob it for source files (`*.gd`, `*.cs`, `*.cpp`, `*.h`, `*.rs`, `*.py`, `*.js`, `*.ts`). **If the code root is unresolved, say so rather than concluding there is no code** — a Unity or Unreal project scanned as `src/` returns zero files and reads as greenfield.
+- **Source code exists?** Resolve the code root (`.opencode/docs/code-root-resolution.md`), then Glob it for source files (`*.ts`, `*.tsx`, `*.js`, `*.jsx`). **If the code root is unresolved, say so rather than concluding there is no code.**
 - **Prototypes exist?** Check for subdirectories in `prototypes/`.
 - **Design docs exist?** Count markdown files in `design/gdd/`.
 - **Production artifacts?** Check for files in `production/sprints/` or `production/milestones/`.
@@ -60,7 +58,7 @@ Store these findings internally to validate the user's self-assessment and tailo
 
 ## Phase 2: Ask Where the User Is
 
-This is the first thing the user sees — unless Phase 1 found a returning user (engine configured, and a concept or brief present): then ask nothing here and answer as the **User is returning** edge case below. Otherwise, use `question` with these exact options so the user can click rather than type:
+This is the first thing the user sees — unless Phase 1 found a returning user (a concept or brief present): then ask nothing here and answer as the **User is returning** edge case below. Otherwise, use `question` with these exact options so the user can click rather than type:
 
 - **Prompt**: "Welcome to OpenCode Game Studios! Before I suggest anything, I'd like to understand where you're starting from. Where are you at with your game idea right now?"
 - **Options**:
@@ -114,7 +112,7 @@ The user needs creative exploration before anything else.
    - **Prompt**: "How would you like to proceed?"
    - **Options**:
      - `Formalize it first` — Run `/brainstorm [concept]` to write it down: a one-page brief at `rigor: minimal` (the default), a full concept document above it
-     - `Jump straight in` — Go to `/setup-engine` now and write the design down afterward
+     - `Jump straight in` — Go to `/prototype` now and write the design down afterward
 3. Name the **immediate next step only** — their pick from step 2. Do not list
    the full pipeline here; Phase 3d has not yet asked how much process the user
    wants, and that answer changes the path. Say: "I'll lay out the full path
@@ -124,11 +122,9 @@ The user needs creative exploration before anything else.
 
 1. Share what you found in Phase 1:
    - "I can see you have [X source files / Y design docs / Z prototypes]..."
-   - "Your engine is [configured as X / not yet configured]..."
 
-2. **Sub-case D1 — Early stage** (engine not configured or only a game concept exists):
-   - Recommend `/setup-engine` first if engine not configured
-   - Then `/project-stage-detect` for a gap inventory
+2. **Sub-case D1 — Early stage** (only a game concept exists):
+   - `/project-stage-detect` for a gap inventory
 
    **Sub-case D2 — GDDs, ADRs, or stories already exist:**
    - Explain: "Having files isn't the same as the template's skills being able to use them. GDDs might be missing required sections. `/adopt` checks this specifically."
@@ -189,7 +185,7 @@ Then also write the same single-line stage name to `production/stage.txt` (no tr
 
 Stage mapping:
 - **Path A, B, or C (starting from scratch)**: write `Concept`
-- **Path D, existing project, engine not configured or only a game concept exists**: write `Concept`
+- **Path D, existing project with only a game concept**: write `Concept`
 - **Path D, existing project with GDDs but no architecture documents**: write `Systems Design`
 - **Path D, existing project with full architecture (ADRs, architecture doc)**: write `Technical Setup`
 
@@ -323,14 +319,13 @@ it — nothing is locked, it simply is not demanded up front. And if one system 
 deserves more care, raise just that one with
 `workflow_overrides.system_overrides.<system>` rather than the whole project."
 
-**If `minimal` (default) — 4 steps to running code:**
-- `/setup-engine` — configure the engine
+**If `minimal` (default) — 3 steps to running code:**
 - `/brainstorm` — produce the one-page `design/game-brief.md` (the lean-tier design artifact; it replaces the full concept doc, systems decomposition, and per-system GDDs)
 - `/create-stories` — turn the brief's MVP list into implementable stories (the epic is implicit — no separate `/create-epics` or `/sprint-plan`; the brief's build order is the plan)
 - `/dev-story` — **first line of game code**
 
 **If `standard` — the full pipeline:**
-- **Concept:** `/setup-engine` → `/brainstorm` → `/prototype` → `/art-bible` → `/map-systems` → `/design-system` (×N systems) → `/review-all-gdds` → `/gate-check`
+- **Concept:** `/brainstorm` → `/prototype` → `/art-bible` → `/map-systems` → `/design-system` (×N systems) → `/review-all-gdds` → `/gate-check`
 - **Architecture:** `/create-architecture` → `/architecture-decision` (×N) → `/create-control-manifest` → `/architecture-review`
 - **Pre-Production:** `/ux-design` → `/create-epics` → `/create-stories` → `/sprint-plan`
 - **Production:** `/dev-story`
@@ -340,21 +335,20 @@ deserves more care, raise just that one with
   in Pre-Production, and `/design-review` after each GDD.
 
 **For a Path D2 user, print this retrofit path in place of the three above.**
-At `minimal` it stops after `/adopt` and `/setup-engine`: the minimal path needs
+At `minimal` it stops after `/adopt`: the minimal path needs
 only `design/game-brief.md` (`/brainstorm`) and stories (`/create-stories`), so
 do not send the user through the GDD, ADR and registry retrofit below. At
 `standard` and `full`:
 - `/project-stage-detect` — phase detection + existence gaps
 - `/adopt` — format compliance audit + migration plan
-- `/setup-engine` — if engine not configured
 - `/design-system retrofit [path]` — fill missing GDD sections
 - `/architecture-decision retrofit [path]` — add missing ADR sections
 - `/architecture-review` — bootstrap the TR requirement registry
 - `/gate-check` — validate readiness for next phase
 
 > **Do not present the minimal path as lesser.** It is the tier's documented
-> floor (`.opencode/docs/workflow-modes.md` — "engine choice and a filled
-> `design/game-brief.md` are required before code starts … everything else can
+> floor (`.opencode/docs/workflow-modes.md` — "a filled
+> `design/game-brief.md` is required before code starts … everything else can
 > be skipped"), not a degraded mode. Equally, do not oversell it: at `minimal`
 > there are no GDDs to catch design problems before they reach code, which is
 > the trade being made.
@@ -394,7 +388,7 @@ Verdict: **COMPLETE** — user oriented and handed off to next step.
 
 - **User picks D but project is empty**: Gently redirect — "It looks like the project is a fresh template with no artifacts yet. Would Path A or B be a better fit?"
 - **User picks A but project has code**: Mention what you found — "I noticed there's already code in `[code root]`. Did you mean to pick D (existing work)?"
-- **User is returning (engine configured, concept exists)**: Skip onboarding entirely — "It looks like you're already set up! Your engine is [X] and you have a game concept at `design/gdd/game-concept.md` (or a game brief at `design/game-brief.md`). Review mode: `[resolve modes.review_mode — an explicit value if set, otherwise it follows modes.rigor: minimal→solo, standard→lean, full→full]`. Want to pick up where you left off? Try `/help` — it reads your tier and progress and names the next step — or just tell me what you'd like to work on." If Phase 1 found `origin` pointing at the template repo, add the Phase 4 note about renaming `origin` here too.
+- **User is returning (concept exists)**: Skip onboarding entirely — "It looks like you're already set up! You have a game concept at `design/gdd/game-concept.md` (or a game brief at `design/game-brief.md`). Review mode: `[resolve modes.review_mode — an explicit value if set, otherwise it follows modes.rigor: minimal→solo, standard→lean, full→full]`. Want to pick up where you left off? Try `/help` — it reads your tier and progress and names the next step — or just tell me what you'd like to work on." If Phase 1 found `origin` pointing at the template repo, add the Phase 4 note about renaming `origin` here too.
 - **User doesn't fit any option**: Let them describe their situation in their own words and adapt.
 
 ---

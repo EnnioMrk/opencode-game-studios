@@ -21,9 +21,9 @@ Every `question` call follows `.opencode/docs/automation-modes.md`
 `automation_always_ask` categories always prompt).
 
 **`team.size`**: which agents validate this ADR (orthogonal to review_mode/workflow).
-- **`individual`** (default): `technical-director` (TD-ADR) + the engine-specialist.
-- **`small`** and **`studio`**: the same two. This skill spawns no engine
-  sub-specialist and no adversarial reviewer at any size.
+- **`individual`** (default): `technical-director` (TD-ADR).
+- **`small`** and **`studio`**: the same. This skill spawns no adversarial
+  reviewer at any size.
 
 **`docs.density`** — it controls the *depth* of the ADR's prose sections, not
 which sections the skeleton emits (that is fixed). `modes.rigor` sets it
@@ -31,8 +31,8 @@ alongside `workflow`; set `docs.density` explicitly to vary ADR verbosity alone:
 `terse` (the default, via `rigor: minimal`) = decision + alternatives as bullets, one line of rationale each;
 `balanced` = paragraph per section with light rationale (`rigor: standard`); `thorough` =
 full prose with trade-offs and worked rationale in Decision, Alternatives, and
-Consequences. Apply it to the prose sections; the Engine Compatibility, ADR
-Dependencies, and GDD Requirements tables are structural and stay whole at every
+Consequences. Apply it to the prose sections; the ADR
+Dependencies and GDD Requirements tables are structural and stay whole at every
 density.
 
 **`workflow`** (see `.opencode/docs/workflow-modes.md`):
@@ -48,21 +48,21 @@ density.
 
 **Read `references/0-accept.md` now and follow it** — this phase's steps are in that file, not here. Read it again if the conversation was compacted or resumed during this phase.
 
-If NOT in retrofit or acceptance mode, proceed to Step 1 below (normal ADR authoring).
+If NOT in retrofit or acceptance mode, proceed to Step 2 below (normal ADR authoring).
 
 **No-argument guard**: If no argument was provided (title is empty), ask before
 running Phase 0:
 
 > "What technical decision are you documenting? Please provide a short title
-> (e.g., `event-system-architecture`, `physics-engine-choice`)."
+> (e.g., `event-system-architecture`)."
 
-Use the user's response as the title, then proceed to Step 1.
+Use the user's response as the title, then proceed to Step 2.
 
 ---
 
-## 1. Load Engine Context (ALWAYS FIRST)
+## 1. Load Context (ALWAYS FIRST)
 
-**Read `references/1-engine-context.md` now and follow it** — this phase's steps are in that file, not here. Read it again if the conversation was compacted or resumed during this phase.
+NOT ASSESSED — no reference set for this stack.
 
 ## 2. Determine the next ADR number
 

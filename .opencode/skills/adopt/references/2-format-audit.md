@@ -19,7 +19,7 @@ For each artifact type in scope (based on argument mode **and the resolved
 workflow tier**), check not just that the file exists but that it contains the
 internal structure the template requires. At `minimal`, scope the audit to
 `design/game-brief.md` — do not audit for GDDs, ADRs, or UX specs (they are not expected).
-Steps 2e (the Engine reference row only), 2f (project config) and 2g (v1.0
+Steps 2e, 2f (project config) and 2g (v1.0
 migration check) run at every tier.
 
 ### 2a: GDD Format Audit
@@ -83,7 +83,6 @@ For each ADR file found, check for these critical sections:
 |---|---|
 | `## Status` | **BLOCKING** — `/story-readiness` ADR status check silently passes everything |
 | `## ADR Dependencies` | HIGH — dependency ordering in `/architecture-review` breaks |
-| `## Engine Compatibility` | HIGH — post-cutoff API risk is unknown |
 | `## GDD Requirements Addressed` | MEDIUM — traceability matrix loses coverage |
 | `## Performance Implications` | LOW — not pipeline-critical |
 
@@ -125,17 +124,15 @@ For each story file found:
 | Manifest version stamp | In manifest header: `Manifest Version:` | MEDIUM — staleness checks blind |
 | Sprint status | `production/sprint-status.yaml` | MEDIUM — `/sprint-status` falls back to markdown |
 | Stage file | `project.stage` in `project.yaml` (fallback `production/stage.txt`) | MEDIUM — phase auto-detect unreliable |
-| Engine reference | `docs/engine-reference/[engine]/VERSION.md` | HIGH — ADR engine checks blind |
 | Architecture traceability | `docs/architecture/requirements-traceability.md` | MEDIUM — no persistent matrix |
 
-At `workflow: minimal` only the Engine reference row applies. The TR registry,
+At `workflow: minimal` none of these rows apply. The TR registry,
 control manifest and its version stamp, sprint status, stage file and
 traceability matrix are not on the minimal path, so their absence is not a gap.
 
 ### 2f: Project Config Audit
 
 Read `project.yaml` (the primary config store) and `.opencode/docs/technical-preferences.md` (legacy mirror). A setting counts as configured if EITHER source has a real value (in technical-preferences.md, `[TO BE CONFIGURED]` means unconfigured):
-- `engine.name`/`version`/`language`/`rendering`/`physics` (else the Engine/Language/Rendering/Physics fields) → HIGH if unconfigured in both (ADR skills fail)
 - `naming.*` (else Naming conventions) → MEDIUM
 - `performance.*` (else Performance budgets) → MEDIUM
 - Forbidden Patterns, Allowed Libraries (technical-preferences.md only — not migrated to project.yaml) → LOW (starts empty by design)
@@ -147,9 +144,8 @@ exist at the repo root AND at least one legacy file does: `production/stage.txt`
 `production/review-mode.txt`, or a `.opencode/docs/technical-preferences.md` with
 real values.
 
-"Real values" means one of the keys the converter actually migrates — Engine,
-Language, Rendering, Physics, the naming, platform and performance fields,
-Framework, or the specialists. Not merely "some bullet is filled in": the
+"Real values" means one of the keys the converter actually migrates — the naming,
+platform and performance fields, or Framework. Not merely "some bullet is filled in": the
 shipped template ships one prose default (`- **Required Tests**: …`) that is
 never migrated, and counting it made every fresh clone read as a v1.0 project.
 

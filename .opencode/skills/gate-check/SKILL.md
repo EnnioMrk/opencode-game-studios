@@ -22,7 +22,7 @@ The project progresses through these stages:
 
 1. **Concept** — Brainstorming, game concept document
 2. **Systems Design** — Mapping systems, writing GDDs
-3. **Technical Setup** — Engine config, architecture decisions
+3. **Technical Setup** — Project config, architecture decisions
 4. **Pre-Production** — Prototyping, vertical slice validation
 5. **Production** — Feature development (Epic/Feature/Task tracking active)
 6. **Polish** — Performance, playtesting, bug fixing
@@ -70,7 +70,7 @@ UI and Visual/Feel stories need are not test items: no `qa.level` relaxes them
 width is `workflow`'s axis (Section 4b). This value affects only the
 **specialist depth within each director's review**.
 `individual` uses the core specialist set; `small` the standard set; `studio`
-adds engine sub-specialists. It never skips a director — skipping directors is
+adds the deepest specialist set. It never skips a director — skipping directors is
 `review_mode`'s job. Both `review_mode` and `team.size` are now fronted by
 `modes.rigor` — one rigor choice sets both — and each still overrides that axis
 when set explicitly (a full-rigor project gets the `studio` set; lighter tiers

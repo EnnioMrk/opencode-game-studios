@@ -213,7 +213,7 @@ and the Verdict line.
 **Fixture (standard):**
 - `project.yaml`: `modes.workflow: standard`, `modes.review_mode: solo`
 - `design/gdd/loot.md` has an uncommitted edit
-- 4 ADRs, by their Engine Compatibility `Layer`: ADR-0001 (Foundation, event bus,
+- 4 ADRs, by their `Layer`: ADR-0001 (Foundation, event bus,
   no mention of `loot.md`), ADR-0002 (Foundation, save system, lists `loot.md` in
   `## GDD Requirements Addressed`), ADR-0006 (Feature, loot tables, names `loot.md`
   in prose only), ADR-0007 (Feature, enemy AI, no mention)

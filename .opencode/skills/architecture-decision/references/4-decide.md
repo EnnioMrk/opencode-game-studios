@@ -6,12 +6,12 @@
 ## 4. Guide the decision collaboratively
 
 Before asking anything, derive the skill's best guesses from the context already
-gathered (GDDs read, engine reference loaded, existing ADRs scanned). Then present
+gathered (GDDs read, existing ADRs scanned). Then present
 a **confirm/adjust** prompt using `question` — not open-ended questions.
 
 **Derive assumptions first:**
 - **Problem**: Infer from the title + GDD context what decision needs to be made
-- **Alternatives**: Propose 2-3 concrete options from engine reference + GDD requirements
+- **Alternatives**: Propose 2-3 concrete options from the GDD requirements
 - **Dependencies**: Scan existing ADRs for upstream dependencies. **If the scan is
   inconclusive, present `UNKNOWN — scan inconclusive, please confirm`, never
   `None`.** The two are not interchangeable: `None` asserts that nothing upstream
@@ -36,9 +36,8 @@ Here's what I'm assuming before drafting:
 
 Problem: [one-sentence problem statement derived from context]
 Alternatives I'll consider:
-  A) [option derived from engine reference]
-  B) [option derived from GDD requirements]
-  C) [option from common patterns]
+  A) [option derived from GDD requirements]
+  B) [option from common patterns]
 GDD systems driving this: [list derived from context]
 Dependencies: [upstream ADRs if any, otherwise "None"]
 Status: Proposed
@@ -52,13 +51,13 @@ Status: Proposed
 
 Do not generate the ADR until the user confirms assumptions or provides corrections.
 
-**After engine specialist and TD reviews return** (Step 5.5/5.6), if unresolved
+**After the TD review returns** (Step 5.6), if unresolved
 decisions remain, present each one as a separate `question` with the proposed
 options as choices plus a free-text escape:
 
 ```
 Decision: [specific unresolved point]
-[A] [option from specialist review]
+[A] [option from the TD review]
 [B] [alternative option]
 [C] Different approach — I'll describe it
 ```

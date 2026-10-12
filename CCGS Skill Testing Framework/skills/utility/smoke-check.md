@@ -3,17 +3,15 @@
 ## Skill Summary
 
 `/smoke-check` is the gate between implementation and QA hand-off. Phase 1 runs
-`project-coherence.sh`, verifies that **game test files** exist under the
-engine's test root or `tests/smoke/` (not merely that `tests/` exists), and
-reads the engine from `project.yaml` (falling back to `technical-preferences.md`),
-then resolves the editor executable — the one `commands.test` names, else
-`engine.path`, else the name on `PATH` — before it calls the runner unavailable.
-Phase 2 runs `commands.test` (or the per-engine default) under a timeout and
-reads the result by engine — gdUnit4 exit codes for Godot; on Unity, Play Mode
-tests under `Assets/Tests/PlayMode/` get a second run with their own results
-file. At `qa.level: minimal` with no game tests, the automated row is WAIVED
-and Phase 2 runs a build check instead — `commands.smoke`, else
-`commands.build`, when set. Phase 3 scans test coverage against the QA plan or
+`project-coherence.sh`, verifies that **game test files** exist under the test
+root — `tests/` — or `tests/smoke/` (not merely that `tests/` exists), and
+resolves the test command — the one `commands.test` names, else the project's
+own test command (`bun test`, from `package.json`) — before it calls the runner
+unavailable. Phase 2 runs that command under a timeout and reads the result: a
+non-zero exit is a FAIL, and a run that executed zero test cases is
+`NOT ASSESSED — no tests found`. At `qa.level: minimal` with no game tests, the
+automated row is WAIVED and Phase 2 runs a build check instead — `commands.smoke`,
+else `commands.build`, when set. Phase 3 scans test coverage against the QA plan or
 sprint stories; Phase 4 batch-verifies manual smoke checks with
 `question`, and Batch 1 first asks whether the build was launched this
 session — "not launched" makes the manual checks NOT ASSESSED. The report is written
@@ -22,12 +20,12 @@ to `production/qa/smoke-[date].md` after explicit approval.
 Verdicts, first matching rule wins: FAIL (a test failure, a suite that did not
 complete — timeout, compile/parse/build error, no results file — or a Batch
 1/Batch 2 check FAILED, or a failed build check), NOT ASSESSED (suite unconfirmed NOT RUN, a runner that
-could not run or executed zero tests, unconfirmed `PlayMode: NOT RUN`, a check
+could not run or executed zero tests, a check
 that could not execute — including a build not launched this session — an
 `UNKNOWN` coverage row, Batch 3 skipped — or no game tests at `qa.level`
 `standard`/`full`; at `minimal` the automated row is WAIVED and the batches carry
-the verdict), PASS WITH WARNINGS (MISSING test evidence, a runner warning such
-as gdUnit4 101's leaked orphans, or a NOT RUN suite the developer confirmed),
+the verdict), PASS WITH WARNINGS (MISSING test evidence, a runner warning on a
+passing suite, or a NOT RUN suite the developer confirmed),
 PASS. NOT ASSESSED ranks above both pass values and below FAIL.
 Whether a FAIL blocks hand-off depends on `qa.level` (advisory at `minimal`)
 and `testing.strict.config` (unset → blocking).
@@ -59,9 +57,8 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 ### Case 1: Happy Path — Automated tests pass, manual items confirmed, PASS
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot` and `commands.test` set to the gdUnit4 command
-- `addons/gdUnit4/bin/GdUnitCmdTool.gd` exists; game tests exist under
-  `tests/unit/` and `tests/integration/`
+- `project.yaml` has `commands.test` set to the project's test command (`bun test`)
+- Game test files exist under `tests/`
 - `production/qa/qa-plan-sprint-005.md` exists
 - The runner exits 0 with 12 tests, 12 passing
 - The developer says the build was launched this session and selects no FAILED item in Batch 1, Batch 2 or Batch 3
@@ -70,10 +67,9 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 **Input:** `/smoke-check`
 
 **Expected behavior:**
-1. Phase 1 reports environment: Godot, tests found, QA plan path
-2. Runs `godot --headless --path . --import`, then `commands.test`
-   (`godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode`)
-   under `timeout 900`; the report says `commands.test` was the command run
+1. Phase 1 reports environment: test command `bun test`, tests found, QA plan path
+2. Runs `commands.test` under `timeout 900`; the report says `commands.test` was
+   the command run
 3. Exit 0 with tests found → automated tests PASS (12/12)
 4. Coverage scan: all stories COVERED or EXPECTED
 5. `question` for Batch 1, Batch 2 and Batch 3 — nothing selected
@@ -82,7 +78,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 8. Writes after approval; delivers "Smoke check passed cleanly. The build is ready for manual QA."
 
 **Assertions:**
-- [ ] Automated test runner is invoked via Bash, after the Godot import
+- [ ] The test command is invoked via Bash before any manual batch is asked
 - [ ] `question` is used for manual smoke check batches
 - [ ] "May I write" is asked before writing the report file
 - [ ] Report is written to `production/qa/smoke-[date].md`
@@ -152,9 +148,9 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 **Fixture:**
 - `project.yaml` sets `modes.rigor: standard` (so `qa.level` resolves to `standard`)
-- Engine is Godot; `tests/unit/` and `tests/integration/` exist but hold only
-  the `.gdignore_placeholder` files `/test-setup` creates
-- No `tests/smoke/` directory
+- `tests/unit/` and `tests/integration/` exist but hold only the placeholder
+  files `/test-setup` creates
+- No game test files under `tests/smoke/`
 
 **Input:** `/smoke-check`
 
@@ -177,8 +173,8 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 **Fixture:**
 - No `modes.rigor` set (the default, `minimal`, so `qa.level` resolves to `minimal`)
-- Engine is Godot; no game test files under `tests/unit/`, `tests/integration/` or `tests/smoke/`
-- `commands.smoke` is `godot --headless --quit-after 5`; it exits 0 with no `SCRIPT ERROR` line
+- No game test files under `tests/unit/`, `tests/integration/` or `tests/smoke/`
+- `commands.smoke` is the project's boot check; it exits 0 with no error output
 - The user says the build was launched this session and confirms every Batch 1, Batch 2 and Batch 3 check
 
 **Input:** `/smoke-check`
@@ -186,7 +182,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 **Expected behavior:**
 1. Phase 1 finds no game test files and, at `qa.level: minimal`, records the automated row as `WAIVED — qa.level: minimal, no game tests`
 2. Phase 2's test run and Phase 3 are skipped, each with a one-line note saying why
-3. Phase 2's build check runs `commands.smoke` (after the Godot import) under a timeout: `Build check: PASS`
+3. Phase 2's build check runs `commands.smoke` under a timeout: `Build check: PASS`
 4. Phase 4 runs Batches 1–3; every check passes
 5. Verdict: PASS — the report's Automated Tests status reads WAIVED
 
@@ -198,7 +194,7 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 - [ ] Verdict is PASS and the report's Automated Tests row reads WAIVED
 - [ ] A Batch 1 or Batch 2 check that could not be executed (no build) makes the verdict NOT ASSESSED, as at any level
 - [ ] Variant — the user answers that the build was not launched this session: Batches 2 and 3 are not asked (the skip is said), the Batch 1 checks read `NOT RUN — build not launched this session`, and the verdict is NOT ASSESSED — never PASS from an empty failure list
-- [ ] Variant — `commands.smoke` prints `SCRIPT ERROR` (Godot's boot check exits 0 on it): the build check is FAIL and so is the verdict
+- [ ] Variant — `commands.smoke` prints an error the exit code hides (a boot check can exit 0 on it): the build check is FAIL and so is the verdict
 
 ---
 
@@ -222,14 +218,15 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 ---
 
-### Case 6: gdUnit4 Lookalikes — exit 0 over zero tests, and exit 101
+### Case 6: Exit-Code Lookalikes — exit 0 over zero tests, and exit 101
 
 **Fixture:**
 - As Case 1, with every story COVERED or EXPECTED and nothing selected in
   Batch 1, Batch 2 or Batch 3
 - Run A: the suites under `tests/unit/` declare no test functions; the runner
   prints `No test cases found` and exits 0
-- Run B: the runner exits 101 — 12 tests, 12 passing, 2 orphan nodes leaked
+- Run B: the runner exits 101 — 12 tests, 12 passing, with a warning about 2
+  leaked resources
 
 **Input:** `/smoke-check`
 
@@ -237,13 +234,13 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 1. Run A: exit 0 is not read as a pass — the automated tests are
    `NOT ASSESSED — no tests found`, and the verdict is NOT ASSESSED even though
    every manual check passed
-2. Run B: 101 is PASS WITH WARNINGS, naming the orphan count; with no MISSING
+2. Run B: 101 is PASS WITH WARNINGS, naming the warning count; with no MISSING
    entry, the verdict is PASS WITH WARNINGS and the advisory list names the
-   orphans
+   warning
 
 **Assertions:**
 - [ ] Run A's verdict is NOT ASSESSED — not PASS
-- [ ] Run B's Status line is PASS WITH WARNINGS with the orphan count
+- [ ] Run B's Status line is PASS WITH WARNINGS with the warning it reported
 - [ ] Run B's verdict is PASS WITH WARNINGS — not PASS, and not FAIL
 
 ---
@@ -289,44 +286,18 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
 
 ---
 
-### Case 9: Unity — Play Mode is a second run
-
-**Fixture:**
-- `engine.name: Unity`; `com.unity.test-framework` is in `Packages/manifest.json`
-- `commands.test` is the Edit Mode command `/setup-engine` writes
-- `Assets/Tests/EditMode/` and `Assets/Tests/PlayMode/` both hold test files
-- Edit Mode exits 0 with 8/8 passing; Play Mode exits 2 with 1 of 3 failing
-
-**Input:** `/smoke-check`
-
-**Expected behavior:**
-1. The Edit Mode run deletes `test-results/editmode.xml` first, then runs
-2. Because `commands.test` does not pass `-testPlatform PlayMode` and
-   `Assets/Tests/PlayMode/` holds tests, the skill runs Play Mode too, deleting
-   and then writing `test-results/playmode.xml`
-3. The report has one Status line per platform: `EditMode: PASS (8/8)` and
-   `PlayMode: FAIL (1 failure)`
-4. The verdict is FAIL
-
-**Assertions:**
-- [ ] Play Mode is run as a second run with its own results file
-- [ ] Each platform is reported on its own line
-- [ ] The Play Mode failure makes the verdict FAIL — the Edit Mode pass does not cover it
-
----
-
 ## Protocol Compliance
 
 - [ ] Uses `question` for all manual smoke check batches (Batch 1, Batch 2, Batch 3), and Batch 1 asks whether the build was launched this session; "not launched" yields NOT ASSESSED
-- [ ] Resolves the editor executable from `commands.test`, then `engine.path`, then `PATH` before reporting the runner unavailable; a bare `godot` that does not resolve is never read as "no engine installed"
+- [ ] Resolves the test command from `commands.test` (its quoted path or first word), else the project's own test command (`bun test`), before reporting the runner unavailable
 - [ ] Never edits `project.yaml`: a `commands.test` missing flags or using a relative path is adjusted for the run and reported to the user
 - [ ] Runs automated tests via Bash before asking any manual questions
 - [ ] Asks "May I write" before creating the report file — never writes without approval
 - [ ] Verdict vocabulary is PASS / PASS WITH WARNINGS / NOT ASSESSED / FAIL — no other verdicts
 - [ ] FAIL is triggered by automated test failures, a suite that did not complete (timeout, compile/parse/build error, no results file), or Batch 1/Batch 2 FAIL responses
-- [ ] PASS WITH WARNINGS is triggered by MISSING test coverage, a runner warning on a passing suite (gdUnit4 101), or a confirmed NOT RUN — with no critical failures
+- [ ] PASS WITH WARNINGS is triggered by MISSING test coverage, a runner warning on a passing suite, or a confirmed NOT RUN — with no critical failures
 - [ ] Unconfirmed NOT RUN (runner not available) yields NOT ASSESSED — never FAIL, never a pass verdict
-- [ ] A run over zero tests, a runner that could not run, and an unconfirmed `PlayMode: NOT RUN` yield NOT ASSESSED
+- [ ] A run over zero tests, a runner that could not run, and an unconfirmed NOT RUN yield NOT ASSESSED
 - [ ] Does not invoke director gates at any point
 
 ---
@@ -341,11 +312,8 @@ None. `/smoke-check` is a pre-QA utility skill. No director gates apply.
   confirms a result from their IDE or CI) is covered by the protocol compliance
   assertions above.
 - At `qa.level: minimal` a FAIL is advisory and never blocks hand-off; Case 2
-  pins `standard` to test the blocking path. Unity's `testcasecount="0"` and
-  Unreal's `No automation tests matched` (→ NOT ASSESSED) follow Case 6 Run A;
-  not separately fixture-tested.
-- The Linux and macOS Unreal commands (picked by `uname -s`) are not
-  fixture-tested. On macOS, Unreal tests are NOT ASSESSED until `commands.test`
-  is set — asserted in the skill, not given a case here.
-- A Play Mode run that cannot be made (`PlayMode: NOT RUN`, unconfirmed →
-  NOT ASSESSED) is covered by protocol compliance, not by its own case.
+  pins `standard` to test the blocking path. A runner that reports zero tests
+  (→ NOT ASSESSED) follows Case 6 Run A; not separately fixture-tested.
+- A runner that cannot be made available in this environment (NOT RUN,
+  unconfirmed → NOT ASSESSED) is covered by protocol compliance, not by its own
+  case.

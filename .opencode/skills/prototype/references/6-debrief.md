@@ -14,11 +14,6 @@ observations you collect here.
 > browser and play it. Take as long as you need. Don't rush through it — try to
 > approach it the way a new player would. Come back here when you're done."
 
-**For Engine path:** The multi-turn iteration loop already captured errors and
-behavior. Now ask for the overall assessment:
-> "Now that it's running — play through it a few times as if you're the player,
-> not the developer. Come back when you have a feel for it."
-
 **For Paper path:** Say exactly this:
 > "Read through `prototypes/[name]-concept/rules.md` and walk through the
 > `play-log.md` as if you're playing it for the first time. If you have someone

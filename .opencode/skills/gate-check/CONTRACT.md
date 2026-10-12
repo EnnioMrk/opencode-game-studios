@@ -10,8 +10,7 @@ Validates whether the project is ready to advance from one development phase to 
 |------|---------------------------|-----------|
 | `project.yaml` (`project.stage`, fallback `production/stage.txt`) | Stage name (used when no argument provided, to auto-detect current stage) | Yes |
 | `project.yaml` (`modes.workflow`, which follows `modes.rigor` — `minimal` by default; `workflow_overrides.system_overrides.*`, `workflow_overrides.art_bible_strict`) | Workflow tier — selects the per-gate artifact checklist (Section 2b); per-system overrides resolved when validating MVP GDDs | Yes |
-| `docs/engine-reference/[engine]/VERSION.md` | Engine version, post-cutoff risk levels (read during engine validation checks) | Yes |
-| `.opencode/docs/technical-preferences.md` | Legacy fallback for `engine.*`, `naming.*` and `performance.*` when those keys are absent or empty in `project.yaml`; sole source for forbidden patterns (never migrated). Referenced in quality checks | Yes — required only for keys absent from `project.yaml` |
+| `.opencode/docs/technical-preferences.md` | Legacy fallback for `naming.*` and `performance.*` when those keys are absent or empty in `project.yaml`; sole source for forbidden patterns (never migrated). Referenced in quality checks | Yes — required only for keys absent from `project.yaml` |
 | `docs/consistency-failures.md` | Domain-tagged entries surfaced as increased-scrutiny context (read if exists; skip if absent) | Yes |
 
 ### Phase-specific inputs (subset read depending on target gate)
@@ -19,9 +18,9 @@ Validates whether the project is ready to advance from one development phase to 
 |-------------|------------------|
 | Concept → Systems Design | `design/gdd/game-concept.md`; pillars either inside it **or** in an optional `design/gdd/game-pillars.md` — at the `minimal` tier, `design/game-brief.md` instead (pillars check drops) |
 | Systems Design → Technical Setup | `design/gdd/systems-index.md`, all MVP GDDs in `design/gdd/`, cross-GDD review report |
-| Technical Setup → Pre-Production | `docs/architecture/` ADRs (≥3), `docs/engine-reference/[engine]/deprecated-apis.md`, `docs/architecture/architecture.md`, `docs/architecture/requirements-traceability.md`, `design/accessibility-requirements.md`, `design/ux/interaction-patterns.md` |
+| Technical Setup → Pre-Production | `docs/architecture/` ADRs (≥3), `docs/architecture/architecture.md`, `docs/architecture/requirements-traceability.md`, `design/accessibility-requirements.md`, `design/ux/interaction-patterns.md` |
 | Pre-Production → Production | `production/sprints/` (first sprint plan), `docs/architecture/control-manifest.md`, `production/epics/` (Foundation + Core layer epics), `design/ux/hud.md`, `design/ux/` key screen specs; recommended, not blocking: `prototypes/*-vertical-slice/REPORT.md` and its playtest in `production/qa/playtests/` — at the `minimal` tier, only a filled `design/game-brief.md` with its build order and stories under `production/epics/` (no sprint plan; the rest drops, the Vertical Slice items included — two checks on the current build replace them: the core loop is fun, and it runs end to end) |
-| Production → Polish | code-root subsystems (resolve per `.opencode/docs/code-root-resolution.md`), the engine's test root — `tests/unit/` + `tests/integration/` (Godot), `Assets/Tests/` (Unity), `Source/<Module>/Private/Tests/` (Unreal) — with all Logic stories covered, `production/qa/smoke-*.md` (PASS or PASS WITH WARNINGS), `production/qa/playtests/` (≥3 sessions) |
+| Production → Polish | code-root subsystems (resolve per `.opencode/docs/code-root-resolution.md`), the test root (`tests/`) with all Logic stories covered, `production/qa/smoke-*.md` (PASS or PASS WITH WARNINGS), `production/qa/playtests/` (≥3 sessions) |
 | Polish → Release | Full story test evidence for all Must Have stories, QA sign-off report, localization check, `production/qa/` QA plan, release checklist output, changelog, the newest full-scope `production/security/security-audit-*.md` (plus any later `quick` re-run) |
 
 ### Preconditions
@@ -42,7 +41,7 @@ Validates whether the project is ready to advance from one development phase to 
 - Any item that cannot be automatically verified is marked `MANUAL CHECK NEEDED` and the user is asked before the verdict is finalized
 
 ## Immutability Rules
-- READS but does NOT modify: all GDDs in `design/gdd/`, all ADRs in `docs/architecture/`, `docs/architecture/control-manifest.md`, `docs/architecture/tr-registry.yaml`, `.opencode/docs/technical-preferences.md` (legacy fallback), `docs/engine-reference/[engine]/VERSION.md`, `docs/engine-reference/[engine]/deprecated-apis.md`, all story files in `production/epics/`, all sprint files in `production/sprints/`, all playtest files in `production/qa/playtests/`, source files in the code root (Grep only), test files under the engine's test root (run via Bash)
+- READS but does NOT modify: all GDDs in `design/gdd/`, all ADRs in `docs/architecture/`, `docs/architecture/control-manifest.md`, `docs/architecture/tr-registry.yaml`, `.opencode/docs/technical-preferences.md` (legacy fallback), all story files in `production/epics/`, all sprint files in `production/sprints/`, all playtest files in `production/qa/playtests/`, source files in the code root (Grep only), test files under the test root (run via Bash)
 - MODIFIES: `project.yaml` (`project.stage` only) + legacy `production/stage.txt` (both on a confirmed PASS or an accepted CONCERNS override only), `production/gate-checks/[report].md` (new file, with user approval)
 - Does NOT modify story files, ADRs, GDDs, or any source/test code
 
@@ -64,7 +63,7 @@ Validates whether the project is ready to advance from one development phase to 
 | Gate Passed | Enabled downstream skill |
 |-------------|-------------------------|
 | Concept → Systems Design | `/map-systems` — or `/design-system` for the first system when `design/gdd/systems-index.md` already exists |
-| Systems Design → Technical Setup | `/create-architecture` first — the master architecture and the ADR work plan (it needs an engine, so `/setup-engine` if none is configured) — then `/architecture-decision` |
+| Systems Design → Technical Setup | `/create-architecture` first — the master architecture and the ADR work plan — then `/architecture-decision` |
 | Technical Setup → Pre-Production | `/create-control-manifest` if `docs/architecture/control-manifest.md` does not exist yet, then `/vertical-slice`; `/create-epics` and `/create-stories` once the slice has validated the core loop |
 | Pre-Production → Production | `/dev-story`, `/sprint-plan`, `/story-readiness` |
 | Production → Polish | `/perf-profile`, `/playtest-report`, `/smoke-check` |
@@ -75,7 +74,7 @@ Validates whether the project is ready to advance from one development phase to 
 
 ## Known Fragile Points
 - `project.stage` in `project.yaml` (with legacy `production/stage.txt` as fallback) is the authoritative stage indicator — if either is manually edited to a wrong value outside of `/gate-check`, auto-detection in future sessions will be incorrect; never edit them outside `/gate-check`'s stage write
-- The Production → Polish gate runs the test suite via Bash. If the test runner command is not configured or fails to start (e.g. gdUnit4 is not installed at `addons/gdUnit4/`), the test check now yields `NOT ASSESSED`, which outranks PASS — so the gate cannot advance a stage on the strength of a suite that never ran. Without the `NOT ASSESSED` branch this masks silent test regressions: Section 3 runs the suite "if a test runner is configured", and with no else an unconfigured runner simply contributes nothing to the verdict
+- The Production → Polish gate runs the test suite via Bash. If the test runner command is not configured or fails to start, the test check now yields `NOT ASSESSED`, which outranks PASS — so the gate cannot advance a stage on the strength of a suite that never ran. Without the `NOT ASSESSED` branch this masks silent test regressions: Section 3 runs the suite "if a test runner is configured", and with no else an unconfigured runner simply contributes nothing to the verdict
 - The Pre-Production → Production gate has a hard Vertical Slice validation block; any subjective checklist item (e.g., "core mechanic feels good") requires a user response via `question` — if the user answers without playing the build, a false PASS is possible
 - Gate report files in `production/gate-checks/` are not validated for completeness by any downstream skill; a partial report written due to a session interruption will look identical to a complete one
 - `docs/consistency-failures.md` is optional context that adjusts scrutiny but does not change the formal checklist; if this file exists but is stale, the increased-scrutiny signals may point at resolved issues

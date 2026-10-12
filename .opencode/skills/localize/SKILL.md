@@ -165,7 +165,7 @@ Generate `production/localization/translator-brief-[locale]-[date].md`:
 ## Do Not Translate List
 The following must appear verbatim in all locales:
 - [Game name]
-- [UI terms that match in-engine labels]
+- [UI terms that match on-screen labels]
 - [Brand or trademark names]
 
 ## Placeholder Reference
@@ -286,10 +286,10 @@ Grep the code root for VO audio references. Verify each referenced path exists i
 Right-to-left languages (Arabic, Hebrew, Persian, Urdu) require layout mirroring beyond
 just translating text. This mode validates the implementation.
 
-Determine the engine: read `engine.name` from `project.yaml`; if that key is absent or empty (including when `project.yaml` has no `engine:` block), fall back to `.opencode/docs/technical-preferences.md`. Then check:
+Determine where the UI sets its text direction, then check:
 
 **Layout mirroring**
-- Is RTL layout enabled in the engine? (Godot: `Control.layout_direction`, Unity: `RTL Support` package, Unreal: text direction flags)
+- Is RTL layout enabled in the app?
 - Are all UI containers set to auto-mirror, or are positions hardcoded?
 - Do progress bars, health bars, and directional indicators mirror correctly?
 
@@ -307,8 +307,6 @@ Determine the engine: read `engine.name` from `project.yaml`; if that key is abs
 - Do any text-in-image assets exist that require RTL versions?
 
 Grep patterns to check:
-- Engine-specific RTL flags in scene/prefab files
-- Any `HBoxContainer`, `LinearLayout`, `HorizontalBox` nodes — verify layout_direction settings
 - String concatenation with `+` near dialogue or UI code
 
 Report findings. Flag BLOCKING issues (content unreadable without fix) vs ADVISORY (cosmetic improvements).

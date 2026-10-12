@@ -247,7 +247,7 @@ None. Content audit is an analysis skill; no gates are invoked.
 
 **Fixture:**
 - `modes.workflow` resolves to `full`
-- `project.yaml` has no `engine.name`; `.opencode/docs/technical-preferences.md` reads `[TO BE CONFIGURED]`; both `src/` and `Source/` exist, so the tree does not decide the root
+- `src/` does not exist, so the code root is unresolved per `.opencode/docs/code-root-resolution.md`
 - `design/gdd/systems-index.md` lists Levels (MVP) and Enemies (MVP)
 - `design/gdd/levels.md` specifies "6 levels"; `design/gdd/enemies.md` specifies "3 enemy types: Grunt, Sniper, Boss"
 - `assets/data/enemies/` contains 3 enemy files; no scene files exist under `assets/`
@@ -277,7 +277,6 @@ None. Content audit is an analysis skill; no gates are invoked.
 - [ ] Writes only after "May I write" and only to `docs/content-audit-[YYYY-MM-DD].md`; `--summary` writes nothing
 - [ ] A missing required input, a scope with no counts, or an untaken Found count yields `NOT ASSESSED — NO DATA`, never a computed gap percentage or COMPLETE
 - [ ] No director gates are invoked
-- [ ] On Unity, every content glob also runs under `Assets/` without a `data/` segment (e.g. `Assets/**/Items/**`, `*Item*.asset`) — a Unity project's items, abilities, quests and dialogue are never reported NOT STARTED from an `assets/data/`-only scan
 
 ---
 
@@ -286,9 +285,8 @@ None. Content audit is an analysis skill; no gates are invoked.
 - `--summary` mode (prints the table, writes nothing, ends with "Run
   `/content-audit` without `--summary` to write the full report.") is not given
   its own case.
-- Unity levels are found under the code root (`Assets/`, `*.unity`) and the
-  other content types under `Assets/` (asserted in Protocol Compliance); Unreal
-  levels under `Content/` (`*.umap`, with data assets as `*.uasset`); neither
-  engine has its own case.
+- Levels are found in the asset root and the code root, the other content
+  types under `assets/data/` (asserted in Protocol Compliance); an unresolved
+  code root leaves the level count untaken (Case 8).
 - Asset naming, size and format compliance is `/asset-audit`'s job, not this
   skill's.

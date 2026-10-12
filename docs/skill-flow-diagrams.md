@@ -5,7 +5,7 @@ These show what runs before and after each skill, and what artifacts flow betwee
 
 ---
 
-## Default Path: Rigor Minimal (Four Steps to Code)
+## Default Path: Rigor Minimal (Three Steps to Code)
 
 `modes.rigor: minimal` is the default. The one-page brief is the design record and
 its build order is the plan, so there is no epic planning, sprint or phase gate to run.
@@ -14,7 +14,6 @@ is allowed. `/help` follows this route at `minimal`.
 
 ```
 MINIMAL PATH (modes.rigor: minimal — the default; no /gate-check, stage stays Concept)
-  /setup-engine ───────────────────────────────────────────────► project.yaml + AGENTS.md
   /brainstorm ─────────────────────────────────────────────────► design/game-brief.md (one page)
         │                                                          (replaces concept doc, systems index, GDDs)
         ▼
@@ -39,7 +38,6 @@ The overview below is the `standard`/`full` pipeline.
 PHASE 1: CONCEPT
   /start ──────────────────────────────────────────────────────► routes to A/B/C/D
   /brainstorm ──────────────────────────────────────────────────► design/gdd/game-concept.md
-  /setup-engine ────────────────────────────────────────────────► project.yaml + AGENTS.md
   /prototype [core-mechanic] ───────────────────────────────────► prototypes/[name]-concept/REPORT.md
         │ PROCEED                                                  (validate idea BEFORE writing GDDs)
         ▼
@@ -67,7 +65,6 @@ PHASE 3: TECHNICAL SETUP
   /architecture-review ────────────────────────────────────────► review report + docs/architecture/tr-registry.yaml
   /create-control-manifest ────────────────────────────────────► docs/architecture/control-manifest.md
   /test-setup ─────────────────────────────────────────────────► test framework + CI/CD pipeline
-  /test-helpers ───────────────────────────────────────────────► tests/helpers/ (engine-specific library)
   /ux-design accessibility ─────────────────────────────────────► design/accessibility-requirements.md
   /ux-design patterns ──────────────────────────────────────────► design/ux/interaction-patterns.md
   /gate-check ─────────────────────────────────────────────────► PASS → advance to pre-production
@@ -161,7 +158,7 @@ upstream GDDs (input, if any)
         ▼
 /design-system [name]
         │
-        ├── Pre-check: feasibility table + engine risk flags
+        ├── Pre-check: feasibility table + risk flags
         │
         ├── Section cycle × 8:
         │     question → options → decision → draft → approval → WRITE
@@ -289,7 +286,6 @@ How a story gets from backlog to closed (summary view):
 ```
 [Phase 3 — one-time infrastructure setup]
 /test-setup ────────────────────────────────────────────────────► test framework scaffolded + CI/CD wired
-/test-helpers ──────────────────────────────────────────────────► tests/helpers/ (GDUnit4, NUnit, etc.)
 
 [Phase 5 — per-sprint QA cycle]
 /qa-plan [sprint or feature]
@@ -383,13 +379,12 @@ For projects with existing work (use `/start` option D or run directly):
 | Where you are | Run this |
 |---------------|---------|
 | Brand new, no idea | `/start` → `/brainstorm` |
-| Have a concept, no engine | `/setup-engine` |
-| Have concept + engine | `/map-systems` |
+| Have a concept | `/map-systems` |
 | Mid-systems design | `/design-system [next system]` or `/map-systems next` |
 | All GDDs done | `/review-all-gdds` → `/gate-check` |
 | In technical setup | `/create-architecture` → `/architecture-decision` |
 | Starting UX design | `/ux-design screen [name]` or `/ux-design hud` |
-| Scaffolding tests | `/test-setup` → `/test-helpers` |
+| Scaffolding tests | `/test-setup` |
 | Have stories, ready to code | `/story-readiness [story]` → `/dev-story [story]` |
 | Story done | `/story-done [story]` |
 | Running QA for a sprint | `/qa-plan` → `/smoke-check` → `/regression-suite` |

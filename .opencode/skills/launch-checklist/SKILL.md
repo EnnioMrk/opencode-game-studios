@@ -83,15 +83,14 @@ Read the argument for the launch date or `dry-run` mode. Dry-run mode generates 
 > **Establish the denominator before every scan below, and report it.** Each line
 > reads either `scanned [N] files, [M] hits` or
 > `NOT ASSESSED — [code root unresolved | no source files | no asset folder | directory empty]`.
-> Never a bare tick. The code root is `src/`, `Assets/` or `Source/` by engine
-> (resolve per `.opencode/docs/code-root-resolution.md`); assets live in
-> `assets/`, `Assets/` or `Content/`.
+> Never a bare tick. The code root is `src/` (resolve per
+> `.opencode/docs/code-root-resolution.md`); assets live in `public/`.
 >
 > This is written once, over the whole phase, rather than under **one** of the
 > four bullets. All four search the code root the same way — for placeholder assets,
 > TODOs, debug output and hardcoded test values — so if only one carries the
 > warning, an empty or absent code root returns zero
-> hits three times and read as three clean results. With no `assets/` directory,
+> hits three times and read as three clean results. With no `public/` directory,
 > for example, the placeholder scan returns zero hits, and "All placeholder art
 > replaced" would be ticked green.
 

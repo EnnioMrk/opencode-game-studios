@@ -2,8 +2,7 @@
 
 ## Trigger
 
-Runs before any commit that modifies files under the code root — `src/`
-(Godot), `Assets/` (Unity) or `Source/` (Unreal); see
+Runs before any commit that modifies files under the code root — `src/`; see
 `.opencode/docs/code-root-resolution.md`.
 
 ## Purpose
@@ -19,12 +18,12 @@ values that should be data-driven.
 # Pre-commit hook: Code quality checks
 # Adapt the specific checks to your language and tooling
 
-# The code root depends on the engine; resolve it the way the shipped commit
-# check does. An unresolved root is reported, never guessed as src/.
+# Resolve the code root the way the shipped commit check does. An unresolved
+# root is reported, never guessed.
 . "$(git rev-parse --show-toplevel)/.opencode/hooks/yaml-helper.sh"
 CODE_ROOT=$(resolve_code_root | cut -f1)
 if [ -z "$CODE_ROOT" ]; then
-    echo "SKIPPED: no code root (set engine.name in project.yaml) — code checks did not run."
+    echo "SKIPPED: code root unresolved — code checks did not run."
     exit 0
 fi
 
@@ -50,9 +49,7 @@ if [ -n "$CODE_FILES" ]; then
         fi
 
         # Run language-specific linter (uncomment appropriate line)
-        # For GDScript: gdlint "$file" || EXIT_CODE=1
-        # For C#: dotnet format --check "$file" || EXIT_CODE=1
-        # For C++: clang-format --dry-run -Werror "$file" || EXIT_CODE=1
+        # For TypeScript: bun run lint || EXIT_CODE=1
     done
 
     # Run unit tests for modified systems

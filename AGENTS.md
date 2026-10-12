@@ -1,6 +1,6 @@
 # OpenCode Game Studios — Game Studio Agent Architecture
 
-Indie game development managed through 49 coordinated OpenCode subagents.
+Indie game development managed through 34 coordinated OpenCode subagents.
 Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 This is the OpenCode port of **Claude Code Game Studios** by Donchitos (MIT).
@@ -8,14 +8,11 @@ See `PORTING.md` for what changed and `README.md` for how to use it.
 
 ## Technology Stack
 
-- **Engine**: [CHOOSE: Godot 4 / Unity / Unreal Engine 5]
-- **Language**: [CHOOSE: GDScript / C# / C++ / Blueprint]
+- **Stack**: [CHOOSE: runtime, language and packaging]
+- **Language**: [CHOOSE]
 - **Version Control**: Git with trunk-based development
-- **Build System**: [SPECIFY after choosing engine]
-- **Asset Pipeline**: [SPECIFY after choosing engine]
-
-> **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
-> dedicated sub-specialists. Use the set matching your engine.
+- **Build System**: [SPECIFY: build, test and run commands]
+- **Asset Pipeline**: [SPECIFY]
 
 ## Tool Map (Claude Code → OpenCode)
 
@@ -38,14 +35,13 @@ See `PORTING.md` for what changed and `README.md` for how to use it.
 ```text
 /
 ├── AGENTS.md                    # Master configuration
-├── project.yaml                 # Machine-readable project config — engine, modes, stage (source of truth)
-├── opencode.jsonc               # OpenCode configuration (permissions)
+├── project.yaml                 # Machine-readable project config — modes, stage, platform (source of truth)
+├── opencode.json                # OpenCode configuration (permissions)
 ├── .opencode/                   # Agent definitions, skills, commands, hooks, rules, docs
-├── <code root>/                 # Game source code — THE PATH IS ENGINE-SPECIFIC, see below
+├── src/                         # Game source code
 ├── assets/                      # Game assets (art, audio, vfx, shaders, data)
 ├── design/                      # Game design documents (gdd, narrative, levels, balance)
 ├── docs/                        # Technical documentation (architecture, api, postmortems)
-│   └── engine-reference/        # Curated engine API snapshots (version-pinned)
 ├── tests/                       # Game test suites (unit, integration, performance, playtest)
 ├── tools/                       # Build and pipeline tools (ci, build, asset-pipeline)
 ├── prototypes/                  # Throwaway prototypes (outside the code root)
@@ -55,54 +51,25 @@ See `PORTING.md` for what changed and `README.md` for how to use it.
 └── CCGS Skill Testing Framework/ # QA for the skills/agents themselves — /skill-test, /skill-improve
 ```
 
-### The code root is engine-specific
+### Code and test roots
 
-**Two of the three supported engines will not build a project whose code sits in
-`src/`.** This is not a style preference — it is a hard constraint of the engine's
-own toolchain:
+The code root is `src/` and the test root is `tests/`. Layout:
+`.opencode/docs/directory-structure.md`.
 
-| `engine.name` | Code root | Why it cannot be `src/` |
-|---|---|---|
-| **Godot** | `src/` | No constraint — Godot loads from `res://` anywhere under the project root. |
-| **Unity** | `Assets/` | Unity compiles **only** `Assets/` and `Packages/`. Code outside them is invisible to the compiler. |
-| **Unreal** | `Source/<Module>/` | UnrealBuildTool discovers modules under `Source/`; content lives in `Content/`. A module elsewhere is not built. |
+## Project Reference
 
-**Resolve the code root from `engine.name` before writing any source file.** A
-path shown as `src/…` alone is a Godot example: read it as *"the code root"* and
-substitute the row above. `src/` is the table's Godot row, not a universal path.
-
-**Tests follow the same rule** — the same compilers decide what they see:
-
-| `engine.name` | Test root | Anywhere else |
-|---|---|---|
-| **Godot** | `tests/unit/`, `tests/integration/` | — |
-| **Unity** | `Assets/Tests/EditMode/`, `Assets/Tests/PlayMode/` | not compiled: "0 tests, Passed" |
-| **Unreal** | `Source/<Module>/Private/Tests/` | not built: "No automation tests matched" |
-
-Read `tests/unit/[system]/` (or `integration/`) anywhere as the test root plus `[System]/`.
-Full layout: `.opencode/docs/directory-structure.md`.
-
-## Engine Version Reference
-
-<!-- ENGINE-REFERENCE-IMPORT: the line below is engine-specific. /setup-engine
-     rewrites it to docs/engine-reference/<engine>/VERSION.md for the chosen
-     engine, so a Unity or Unreal project stops pointing at the Godot reference.
-     It defaults to Godot (the template's example engine); skills that need the
-     pinned version read that file on demand. -->
-Read `docs/engine-reference/godot/VERSION.md` (Godot 4.6) before suggesting
-version-qualified engine APIs. `<engine>` matches `engine.name` in
-`project.yaml` and is `godot`, `unity` or `unreal`.
+The project's own truth lives in `docs/`. The studio's `design/gdd/`,
+`production/` and `CCGS Skill Testing Framework/` trees start empty.
 
 ## Technical Preferences
 
-`project.yaml` at the repo root is the primary config store — engine, specialists,
-naming, platform, performance, modes. Skills resolve it via `resolve_config`
+`project.yaml` at the repo root is the primary config store — naming, platform,
+performance, modes. Skills resolve it via `resolve_config`
 (see `.opencode/docs/config-resolution.md`).
 
 `.opencode/docs/technical-preferences.md` is the **legacy fallback**, read on demand
 when a key is absent from `project.yaml`. It is no longer loaded at session start:
-before `/setup-engine` runs it is almost entirely `[TO BE CONFIGURED]` placeholders,
-and after it runs `project.yaml` holds the real values.
+it is almost entirely placeholders, and `project.yaml` holds the real values.
 
 ## Coordination Rules
 
@@ -161,8 +128,8 @@ Every task follows: **Question -> Options -> Decision -> Draft -> Approval**
 
 See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
 
-> **First session?** If the project has no engine configured and no game concept,
-> run `/start` to begin the guided onboarding flow.
+> **First session?** If the project has no game concept yet, run `/start` to
+> begin the guided onboarding flow.
 
 ## Rules and Hooks
 
@@ -190,8 +157,8 @@ See `docs/COLLABORATIVE-DESIGN-PRINCIPLE.md` for full protocol and examples.
   before marking work complete.
 - **A parse check is not a run.** Every story that changes something
   player-observable is launched and observed before it closes, and the
-  observation is a retained screenshot in `production/qa/evidence/`. Procedure
-  per engine: `.opencode/docs/run-and-observe.md`.
+  observation is a retained screenshot in `production/qa/evidence/`. Procedure:
+  `.opencode/docs/run-and-observe.md`.
 
 ### Design Document Standards
 

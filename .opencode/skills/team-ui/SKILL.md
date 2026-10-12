@@ -37,7 +37,7 @@ below), and the agents that work at them are team members, not director gates.
 **`team.size`**: which agents are active (orthogonal to review_mode gate-depth and workflow docs).
 - **`individual`** (default): `ui-programmer` + `ux-designer`. Other agents consulted via these two, not spawned separately.
 - **`small`**: + `accessibility-specialist` + `art-director`.
-- **`studio`**: + engine UI specialist + an adversarial review pass: Phase 4's reviewers are told "your job is not to confirm this matches the spec — find where it fails it", and the report says the pass ran.
+- **`studio`**: + an adversarial review pass: Phase 4's reviewers are told "your job is not to confirm this matches the spec — find where it fails it", and the report says the pass ran.
 A non-core agent needed at `individual` routes through the nearest active core agent with an informational note. **"Phase gate" means any phase that ends in an `question` decision point this pipeline itself lists** — a transition under Decision Points above, or a **Gate** step written into the pipeline below — **whatever the `automation` mode.** `guided` and `autonomous` change how a gate is passed (it auto-advances, or is recorded with `log_decision`), not whether it is one, so bounded-exception condition (3) below holds at it in every mode. An agent restricted to "phase gates only" is spawned at those points and no others. This active-set scoping applies throughout the pipeline below: any phase that names an agent outside the active set routes through the nearest core agent rather than spawning it.
 
 **Announce the active set before Step 1 — never let the collapse be silent.**
@@ -69,13 +69,7 @@ enforced.**
 - **ux-designer** — User flows, wireframes, accessibility, input handling
 - **ui-programmer** — UI framework, screens, widgets, data binding, implementation
 - **art-director** — Visual style, layout polish, consistency with art bible
-- **engine UI specialist** — Validates UI implementation patterns against engine-specific best practices (`specialists.ui` from `project.yaml`; if absent, the UI Specialist line of `## Engine Specialists` in `.opencode/docs/technical-preferences.md`)
 - **accessibility-specialist** — Audits accessibility compliance at Phase 4
-
-> **`specialists.ui: null` means UNSET.** Treat it as absent and skip the engine
-> UI specialist; never spawn `null` as an agent name. The v1.0 migration writes
-> the whole `specialists` block whenever any one member is set, so `null` here is
-> ordinary — and the config reader returns it as the non-empty string `"null"`.
 
 **Templates used by this pipeline:**
 - `ux-spec.md` — Standard screen/flow UX specification
@@ -89,7 +83,6 @@ Use the `Agent` tool to spawn each team member as a subagent:
 - `subagent_type: ux-designer` — User flows, wireframes, accessibility, input handling
 - `subagent_type: ui-programmer` — UI framework, screens, widgets, data binding
 - `subagent_type: art-director` — Visual style, layout polish, art bible consistency
-- `subagent_type: [UI engine specialist]` — Engine-specific UI pattern validation (e.g., unity-ui-specialist, ue-umg-specialist, godot-specialist)
 - `subagent_type: accessibility-specialist` — Accessibility compliance audit
 
 **Brief each agent — do not dump context.** Read the shared inputs **once** and pass a distilled brief inline: the lines each agent actually needs, never a file path for a document you have already read (an agent handed a path re-reads the whole file). Pass a path only for a document you have not read and only that agent needs.
@@ -103,7 +96,6 @@ uses. One file per agent, so the parallel Phase 4 reviews never share one:
 | Phase / agent | Writes to |
 |---|---|
 | 2 art-director | `production/ui/[feature-name]/visual-design.md` |
-| 3 engine UI specialist | `production/ui/[feature-name]/engine-notes.md` |
 | 3 ui-programmer | the code root — the files the one implementation ask lists (File Write Protocol), outside the bounded exception |
 | 4 ux-designer, art-director, accessibility-specialist | `production/ui/[feature-name]/review-[agent].md`, one each |
 
@@ -197,13 +189,7 @@ Delegate to **art-director**:
 
 ### Phase 3: Implementation
 
-Before implementation begins, spawn the **engine UI specialist** (`specialists.ui` from `project.yaml`; if absent, the UI Specialist line of `## Engine Specialists` in `.opencode/docs/technical-preferences.md`) to review the UX spec and visual design spec for engine-specific implementation guidance:
-- Which engine UI framework should be used for this screen? (e.g., UI Toolkit vs UGUI in Unity, Control nodes vs CanvasLayer in Godot, UMG vs CommonUI in Unreal)
-- Any engine-specific gotchas for the proposed layout or interaction patterns?
-- Recommended widget/node structure for the engine?
-- Output: engine UI implementation notes to hand off to ui-programmer before they begin
-
-If no engine is configured, skip this step. **Record ``Engine validation: NOT ASSESSED — no engine configured (`engine.name` unset in `project.yaml`)`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed; the reader cannot tell engine guidance was never sought.
+**Record ``Implementation validation: NOT ASSESSED — no specialist applies`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed.
 
 Delegate to **ui-programmer**:
 - Implement the UI following the UX spec and visual design spec
@@ -285,10 +271,10 @@ A summary report covering: UX spec status, UX review verdict, visual design stat
 
 Verdict: **COMPLETE** — UI feature delivered through full pipeline (UX spec → visual → implementation → review → polish).
 
-If the accessibility gate (no committed tier) or the engine validation (no engine
-configured) was NOT ASSESSED, the verdict names each one — never a plain COMPLETE:
+If the accessibility gate (no committed tier) or the implementation validation
+was NOT ASSESSED, the verdict names each one — never a plain COMPLETE:
 
-Verdict: **COMPLETE — [accessibility | engine validation] NOT ASSESSED ([reason])** — UI feature delivered; the named check could not run.
+Verdict: **COMPLETE — [accessibility | Implementation validation] NOT ASSESSED ([reason])** — UI feature delivered; the named check could not run.
 
 Verdict: **BLOCKED** — pipeline halted; surface the blocker and its phase before stopping.
 

@@ -2,7 +2,7 @@
 
 ## Agent Summary
 **Domain owned:** Level layouts, encounter design (per-encounter difficulty), pacing charts, environmental storytelling, secret and optional content placement, flow analysis.
-**Does NOT own:** Game-wide systems (game-designer / systems-designer), story decisions (narrative-director — coordinates with), visual art style (art-director), level implementation in the engine and enemy AI code (programmers), game-wide difficulty parameters.
+**Does NOT own:** Game-wide systems (game-designer / systems-designer), story decisions (narrative-director — coordinates with), visual art style (art-director), level implementation and enemy AI code (programmers), game-wide difficulty parameters.
 **Gate IDs handled:** None. Design-review verdicts come from the `/design-review` skill, which spawns level-designer as a specialist that returns findings.
 
 ---
@@ -35,7 +35,7 @@ Verified by reading the agent's `.opencode/agents/level-designer.md` frontmatter
 **Assertions:**
 - [ ] Does not write or specify code for AI behavior logic
 - [ ] States that behavior-tree code is implementation work outside its role, rather than taking it on
-- [ ] Explicitly names `ai-programmer` (or `gameplay-programmer`, which its file names for engine implementation) as who implements it
+- [ ] Explicitly names `ai-programmer` (or `gameplay-programmer`, which its file names for implementation) as who implements it
 - [ ] Specifies the desired patrol in level design terms (e.g., route through named chokepoints and sight lines, pressure zones, spawn timing) for the programmer to implement
 
 ### Case 3: Review findings — specific, verdict left to the review skill

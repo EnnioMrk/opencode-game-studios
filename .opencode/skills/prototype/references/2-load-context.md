@@ -10,10 +10,4 @@ that replaces it at `rigor: minimal` — if either exists. Extract:
 - Core fantasy (what the player is supposed to feel)
 - Core loop (the moment-to-moment action being tested)
 
-Determine the engine and language in use: read `engine.name` and
-`engine.language` from `project.yaml`. For each field, if its key is absent or
-empty (including when `project.yaml` has no `engine:` block), fall back to
-`AGENTS.md` and `.opencode/docs/technical-preferences.md`. Treat a
-`[TO BE CONFIGURED]` value as not set.
-
 ---

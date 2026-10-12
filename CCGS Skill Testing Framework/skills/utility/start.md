@@ -3,12 +3,10 @@
 ## Skill Summary
 
 `/start` is the first-time onboarding skill. Phase 1 silently detects project
-state (engine from `project.yaml` or `technical-preferences.md`, concept or
-brief, source code under the engine's code root, prototypes, GDDs, production
-artifacts, and whether `.git/config`'s `origin` still points at the template
-repo). Phase 2 asks where the user is with four `question` options
-(A No idea yet, B Vague idea, C Clear concept, D Existing work); engine choice
-is not asked here — it is deferred to `/setup-engine`.
+state (concept or brief, source code under the code root, prototypes, GDDs,
+production artifacts, and whether `.git/config`'s `origin` still points at the
+template repo). Phase 2 asks where the user is with four `question` options
+(A No idea yet, B Vague idea, C Clear concept, D Existing work).
 
 Phase 3 routes by answer and names only the immediate next step. Phase 3c asks
 "May I write `project.stage: [stage]` to `project.yaml` (and the legacy mirror
@@ -21,8 +19,7 @@ writes any of the six knobs `modes.rigor` fronts (`modes.review_mode`,
 `team.size`) or `production/review-mode.txt`. Phase 4 prints the path for the
 chosen rigor — Path D2's retrofit path included — and asks which step to take
 first; Phase 5 prints a single "Type `[skill command]` to begin." line. A
-returning user (engine configured and a concept or brief present) skips
-onboarding. No director gates apply. Verdict: COMPLETE.
+returning user (a concept or brief present) skips onboarding. No director gates apply. Verdict: COMPLETE.
 
 ---
 
@@ -60,7 +57,7 @@ point this skill runs.
 
 **Expected behavior:**
 1. Phase 1 detection runs without printing its findings
-2. Phase 2 `question` offers exactly A–D; no engine question is asked
+2. Phase 2 `question` offers exactly A–D
 3. Path A: explains `/brainstorm` tier-neutrally and names only `/brainstorm open`
    as the next step ("I'll lay out the full path once I know how much process you want")
 4. Phase 3c asks "May I write `project.stage: Concept` to `project.yaml` (and the
@@ -72,17 +69,17 @@ point this skill runs.
 5. Phase 3d offers `Jam / prototype / first game (Recommended)` first (no
    concept → minimal); `modes.rigor: minimal` is written on selection
 6. Phase 3e writes `modes.automation: guided` on selection
-7. Phase 4 prints the minimal 4-step path (`/setup-engine`, `/brainstorm`,
-   `/create-stories`, `/dev-story`) and asks which step to take first
+7. Phase 4 prints the minimal 3-step path (`/brainstorm`, `/create-stories`,
+   `/dev-story`) and asks which step to take first
 8. Phase 5 prints only "Type `[skill command]` to begin."; verdict COMPLETE
 
 **Assertions:**
-- [ ] Phase 2 offers exactly the four A–D options and no engine choice
+- [ ] Phase 2 offers exactly the four A–D options
 - [ ] `project.yaml` and `production/stage.txt` are written only after the one "May I write" ask that names both
 - [ ] `project.stage` and `production/stage.txt` are both `Concept`
 - [ ] `project.yaml` ends up holding only `project.stage`, `modes.rigor` and `modes.automation` from `/start` — none of the six rigor-fronted knobs — and `production/review-mode.txt` is not written
 - [ ] The recommended rigor option is listed first with ` (Recommended)`
-- [ ] Phase 4 prints the minimal 4-step path
+- [ ] Phase 4 prints the minimal 3-step path
 - [ ] The next skill is not auto-run; Verdict is COMPLETE
 
 ---
@@ -90,41 +87,39 @@ point this skill runs.
 ### Case 2: Returning User — Onboarding skipped
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot` and `modes.rigor: minimal`; no explicit `modes.review_mode`
+- `project.yaml` has `modes.rigor: minimal`; no explicit `modes.review_mode`
 - `design/game-brief.md` exists
 
 **Input:** `/start`
 
 **Expected behavior:**
-1. Phase 1 finds the engine configured and the brief present
-2. Skill skips onboarding: "It looks like you're already set up! Your engine is
-   Godot and you have … a game brief at `design/game-brief.md`."
+1. Phase 1 finds the brief present
+2. Skill skips onboarding: "It looks like you're already set up! You have … a
+   game brief at `design/game-brief.md`."
 3. Review mode is reported as `solo` (resolved from `modes.rigor: minimal`)
 4. Skill points to `/help` or asks what the user would like to work on
 
 **Assertions:**
 - [ ] The A–D starting-point question is not asked
-- [ ] The message names the configured engine (Godot) and the brief path
+- [ ] The message names the brief path
 - [ ] Review mode is reported as `solo`, resolved from rigor
 - [ ] No write is made to `project.yaml` or `production/stage.txt`
 
 ---
 
-### Case 3: Existing Work on Unity — Path D2, stage and rigor already set
+### Case 3: Existing Work — Path D2, stage and rigor already set
 
 **Fixture:**
-- `project.yaml` has `engine.name: Unity`, `modes.rigor: standard` and
-  `modes.automation: collaborative`
-- C# scripts exist under `Assets/Scripts/`; `design/gdd/` holds 3 system GDDs;
+- `project.yaml` has `modes.rigor: standard` and `modes.automation: collaborative`
+- TypeScript files exist under `src/`; `design/gdd/` holds 3 system GDDs;
   no `design/gdd/game-concept.md`, no `docs/architecture/`
 - The user picks `D) Existing work` and approves the `project.yaml` write
 
 **Input:** `/start`
 
 **Expected behavior:**
-1. Phase 1 resolves the code root as `Assets/` for Unity and finds source files
-   there (it does not scan `src/` and conclude there is no code)
-2. Phase 3 D shares what it found (source files, 3 design docs, engine Unity)
+1. Phase 1 resolves the code root as `src/` and finds source files there
+2. Phase 3 D shares what it found (source files, 3 design docs)
 3. Sub-case D2: recommends `/project-stage-detect` then `/adopt`, naming
    `/project-stage-detect` as the immediate step; the tiered path waits for
    Phase 4
@@ -138,7 +133,7 @@ point this skill runs.
    `/architecture-review`, `/gate-check`
 
 **Assertions:**
-- [ ] Source files are found under `Assets/`, not reported as absent
+- [ ] Source files are found under `src/`, not reported as absent
 - [ ] `/project-stage-detect` and `/adopt` are recommended for D2
 - [ ] Stage `Systems Design` is written to both `project.yaml` and `production/stage.txt`, after the "May I write" ask
 - [ ] The rigor and automation questions are skipped because both keys are set
@@ -197,8 +192,8 @@ point this skill runs.
 ### Case 6: Path D2 With Rigor Unset — the retrofit path waits for the answer
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot` and no `modes` block
-- `src/` holds GDScript files; `design/gdd/` holds 4 system GDDs; no
+- `project.yaml` has no `modes` block
+- `src/` holds TypeScript files; `design/gdd/` holds 4 system GDDs; no
   `docs/architecture/`
 - The user picks `D) Existing work`, approves the `project.yaml` write, then
   picks `Several systems that affect each other` and `Collaborative`
@@ -213,8 +208,7 @@ point this skill runs.
    `modes.rigor: standard` is written on selection
 4. Phase 4 prints the D2 retrofit path at `standard`, including
    `/design-system retrofit`, `/architecture-decision retrofit` and
-   `/architecture-review` — not the minimal stop after `/adopt` and
-   `/setup-engine`
+   `/architecture-review` — not the minimal stop after `/adopt`
 
 **Assertions:**
 - [ ] No tiered D2 path is printed before Phase 3d has the rigor
@@ -227,7 +221,7 @@ point this skill runs.
 ## Protocol Compliance
 
 - [ ] Detects project state silently before the first question
-- [ ] Asks the starting-point question via `question` with options A–D; defers engine choice to `/setup-engine`
+- [ ] Asks the starting-point question via `question` with options A–D
 - [ ] Never writes any of the six rigor-fronted knobs (`modes.review_mode`, `modes.workflow`, `docs.density`, `qa.level`, `modes.story_granularity`, `team.size`) or `production/review-mode.txt`
 - [ ] Skips the rigor and automation questions when those keys are already set
 - [ ] Asks "May I write" before the `project.yaml` write, naming `production/stage.txt` in the same ask; announces the stage it wrote; writes rigor/automation only from the user's selection

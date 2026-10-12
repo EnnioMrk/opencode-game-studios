@@ -18,7 +18,7 @@ being entered, so `/gate-check systems-design` is the Concept → Systems Design
 **At `workflow: minimal`, skip the menus below.** They walk the phase ladder, and
 the minimal route is not the ladder: offer the first incomplete step of
 `paths.minimal` instead (the `--path minimal` rows from Section 3):
-`/setup-engine`, then `/brainstorm`, then `/create-stories`, then `/dev-story`
+`/brainstorm`, then `/create-stories`, then `/dev-story`
 on the next story — the route `/help` gives.
 
 For **Concept → Systems Design** (`/gate-check systems-design`) PASS — option [A] is
@@ -36,12 +36,12 @@ Gate passed. What would you like to do next?
 For **Systems Design → Technical Setup** (`/gate-check technical-setup`) PASS:
 ```
 Gate passed. What would you like to do next?
-[A] Run /create-architecture — produce your master architecture blueprint and ADR work plan (recommended next step)
+[A] Run /create-architecture — produce your master architecture document and ADR work plan (recommended next step)
 [B] Design more GDDs first — return here when all MVP systems are complete
 [C] Stop here for this session
 ```
 
-> **Note for the Systems Design → Technical Setup PASS**: `/create-architecture` is the required next step before writing any ADRs. It produces the master architecture document and a prioritized list of ADRs to write. Running `/architecture-decision` without this step means writing ADRs without a blueprint — skip it at your own risk.
+> **Note for the Systems Design → Technical Setup PASS**: `/create-architecture` is the required next step before writing any ADRs. It produces the master architecture document and a prioritized list of ADRs to write. Running `/architecture-decision` without this step means writing ADRs without a plan — skip it at your own risk.
 
 For **Technical Setup → Pre-Production** (`/gate-check pre-production`) PASS:
 ```
@@ -88,12 +88,10 @@ Based on the verdict, suggest specific next steps:
 - **Concept or a GDD not reviewed?** → `/design-review [doc]`
 - **GDDs not cross-reviewed?** → `/review-all-gdds` (run after all MVP GDDs are individually approved)
 - **Cross-GDD consistency issues?** → fix flagged GDDs, then re-run `/review-all-gdds`
-- **No test framework?** → `/test-setup` to scaffold the framework for your engine
+- **No test framework?** → `/test-setup` to scaffold the framework
 - **No QA plan for current sprint?** → `/qa-plan sprint` to generate one before implementation begins
 - **Missing ADRs?** → `/architecture-decision` for individual decisions
-- **No master architecture doc?** → `/create-architecture` for the full blueprint
-- **ADRs missing engine compatibility sections?** → Re-run `/architecture-decision`
-  or manually add Engine Compatibility sections to existing ADRs
+- **No master architecture doc?** → `/create-architecture` for the full document
 - **Missing control manifest?** → `/create-control-manifest` (requires Accepted ADRs)
 - **Missing epics?** → `/create-epics layer: foundation` then `/create-epics layer: core` (requires control manifest)
 - **Missing stories for an epic?** → `/create-stories [epic-slug]` (run after each epic is created)

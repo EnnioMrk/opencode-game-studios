@@ -36,7 +36,6 @@ Categories to extract:
 |----------|---------|
 | **Data structures** | "Each entity has health, max health, status effects" → needs a component/data schema |
 | **Performance constraints** | "Collision detection must run at 60fps with 200 entities" → physics budget ADR |
-| **Engine capability** | "Inverse kinematics for character animation" → IK system ADR |
 | **Cross-system communication** | "Damage system notifies UI and audio simultaneously" → event/signal architecture ADR |
 | **State persistence** | "Player progress persists between sessions" → save system ADR |
 | **Threading/timing** | "AI decisions happen off the main thread" → concurrency ADR |

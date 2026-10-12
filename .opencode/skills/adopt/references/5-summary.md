@@ -10,7 +10,6 @@ Present a compact summary before writing:
 ```
 ## Adoption Audit Summary
 Phase detected: [phase]
-Engine: [configured / NOT CONFIGURED]
 GDDs audited: [N] ([X] fully compliant, [Y] with gaps)
 ADRs audited: [N] ([X] fully compliant, [Y] with gaps)
 Stories audited: [N]

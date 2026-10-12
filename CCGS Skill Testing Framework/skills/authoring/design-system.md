@@ -11,7 +11,7 @@ Dependencies, Tuning Knobs, Acceptance Criteria); 5 plus conditional Formulas at
 after the other sections.
 
 The skill reads context first (game concept, systems index, entity registry,
-dependency GDD sections, engine reference), presents a context summary and a
+dependency GDD sections), presents a context summary and a
 Technical Feasibility Brief, then asks "May I create the skeleton file at
 `design/gdd/[system-name].md`?". Each section then runs the cycle Context →
 Questions → Options → Decision → Draft → Approval → Write: in `collaborative`
@@ -76,7 +76,7 @@ Review manually before production."
 **Fixture:**
 - `design/gdd/game-concept.md` and `design/gdd/systems-index.md` exist; `combat` is listed with `Category: Gameplay`
 - No `design/gdd/combat.md`
-- `project.yaml` has `engine.name: Godot`, `modes.review_mode: full`, `modes.workflow: full`, `modes.automation: collaborative`; `docs/engine-reference/godot/` has `VERSION.md` and `modules/physics.md` (combat maps to the Physics domain)
+- `project.yaml` has `modes.review_mode: full`, `modes.workflow: full`, `modes.automation: collaborative`
 - CD-GDD-ALIGN returns APPROVE
 
 **Input:** `/design-system combat`
@@ -107,9 +107,8 @@ Review manually before production."
 ### Case 2: Retrofit Mode — Fill only the incomplete sections at standard tier
 
 **Fixture:**
-- `project.yaml` has `engine.name: Godot`, `modes.workflow: standard`, `modes.review_mode: lean`
-- `design/gdd/game-concept.md` and `design/gdd/systems-index.md` exist; `inventory` is listed with `Category: Economy` (engine domain Scripting)
-- `docs/engine-reference/godot/` has `VERSION.md` and `modules/`, but no `modules/scripting.md`
+- `project.yaml` has `modes.workflow: standard`, `modes.review_mode: lean`
+- `design/gdd/game-concept.md` and `design/gdd/systems-index.md` exist; `inventory` is listed with `Category: Economy`
 - `design/gdd/inventory.md` exists with Overview, Detailed Design and Formulas fully written; its `## Summary` holds only `[To be designed]`
 - `## Edge Cases` and `## Acceptance Criteria` contain only `[To be designed]`; `## Dependencies` has an empty body
 - The file has no Player Fantasy or Tuning Knobs section
@@ -121,7 +120,7 @@ Review manually before production."
 2. It presents the "Retrofit: Inventory" block: written sections (will not be touched) and missing or incomplete sections (will be authored)
 3. Player Fantasy and Tuning Knobs are listed as available to add, not as gaps, because `standard` does not require them
 4. It asks: "Shall I fill the 3 missing sections? I will not modify any existing content."
-5. On yes, Phase 2 runs as normal; §2e names the missing module — "no engine reference for `Scripting` under `docs/engine-reference/godot/modules/`; feasibility not checked against the pinned engine" — and carries it into §5-pre
+5. On yes, Phase 2 runs as normal; §2e records `NOT ASSESSED — no reference set for this stack` and carries it into §5-pre
 6. No skeleton is created; only Edge Cases, Dependencies and Acceptance Criteria run the section cycle, then §5-pre replaces the Summary placeholder
 7. Each write replaces only the placeholder or empty body; Overview, Detailed Design and Formulas are not modified
 
@@ -129,7 +128,7 @@ Review manually before production."
 - [ ] The retrofit block is shown before any change is made
 - [ ] Sections the tier does not require are not reported as gaps
 - [ ] The skill asks "Shall I fill the 3 missing sections? I will not modify any existing content."
-- [ ] The absent `scripting.md` module is named in the output, not skipped silently as if feasibility had been checked
+- [ ] §2e records `NOT ASSESSED — no reference set for this stack`, not skipped silently as if feasibility had been checked
 - [ ] No skeleton is created and complete sections are not re-authored or overwritten
 - [ ] Each filled section still goes through the per-section approval before its write
 
@@ -170,7 +169,7 @@ Review manually before production."
 
 **Fixture:**
 - `design/gdd/game-concept.md` and `design/gdd/systems-index.md` exist; the system is `stamina` (`Category: Gameplay`); no `design/gdd/stamina.md`
-- `project.yaml` has `engine.name: Godot` and `modes.workflow: full`
+- `project.yaml` has `modes.workflow: full`
 - Section D's stamina formula has no knobs that interact; the stamina bar is feedback the player reads to play
 - Scenario (a): `modes.review_mode: lean`
 - Scenario (b): `modes.review_mode: solo`

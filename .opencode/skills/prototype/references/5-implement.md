@@ -16,11 +16,10 @@ If yes, create the directory. Every file must begin with:
 [comment] Date: [Current date]
 ```
 
-Write `[comment]` in each file's own comment syntax — `#` in GDScript (`.gd`) and
-Python, `//` in C#, C++ and JavaScript, `--` in Lua, `<!-- … -->` in HTML and
-Markdown. A header in another language's syntax is a parse error, not a label.
-Files that cannot hold a comment (JSON, engine-generated scene and project
-files) are exempt.
+Write `[comment]` in each file's own comment syntax — `#` in Python, `//` in C++
+and JavaScript, `--` in Lua, `<!-- … -->` in HTML and Markdown. A header in
+another language's syntax is a parse error, not a label. Files that cannot hold a
+comment (JSON) are exempt.
 
 Standards are intentionally relaxed:
 
@@ -66,19 +65,6 @@ human would make, not an algorithm. The player believes it's automated. This let
 you validate whether your AI design *feels right* before writing a single line of
 pathfinding or decision tree code. When you observe what responses the human
 controller naturally produces, you learn exactly what the AI needs to do.
-
-### Engine path: multi-turn loop
-
-After writing the initial code:
-
-> "The prototype files are written. Run the project in your engine now.
-> If there are errors, paste them here and I'll fix them. If it runs,
-> describe what you see and whether it feels like it's answering the question."
-
-Iterate until the prototype is playable. Each loop:
-1. User runs → reports errors or observations
-2. Agent fixes errors or adjusts the mechanic
-3. Repeat until playable or sunk cost rule triggers
 
 ### HTML path: single output
 

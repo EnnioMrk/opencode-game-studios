@@ -29,7 +29,7 @@ no QA plan, readiness check or sprint. `/story-done` names the next story.
 
 **With a sprint plan, after all sprint stories are done:** run `/team-qa sprint` to execute the full QA cycle and get a sign-off verdict before advancing the project stage.
 
-**Output:** Source code under the project's **code root** + test file under the engine's **test root** (`tests/` Godot, `Assets/Tests/` Unity, `Source/<Module>/Private/Tests/` Unreal — `.opencode/docs/directory-structure.md`). Resolve the code root from `engine.name` (`src/` Godot, `Assets/` Unity, `Source/<Module>/` Unreal) per `.opencode/docs/code-root-resolution.md`.
+**Output:** Source code under the project's **code root** (`src/`) + test file under the **test root** (`tests/` — `.opencode/docs/directory-structure.md`). Resolve the code root per `.opencode/docs/code-root-resolution.md`.
 
 ---
 
@@ -123,11 +123,10 @@ describe what collaborative mode requires, not universal behavior.
   - the story's `ADR Version`, `**ADR Decision Summary**` and `## Implementation Notes` (ADR mismatch option [A]), and its `Manifest Version:` / `Manifest-Note:` (manifest option [A] or [B]) — each option names that edit, so choosing it is the ask
   - a dependency story's `Status: Complete` (dependency option [C], then "May I update [dependency path] Status to Complete?")
   - a Config/Data story's data file ("May I write to [path]?")
-  - on Unity, `Assets/Scripts/ScreenshotOnArg.cs`, written verbatim from `.opencode/docs/run-and-observe.md` ("May I write `Assets/Scripts/ScreenshotOnArg.cs`?", Phase 6)
 
   The session-state checkpoint in `production/session-state/active.md` is the one write made without an ask.
 - **Load before implementing** — do not start coding until all context is loaded
-  (story, TR-ID, ADR, manifest, engine prefs). Incomplete context produces code
+  (story, TR-ID, ADR, manifest, technical preferences). Incomplete context produces code
   that drifts from design.
 - **The ADR is the law** — implementation must follow the ADR's Implementation
   Guidelines. If the guidelines conflict with what seems "better," flag it in the

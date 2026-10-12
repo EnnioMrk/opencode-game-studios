@@ -157,10 +157,10 @@ None. `/bug-report` is an operational documentation skill. No director gates app
 ### Case 5: Director Gate Check — Analyze Mode, no gate
 
 **Fixture:**
-- `src/save/save_manager.gd` exists and contains an unguarded null dereference and an unclosed file handle
+- `src/save/save-manager.ts` exists and contains an unguarded null dereference and an unclosed file handle
 - `production/qa/bugs/` holds `BUG-0011.md` (the highest existing number)
 
-**Input:** `/bug-report analyze src/save/save_manager.gd`
+**Input:** `/bug-report analyze src/save/save-manager.ts`
 
 **Expected behavior:**
 1. Analyze Mode reads the target file
@@ -225,7 +225,7 @@ None. `/bug-report` is an operational documentation skill. No director gates app
   and no `commands` block
 - `production/qa/bugs/BUG-0005.md`: Category `UI`, System `HUD`, "health bar does
   not update after healing", `**Status**: Fixed — Pending Verification`
-- No test in the engine's test root covers the HUD
+- No test under `tests/` covers the HUD
 
 **Input:** `/bug-report verify BUG-0005`, then `/bug-report close BUG-0005`
 

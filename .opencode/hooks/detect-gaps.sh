@@ -40,21 +40,6 @@ echo "=== Checking for Documentation Gaps ==="
 # --- Check 0: Fresh project detection (suggests /start) ---
 FRESH_PROJECT=true
 
-# Check if engine is configured (project.yaml first, fall back to technical-preferences.md)
-if [ -f "project.yaml" ] && [ -f ".opencode/hooks/yaml-helper.sh" ]; then
-  source .opencode/hooks/yaml-helper.sh
-  ENGINE_NAME=$(get_yaml_key project.yaml engine.name 2>/dev/null)
-  if [ -n "$ENGINE_NAME" ]; then
-    FRESH_PROJECT=false
-  fi
-fi
-if [ "$FRESH_PROJECT" = true ] && [ -f ".opencode/docs/technical-preferences.md" ]; then
-  ENGINE_LINE=$(grep -E "^[[:space:]]*-[[:space:]]+\*\*Engine\*\*:" .opencode/docs/technical-preferences.md 2>/dev/null)
-  if [ -n "$ENGINE_LINE" ] && ! echo "$ENGINE_LINE" | grep -q "TO BE CONFIGURED" 2>/dev/null; then
-    FRESH_PROJECT=false
-  fi
-fi
-
 # Check if a design record exists.
 #
 # TWO FILES, NOT ONE. `game-concept.md` is the `standard`/`full` concept doc;
@@ -73,17 +58,12 @@ fi
 
 # Check if source code exists.
 #
-# All three code roots, not just `src/`. Per .opencode/docs/directory-structure.md
-# `src/` is the Godot row; Unity builds from `Assets/` and Unreal from
-# `Source/`. Testing only `src/` meant a Unity project with a full codebase
-# could still be greeted with "NEW PROJECT ... Run: /start".
-#
 # Tested directly rather than through resolve_code_root: this check runs before
 # the config helper is guaranteed to be sourced, and "is there any code at all"
-# does not need the engine to be known.
-for _root in src Assets Source; do
+# does not need the code root resolved.
+for _root in src; do
   [ -d "$_root" ] || continue
-  SRC_CHECK=$(find "$_root" -type f \( -name "*.gd" -o -name "*.cs" -o -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" -o -name "*.rs" -o -name "*.py" -o -name "*.js" -o -name "*.ts" \) 2>/dev/null | head -1)
+  SRC_CHECK=$(find "$_root" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" -o -name "*.mjs" -o -name "*.cjs" \) 2>/dev/null | head -1)
   if [ -n "$SRC_CHECK" ]; then
     FRESH_PROJECT=false
     break
@@ -92,20 +72,12 @@ done
 
 # --- Check 0b: v1.0 project — legacy config present, project.yaml absent ---
 # The migration story depends on users discovering /adopt; UPGRADING.md only
-# reaches people who read it. An unconfigured technical-preferences.md template
-# does not count as legacy data (same rule as migrate-v1-config.sh), and legacy
-# config also means the project is not fresh — the NEW PROJECT banner below
-# would be wrong for it.
+# reaches people who read it. Legacy config also means the project is not fresh
+# — the NEW PROJECT banner below would be wrong for it.
 if [ ! -f "project.yaml" ]; then
   LEGACY_FILES=""
   [ -f "production/stage.txt" ] && LEGACY_FILES="production/stage.txt"
   [ -f "production/review-mode.txt" ] && LEGACY_FILES="${LEGACY_FILES:+$LEGACY_FILES, }production/review-mode.txt"
-  if [ -f ".opencode/docs/technical-preferences.md" ]; then
-    TP_ENGINE=$(grep -E "^[[:space:]]*-[[:space:]]+\*\*Engine\*\*:" .opencode/docs/technical-preferences.md 2>/dev/null)
-    if [ -n "$TP_ENGINE" ] && ! echo "$TP_ENGINE" | grep -q "TO BE CONFIGURED" 2>/dev/null; then
-      LEGACY_FILES="${LEGACY_FILES:+$LEGACY_FILES, }.opencode/docs/technical-preferences.md"
-    fi
-  fi
   if [ -n "$LEGACY_FILES" ]; then
     FRESH_PROJECT=false
     echo ""
@@ -117,7 +89,7 @@ fi
 
 if [ "$FRESH_PROJECT" = true ]; then
   echo ""
-  echo "🚀 NEW PROJECT: No engine configured, no game concept, no source code."
+  echo "🚀 NEW PROJECT: No design record and no source code."
   echo "   This looks like a fresh start! Run: /start"
   echo ""
   echo "💡 To get a comprehensive project analysis, run: /project-stage-detect"
@@ -129,11 +101,11 @@ fi
 #
 # Checks 1, 3 and 4 all ask "where is the design/architecture document for this
 # code?". At `minimal` the answer is that there deliberately is none:
-# workflow-modes.md requires only engine choice and a filled
-# `design/game-brief.md` before code starts, and says everything else can be
-# skipped. Reporting their absence as a GAP nags the user about work their own
-# configuration told them to skip -- and a warning that fires when nothing is
-# wrong trains the user to ignore the ones that matter.
+# workflow-modes.md requires only a filled `design/game-brief.md` before code
+# starts, and says everything else can be skipped. Reporting their absence as a
+# GAP nags the user about work their own configuration told them to skip -- and
+# a warning that fires when nothing is wrong trains the user to ignore the ones
+# that matter.
 #
 # resolve_setting, NOT get_yaml_key: `modes.workflow` is rigor-fronted, so a
 # project that set `rigor: minimal` and nothing else has no `modes.workflow` key
@@ -157,18 +129,15 @@ else
     DOC_CHECKS=true
 fi
 
-# --- Resolve the engine-specific code root for checks 1, 3 and 4 ------------
+# --- Resolve the code root for checks 1, 3 and 4 ----------------------------
 #
-# Checks 1, 3 and 4 were all hardcoded to `src/`, which .opencode/docs/directory-
-# structure.md defines as the GODOT row of the code-root table -- Unity uses
-# `Assets/`, Unreal `Source/`. On those two engines every directory test below
-# failed, the source-file count came back 0, and NONE of the three checks ran.
-# A project with 200 undocumented Unity systems produced the same empty output
-# as a fully documented one.
+# Checks 1, 3 and 4 were all hardcoded to `src/`. On a project that keeps its
+# code elsewhere every directory test below failed, the source-file count came
+# back 0, and NONE of the three checks ran. A project with 200 undocumented
+# systems produced the same empty output as a fully documented one.
 #
-# Only the ROOT is engine-specific. The `core/`, `engine/` and `gameplay/`
-# sub-layout is CCGS's own convention, unchanged by the engine, so it stays
-# literal.
+# Only the ROOT is resolved. The `core/` and `gameplay/` sub-layout is CCGS's
+# own convention, unchanged by the tree, so it stays literal.
 #
 # Resolved AFTER the fresh-project early-exit, so a brand-new project never
 # pays for the lookup.
@@ -182,18 +151,15 @@ fi
 # are no gaps -- it has established nothing (obligation 1 and 3 of
 # .opencode/rules/skill-authoring.md). Announce it, once, and only when the checks
 # would otherwise have had somewhere to look.
-if [ "$DOC_CHECKS" = true ] && [ -z "$CODE_ROOT" ]; then
-  if [ -d src ] || [ -d Assets ] || [ -d Source ]; then
-    echo "ℹ️  NOT CHECKED: code exists but the code root is ambiguous (engine.name unset, and the tree does not name one unambiguously)."
-    echo "    Checks 1, 3 and 4 (design and architecture docs for existing code) did NOT run."
-    echo "    Suggested action: /setup-engine, or set engine.name in project.yaml"
-  fi
+if [ "$DOC_CHECKS" = true ] && [ -z "$CODE_ROOT" ] && [ -d src ]; then
+  echo "ℹ️  NOT CHECKED: code exists but the code root could not be resolved."
+  echo "    Checks 1, 3 and 4 (design and architecture docs for existing code) did NOT run."
 fi
 
 # --- Check 1: Substantial codebase but sparse design docs ---
 if [ -n "$CODE_ROOT" ] && [ -d "$CODE_ROOT" ]; then
   # Count source files (cross-platform, handles Windows paths)
-  SRC_FILES=$(find "$CODE_ROOT" -type f \( -name "*.gd" -o -name "*.cs" -o -name "*.cpp" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" -o -name "*.rs" -o -name "*.py" -o -name "*.js" -o -name "*.ts" \) 2>/dev/null | wc -l)
+  SRC_FILES=$(find "$CODE_ROOT" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" -o -name "*.mjs" -o -name "*.cjs" \) 2>/dev/null | wc -l)
 else
   SRC_FILES=0
 fi
@@ -242,9 +208,9 @@ if [ -d "prototypes" ]; then
 fi
 
 # --- Check 3: Core systems without architecture docs ---
-if [ "$DOC_CHECKS" = true ] && [ -n "$CODE_ROOT" ] && { [ -d "$CODE_ROOT/core" ] || [ -d "$CODE_ROOT/engine" ]; }; then
+if [ "$DOC_CHECKS" = true ] && [ -n "$CODE_ROOT" ] && [ -d "$CODE_ROOT/core" ]; then
   if [ ! -d "docs/architecture" ]; then
-    echo "⚠️  GAP: Core engine/systems exist but no docs/architecture/ directory"
+    echo "⚠️  GAP: Core systems exist but no docs/architecture/ directory"
     echo "    Suggested action: Create docs/architecture/ and run /architecture-decision"
   else
     ADR_COUNT=$(find docs/architecture -type f -name "*.md" 2>/dev/null | wc -l)

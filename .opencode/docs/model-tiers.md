@@ -46,19 +46,12 @@ small and read-only gets the cheap tier, 5+ documents synthesized into a
 high-stakes verdict gets the top tier, everything else the middle one.
 
 **Agent model tiers.** 30 agents used `inherit`, so they ran on the session's
-model; the port keeps that. 19 were pinned in the original template:
+model; the port keeps that. 19 were pinned in the original template; the port
+keeps 7 of them:
 
 - **opus (3):** `creative-director`, `producer`, `technical-director`
-- **sonnet (16):** `lead-programmer`, `prototyper`, `devops-engineer`,
-  `community-manager` and the 12 engine sub-specialists:
-  `godot-csharp-specialist`, `godot-gdextension-specialist`,
-  `godot-gdscript-specialist`, `godot-shader-specialist`,
-  `ue-blueprint-specialist`, `ue-gas-specialist`, `ue-replication-specialist`,
-  `ue-umg-specialist`, `unity-addressables-specialist`,
-  `unity-dots-specialist`, `unity-shader-specialist`, `unity-ui-specialist`.
-  `/dev-story` and `/code-review` spawn the sub-specialists named in
-  `project.yaml`'s `specialists` block (which `/setup-engine` writes); `/team-ui` spawns
-  `unity-ui-specialist` and `ue-umg-specialist`; `/team-release` spawns
+- **sonnet (4):** `lead-programmer`, `prototyper`, `devops-engineer`,
+  `community-manager`. `/team-release` spawns
   `devops-engineer` and `community-manager`, and `/team-live-ops` spawns
   `community-manager`.
 - **haiku (0):** no agent. The Haiku row above is for read-only lookups and

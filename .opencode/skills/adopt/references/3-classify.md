@@ -8,12 +8,11 @@
 Organise every gap found across all audits into four severity tiers:
 
 **BLOCKING** — Will cause template skills to silently produce wrong results *right now*.
-Examples: ADR missing Status field, systems-index parenthetical status values,
-engine not configured when ADRs exist.
+Examples: ADR missing Status field, systems-index parenthetical status values.
 
 **HIGH** — Will cause stories to be generated with missing safety checks, or
 infrastructure bootstrapping will fail.
-Examples: ADRs missing Engine Compatibility, GDDs missing Acceptance Criteria
+Examples: GDDs missing Acceptance Criteria
 (stories can't be generated from them), tr-registry.yaml missing.
 
 **MEDIUM** — Degrades quality and pipeline tracking but does not break functionality.

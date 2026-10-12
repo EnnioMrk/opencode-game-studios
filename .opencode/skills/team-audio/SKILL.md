@@ -38,7 +38,7 @@ below), and the agents that work at them are team members, not director gates.
 **`team.size`**: which agents are active (orthogonal to review_mode gate-depth and workflow docs).
 - **`individual`** (default): `sound-designer` only. Other agents consulted via the sound-designer, not spawned separately.
 - **`small`**: + `audio-director` + `technical-artist` + `gameplay-programmer`.
-- **`studio`**: + `accessibility-specialist` + the primary engine specialist (the full pipeline as documented).
+- **`studio`**: + `accessibility-specialist` (the full pipeline as documented).
 A non-core agent needed at `individual` routes through the nearest active core agent with an informational note. **"Phase gate" means any phase that ends in an `question` decision point this pipeline itself lists** — a transition under Decision Points above, or a **Gate** step written into the pipeline below — **whatever the `automation` mode.** `guided` and `autonomous` change how a gate is passed (it auto-advances, or is recorded with `log_decision`), not whether it is one, so bounded-exception condition (3) below holds at it in every mode. An agent restricted to "phase gates only" is spawned at those points and no others. This active-set scoping applies throughout the pipeline below: any phase that names an agent outside the active set routes through the nearest core agent rather than spawning it.
 
 **Announce the active set before Step 1 — never let the collapse be silent.**
@@ -89,7 +89,6 @@ Use the `Agent` tool to spawn each team member as a subagent:
 - `subagent_type: sound-designer` — SFX specifications, audio events, mixing groups
 - `subagent_type: accessibility-specialist` — Visual fallbacks and subtitles for critical audio, auditory sensitivity
 - `subagent_type: technical-artist` — Audio middleware, bus structure, memory budgets
-- `subagent_type: [primary engine specialist]` — Validate audio integration patterns for the engine
 - `subagent_type: gameplay-programmer` — Audio manager, gameplay triggers, adaptive music
 
 **Brief each agent — do not dump context.** Read the shared inputs **once** and pass a distilled brief inline: the lines each agent actually needs, never a file path for a document you have already read (an agent handed a path re-reads the whole file). Pass a path only for a document you have not read and only that agent needs.
@@ -107,8 +106,7 @@ the "Save to" step uses. One file per agent, so parallel steps never share one:
 | 2 sound-designer | `production/audio/[feature]/sfx-spec.md` |
 | 2 accessibility-specialist | `production/audio/[feature]/accessibility.md` |
 | 3 technical-artist | `production/audio/[feature]/integration-plan.md` |
-| 3 engine specialist | `production/audio/[feature]/engine-notes.md` |
-| 4 gameplay-programmer | the code root and the engine's test root — the files the one implementation ask lists (File Write Protocol), outside the bounded exception |
+| 4 gameplay-programmer | the code root and the test root — the files the one implementation ask lists (File Write Protocol), outside the bounded exception |
 
 These are working drafts; the durable record is the audio design document you
 compile from them.
@@ -154,13 +152,7 @@ Spawn the `technical-artist` agent to:
 - Plan streaming vs preloaded asset strategy
 - Design any audio-reactive visual effects
 
-Spawn the **primary engine specialist** in parallel (`<engine>-specialist` derived from `engine.name` — Godot→`godot-specialist`, Unity→`unity-specialist`, Unreal→`unreal-specialist`; fall back to the Primary line of `## Engine Specialists` in `.opencode/docs/technical-preferences.md`) to validate the integration approach:
-- Is the proposed audio middleware integration idiomatic for the engine? (e.g., Godot's built-in AudioStreamPlayer vs FMOD, Unity's Audio Mixer vs Wwise, Unreal's MetaSounds vs FMOD)
-- Any engine-specific audio node/component patterns that should be used?
-- Known audio system changes in the pinned engine version that affect the integration plan?
-- Output: engine audio integration notes to merge with the technical-artist's plan
-
-If no engine is configured, skip the specialist spawn. **Record ``Engine validation: NOT ASSESSED — no engine configured (`engine.name` unset in `project.yaml`)`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed; the reader cannot tell engine guidance was never sought.
+**Record ``Integration validation: NOT ASSESSED — no specialist applies`` in this run's output.** A skipped check that says nothing is indistinguishable from a check that passed.
 
 ### Step 4: Code Integration (gameplay-programmer)
 Spawn the `gameplay-programmer` agent to:
@@ -190,10 +182,10 @@ Spawn the `gameplay-programmer` agent to:
 
 Verdict: **COMPLETE** — audio design document produced and team pipeline finished.
 
-If the engine validation was skipped (no engine configured), the verdict says
-so — never a plain COMPLETE:
+Integration validation is `NOT ASSESSED — no specialist applies`, so the verdict
+says so — never a plain COMPLETE:
 
-Verdict: **COMPLETE — engine validation NOT ASSESSED ([reason])** — audio design document produced; the engine specialist never reviewed the integration plan.
+Verdict: **COMPLETE — Integration validation NOT ASSESSED** — audio design document produced.
 
 If the pipeline stops because a dependency is unresolved (e.g., critical accessibility gap or missing GDD not resolved by the user):
 

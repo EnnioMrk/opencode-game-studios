@@ -2,7 +2,7 @@
 
 # TD-MANIFEST — Control Manifest Review
 
-Agent: `technical-director` | Model tier: Opus | Domain: Architecture, engine risk, performance
+Agent: `technical-director` | Model tier: Opus | Domain: Architecture, performance
 
 **Trigger**: After control-manifest rules are extracted and previewed
 (`/create-control-manifest` Phase 4), before the manifest file is written
@@ -10,8 +10,7 @@ Agent: `technical-director` | Model tier: Opus | Domain: Architecture, engine ri
 **Context to pass**:
 - The Control Manifest Preview from Phase 4 (rule counts per layer, full extracted rule list)
 - The list of ADRs covered
-- Engine version
-- Any rules sourced from `technical-preferences.md` or engine reference docs
+- Any rules sourced from `technical-preferences.md`
 
 **Prompt**:
 > "Review this control manifest before it is written. Are all mandatory ADR

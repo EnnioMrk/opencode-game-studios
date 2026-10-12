@@ -2,7 +2,7 @@
 
 ## Role in Pipeline
 Translates approved GDDs and architecture documents into one EPIC.md file per
-architectural module, defining scope, ADR governance, engine risk, and requirement
+architectural module, defining scope, ADR governance, and requirement
 traceability — sits between architecture review and story decomposition.
 
 ## Inputs Required
@@ -13,10 +13,9 @@ traceability — sits between architecture review and story decomposition.
 | `design/gdd/systems-index.md` | System list, layer assignments, priority order | Yes |
 | `design/gdd/[system].md` | `## Summary`, `## Acceptance Criteria`, `## Overview` (all 8 required sections) | Yes |
 | `docs/architecture/architecture.md` | Module ownership, API boundaries | Yes |
-| `docs/architecture/adr-NNNN-[slug].md` (all governing ADRs) | `Status:`, `GDD Requirements Addressed`, `Decision`, `Engine Compatibility` | Yes |
+| `docs/architecture/adr-NNNN-[slug].md` (all governing ADRs) | `Status:`, `GDD Requirements Addressed`, `Decision` | Yes |
 | `docs/architecture/control-manifest.md` | `Manifest Version:` date in header | Yes |
 | `docs/architecture/tr-registry.yaml` | TR-IDs with `id`, `system`, requirement text | Yes |
-| `docs/engine-reference/[engine]/VERSION.md` | Engine name, version, risk levels | Yes |
 
 > **Tier.** The rows above and the preconditions below are the `full` inputs.
 > SKILL.md relaxes them by `workflow`: at `standard`, GDDs need the 5 required
@@ -54,7 +53,7 @@ traceability — sits between architecture review and story decomposition.
 - A PR-EPIC review that could not judge the epics (no milestone timeline or team capacity) is reported as `PR-EPIC: NOT ASSESSED — [input]` and never read as REALISTIC
 
 ## Immutability Rules
-- READS but does NOT modify: `design/gdd/systems-index.md`, all GDD files, `docs/architecture/architecture.md`, all ADR files in `docs/architecture/adr-NNNN-[slug].md` pattern, `docs/architecture/control-manifest.md`, `docs/architecture/tr-registry.yaml`, `docs/engine-reference/[engine]/VERSION.md`
+- READS but does NOT modify: `design/gdd/systems-index.md`, all GDD files, `docs/architecture/architecture.md`, all ADR files in `docs/architecture/adr-NNNN-[slug].md` pattern, `docs/architecture/control-manifest.md`, `docs/architecture/tr-registry.yaml`
 - MODIFIES: `production/epics/[epic-slug]/EPIC.md` (creates, or updates in place keeping its Stories table), `production/epics/index.md` (creates or updates)
 
 ## Hard Constraints (Never Violate)

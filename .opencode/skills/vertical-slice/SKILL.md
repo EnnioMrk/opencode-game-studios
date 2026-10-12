@@ -48,7 +48,7 @@ Every `question` call follows `.opencode/docs/automation-modes.md`
 `automation_always_ask` categories always prompt).
 
 Read the following files to understand the full design intent:
-- `AGENTS.md` — tech stack and engine
+- `AGENTS.md` — tech stack
 - `design/gdd/game-concept.md` — core fantasy and game pillars (or
   `design/game-brief.md`, the one-page brief that replaces it at `rigor: minimal` —
   pitch, core loop and "what they feel" line; it has no pillars)
@@ -106,7 +106,7 @@ Once confirmed, write a session checkpoint to `production/session-state/active.m
 validation question, systems in scope, art quality level, and current phase ("Phase
 4 — Implement"). Update this file at the end of each build day with what was
 completed. This is the primary recovery mechanism if the session ends mid-slice —
-multi-week Engine builds will span many sessions.
+multi-week slice builds will span many sessions.
 
 ---
 
@@ -123,11 +123,10 @@ If yes, create the directory. Every file must begin with:
 [comment] Date: [Current date]
 ```
 
-Write `[comment]` in each file's own comment syntax — `#` in GDScript (`.gd`) and
-Python, `//` in C#, C++ and JavaScript, `--` in Lua, `<!-- … -->` in HTML and
-Markdown. A header in another language's syntax is a parse error, not a label.
-Files that cannot hold a comment (JSON, engine-generated scene and project
-files) are exempt.
+Write `[comment]` in each file's own comment syntax — `#` in Python, `//` in C#,
+C++ and JavaScript, `--` in Lua, `<!-- … -->` in HTML and Markdown. A header in
+another language's syntax is a parse error, not a label.
+Files that cannot hold a comment (JSON, generated files) are exempt.
 
 **Quality standards** — higher than concept prototype, not full production:
 - Follow architecture layers from `docs/architecture/control-manifest.md`
@@ -258,7 +257,7 @@ If the template file is not found, use this fallback structure:
 - `### Executive Summary` (PROCEED / PIVOT / KILL / NOT ASSESSED verdict + 2-sentence rationale)
 - `### Core Loop Validation` (what was tested, what passed, what failed)
 - `### Feel Assessment` (animation, controls, feedback — subjective notes)
-- `### Technical Findings` (performance, engine issues, architectural risks)
+- `### Technical Findings` (performance, technical issues, architectural risks)
 - `### Velocity Log` (day-by-day actual progress — do not skip)
 - `### Lessons Learned` (assumptions broken by building to near-production
   quality; what surprised us about the pipeline or architecture; what we would

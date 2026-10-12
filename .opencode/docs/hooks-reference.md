@@ -12,7 +12,7 @@ into the JSON shape each script expects, then passes results back:
 | ---- | ----- | ------- | ------ |
 | `validate-commit.sh` | `permission.hook("evaluate")` + `tool.hook("execute.after")` | `git commit` commands | Validates design doc sections, JSON data files, hardcoded values, TODO format; blocks on a must-fix problem and warns otherwise |
 | `validate-push.sh` | `permission.hook("evaluate")` + `tool.hook("execute.after")` | `git push` commands | Warns on pushes to protected branches (`main`, `master` and `release/*`) |
-| `validate-assets.sh` | `tool.hook("execute.after")` | `edit`/`write` on asset files | Checks data-file JSON under `assets/`, `Assets/` or `Content/`, and asset naming in Godot's `assets/` only |
+| `validate-assets.sh` | `tool.hook("execute.after")` | `edit`/`write` on asset files | Checks data-file JSON under `assets/`, and asset naming there |
 | `validate-skill-change.sh` | `tool.hook("execute.after")` | Skill file changes | Advises running `/skill-test` after any `.opencode/skills/` file is written or edited |
 | `session-start.sh` | `session.hook("context")` | First model call of a root session | Loads sprint context, milestone, git activity; detects and previews active session state file for recovery |
 | `detect-gaps.sh` | `session.hook("context")` | First model call of a root session | Detects fresh projects (suggests /start) and missing documentation when code/prototypes exist, suggests /reverse-document or /project-stage-detect |

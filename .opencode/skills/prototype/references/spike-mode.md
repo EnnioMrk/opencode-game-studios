@@ -20,7 +20,7 @@ gate implications. Hard cap: ~4 hours.
 
 1. **Define the spike question** (plain text, not a widget): "What specific question does this spike answer? Give me one sentence: 'Can we [do X] using [approach Y]?'"
 
-2. **Choose path** — same question widget as Phase 3 (HTML / Engine / Paper).
+2. **Choose path** — same question widget as Phase 3 (HTML / Paper).
 
 3. **Scope** — maximum 2-3 bullet points. One mechanic, one technical question, nothing else.
 
@@ -42,7 +42,7 @@ large open worlds, hundreds of simultaneous physics bodies, heavy particle syste
 complex shaders — run a performance spike before writing gameplay code to confirm
 the target hardware can sustain the required framerate. This is distinct from other
 spikes in two ways:
-- The question is "can the engine render [scene X] at 60fps on [minimum spec hardware]?"
+- The question is "can the game render [scene X] at 60fps on [minimum spec hardware]?"
   not "does this mechanic feel good?"
 - The output is a benchmark number, not a feel verdict
 - No gameplay logic is needed — just the maximum intended scene load (terrain, draw

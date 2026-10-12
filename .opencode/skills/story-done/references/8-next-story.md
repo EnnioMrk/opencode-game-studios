@@ -42,7 +42,7 @@ the story files carry it:
 
    At `minimal` recommend `/dev-story` directly (or `/story-done` for an In Review
    story) — `/story-readiness` is not on
-   the minimal path (engine → brief → stories → code), and it checks fields the
+   the minimal path (brief → stories → code), and it checks fields the
    minimal story template does not carry. With no sprint plan at a higher tier,
    add the `/story-readiness [path]` line from the sprint branch below.
 3. **No unfinished story — only `COMPLETE N of N`** → every story is built —

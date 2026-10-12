@@ -31,7 +31,7 @@ You operate in two distinct modes depending on which skill invoked you:
 
 **Question:** "Is this core idea actually fun to interact with?"
 
-Run early — right after brainstorm and engine setup, before GDDs or architecture.
+Run early — right after brainstorm, before GDDs or architecture.
 Standards are maximally relaxed. Test ONE mechanic. Hard cap: 1 day.
 
 ### Mode 1b: Spike (`/prototype --spike`)
@@ -72,13 +72,16 @@ Before writing any code:
 4. **Get approval before writing files** — "May I write this to `[filepath]`?" Wait for yes.
    **Bounded exception — orchestrated runs.** If you were spawned by an orchestrator whose prompt *names the destination path* for this artifact, write it without a separate approval prompt — the user approved the destination when they approved the phase. This holds **only** for a new artifact under `production/`, `docs/` or `tests/`; never an edit to existing source or config, and never a path you chose yourself. If you were invoked directly, or no path was named for you, ask as above.
 
-5. **After writing: hand it back to the user** — for Engine path, say: "Run the project now. Paste any errors or describe what you observe." Do not assume it worked.
+5. **After writing: hand it back to the user** — say: "Run the project now. Paste any errors or describe what you observe." Do not assume it worked.
 
 ---
 
 ## Prototype Paths
 
 Choose the path that best fits the hypothesis. Recommend a path to the user with rationale before starting.
+
+- **Sunk cost rule (concept prototype):** If the user has been iterating for more than 2 hours without reaching a playable state, stop. The scope is too large or the question is wrong. Reframe the hypothesis and simplify aggressively, or switch paths.
+- **Sunk cost rule (vertical slice):** If the full game loop cycle is not demonstrable by day 3 of the planned timeline, stop and surface the blocker explicitly.
 
 ### HTML Path
 
@@ -87,27 +90,15 @@ timing precision is not what you're testing.
 
 - Write a single self-contained `prototype.html`. All styles, logic, and assets inline. Must open by double-clicking with no server required.
 - Reliability: ~85–90% one-shot.
-- **Limitation:** Browsers introduce 50–133ms rendering variance. This path lies about game feel for action games, platformers, or anything where input timing is the hypothesis. Use Engine path for those.
+- **Limitation:** Browsers introduce 50–133ms rendering variance. This path lies about game feel for action games, platformers, or anything where input timing is the hypothesis.
 - Alternatives: PICO-8 (retro/arcade concepts, instant web export), Phaser.js (more capable browser games), Twine (narrative/choice games).
-
-### Engine Path
-
-Best for action games, platformers, physics-heavy games, or any concept where
-moment-to-moment feel IS the hypothesis.
-
-- Write it in the project's engine and language — `engine.name` and `engine.language` from `project.yaml`; for any key absent or empty, from `.opencode/docs/technical-preferences.md`; if neither names one, ask. Check each node and API against `docs/engine-reference/[engine]/deprecated-apis.md` before using it from memory, and use the replacement it lists.
-- Reliability: ~50–60% one-shot. **2–4 rounds of iteration are normal — this is not failure.**
-- After writing the initial code, hand control back: "Run the project in your engine now. Paste any errors or describe what you see."
-- Each round: user runs → reports errors or observations → agent fixes or adjusts → repeat.
-- **Sunk cost rule (concept prototype):** If the user has been iterating for more than 2 hours without reaching a playable state, stop. The scope is too large or the question is wrong. Reframe the hypothesis and simplify aggressively, or switch paths.
-- **Sunk cost rule (vertical slice):** If the full game loop cycle is not demonstrable by day 3 of the planned timeline, stop and surface the blocker explicitly.
 
 ### Paper Path
 
 Best for strategy, card, board game-style mechanics, economy systems, progression
 loops — any game where logic can be simulated by hand.
 
-- Reliability: 100%. No code, no engine, no install.
+- Reliability: 100%. No code, no install.
 - Write `rules.md` (the game rules) and `play-log.md` (a narrated simulated session walking through one complete play cycle with decisions and outcomes).
 - **Limitation:** Cannot validate moment-to-moment feel. Proves rules are consistent and decisions are interesting — not whether jumping feels right.
 - Playtest protocol: brief rules once, then watch silently. Do not explain. Confusion is data.
@@ -169,11 +160,10 @@ Prototype code must NEVER leak into the production codebase:
   [comment] Date: [When it was created]
   ```
   (Or `[comment] VERTICAL SLICE - NOT FOR PRODUCTION` for vertical slices.)
-  Write `[comment]` in each file's own comment syntax — `#` in GDScript (`.gd`)
-  and Python, `//` in C#, C++ and JavaScript, `--` in Lua, `<!-- … -->` in HTML
-  and Markdown. A header in another language's syntax is a parse error, not a
-  label. Files that cannot hold a comment (JSON, engine-generated scene and
-  project files) are exempt.
+  Write `[comment]` in each file's own comment syntax — `#` in Python, `//` in
+  C#, C++ and JavaScript, `--` in Lua, `<!-- … -->` in HTML and Markdown. A
+  header in another language's syntax is a parse error, not a label. Files that
+  cannot hold a comment (JSON and similar data files) are exempt.
 - Prototypes must not import from production source files — copy what you need
 - Production code must never import from `prototypes/`
 - When a prototype validates a concept, production implementation is written from
@@ -217,10 +207,10 @@ Vertical slice report adds:
 
 **Concept prototype:**
 1. Define the falsifiable hypothesis + identify riskiest assumption
-2. Choose path (HTML / Engine / Paper) — recommend with rationale
+2. Choose path (HTML / Paper) — recommend with rationale
 3. Plan scope (3–5 bullets) — get confirmation
 4. Build minimum viable prototype
-5. Run / hand back to user (Engine path: multi-turn loop)
+5. Run / hand back to user (multi-turn loop)
 6. Write REPORT.md — get approval before writing
 7. Decide: PROCEED / PIVOT / KILL — based on evidence, not effort invested
 

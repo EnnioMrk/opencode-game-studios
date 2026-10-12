@@ -11,7 +11,6 @@
 - Phase 1b — L1/L2: Targeted Section Load
 - Design Documents
 - Architecture Documents
-- Engine Reference
 - Project Standards
 
 ### Phase 1a — L0: Summary Scan (fast, low tokens)
@@ -63,9 +62,6 @@ For `single-gdd [path]` mode: use the target GDD's summary to identify which
 ADRs reference the same system (Grep ADRs for the system name), then load only
 those ADRs' sections per Phase 1b. Skip unrelated GDDs entirely.
 
-For `engine` mode: load ADR sections only — GDDs are not needed for engine checks.
-In practice this is the `## Engine Compatibility` scan alone.
-
 For `coverage` or `full` mode: proceed to Phase 1b for the full in-scope set.
 **This is a section load, not a full-file load** — see below for why, and for the
 narrow cases that still justify escalating to a whole document.
@@ -86,7 +82,7 @@ scan matching fewer than the denominator means those documents lack the section 
 ### Design Documents
 
 Phase 2 extracts *technical requirements* — data structures, performance
-constraints, engine capabilities, cross-system communication, persistence,
+constraints, cross-system communication, persistence,
 threading, platform needs. Those live in a known set of sections; Overview and
 Player Fantasy are narrative and yield none.
 
@@ -104,12 +100,12 @@ cross-references material outside itself, or when a GDD matched zero sections
 
 ### Architecture Documents
 
-Phases 3–5 need the traceability table, the decision itself, engine claims, and
+Phases 3–4 need the traceability table, the decision itself, and
 the dependency edges — not Context, Consequences, Alternatives, Migration Plan or
 Validation Criteria, which explain *why* a decision was made.
 
 ```
-Grep pattern="^## (Status|Decision|GDD Requirements Addressed|Engine Compatibility|ADR Dependencies|Performance Implications)" glob="docs/architecture/adr-*.md" output_mode="content" -A 30
+Grep pattern="^## (Status|Decision|GDD Requirements Addressed|ADR Dependencies|Performance Implications)" glob="docs/architecture/adr-*.md" output_mode="content" -A 30
 ```
 
 Interpret against **N_adr**, and distinguish the two zero-match cases — they are
@@ -126,24 +122,13 @@ reasoning (Phase 4) — that is a per-ADR decision, not a blanket load.
 
 - `docs/architecture/architecture.md` if it exists
 
-### Engine Reference
-- `docs/engine-reference/[engine]/VERSION.md`
-- `docs/engine-reference/[engine]/breaking-changes.md`
-- `docs/engine-reference/[engine]/deprecated-apis.md`
-- **Only the module docs the in-scope ADRs actually name** — take the union of
-  each ADR's `References Consulted` and `Post-Cutoff APIs Used` fields (already
-  captured by the `## Engine Compatibility` scan above) and read those files.
-  Reading the whole `modules/` directory loads engine subsystems the project may
-  not use at all. If no ADR names any module, read none and note it: Phase 5
-  cannot cross-check engine claims that were never made.
-
 ### Project Standards
 - `project.yaml` — `naming.*` and `performance.*`; plus `.opencode/docs/technical-preferences.md` for those keys when absent and for forbidden patterns / allowed libraries
 
-Report a count: "Loaded [N] GDDs, [M] ADRs, engine: [name + version]."
+Report a count: "Loaded [N] GDDs, [M] ADRs."
 
 **Also read `docs/consistency-failures.md`** if it exists. Extract entries with
-Domain matching the systems under review (Architecture, Engine, or any GDD domain
+Domain matching the systems under review (Architecture or any GDD domain
 being covered). Surface recurring patterns as a "Known conflict-prone areas" note
 at the top of the Phase 4 conflict detection output.
 

@@ -31,7 +31,7 @@
 
 ### Source Code
 - **Status**: [X%] complete
-- **Files Found**: [N] source files in `[code root]/` (`src/` Godot, `Assets/` Unity, `Source/` Unreal)
+- **Files Found**: [N] source files in `[code root]/`
 - **Major Systems Identified**:
   - ✅ [System 1] (`[code root]/path/`) — [brief status]
   - ✅ [System 2] (`[code root]/path/`) — [brief status]
@@ -175,7 +175,7 @@ design/
   narrative/     [N] files
   levels/        [N] files
 
-[code root]/     (src/, Assets/ or Source/<Module>/)
+[code root]/
   core/          [N] files
   gameplay/      [N] files
   ai/            [N] files

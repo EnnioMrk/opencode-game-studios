@@ -1,7 +1,7 @@
 # OpenCode Game Studios
 
 Turn an OpenCode session into a full game development studio.
-**49 agents. 74 skills. One coordinated AI team.**
+**34 agents. 72 skills. One coordinated AI team.**
 
 This is the OpenCode port of [Claude Code Game
 Studios](https://github.com/Donchitos/Claude-Code-Game-Studios) by Donchitos
@@ -21,6 +21,9 @@ See [`PORTING.md`](PORTING.md) for the full mapping and what changed.
   branches in the skills or in the QA specs. Use it for browser, web and
   desktop games that bring their own runtime.
 
+On this branch `PORTING.md`, `CHANGELOG.md` and `UPGRADING.md` still describe the
+original port, including its engine sets; they are kept as history.
+
 ---
 
 ## Why This Exists
@@ -29,7 +32,7 @@ Building a game solo with AI is powerful — but a single chat session has no
 structure. No one stops you from hardcoding magic numbers, skipping design docs,
 or writing spaghetti code. There is no QA pass, no design review.
 
-OpenCode Game Studios gives your session the structure of a real studio: 49
+OpenCode Game Studios gives your session the structure of a real studio: 34
 specialized agents organized into a hierarchy — directors who guard the vision,
 department leads who own their domains, and specialists who do the hands-on
 work. Each agent has defined responsibilities, escalation paths, and quality
@@ -42,11 +45,11 @@ keeps the project organized from first brainstorm to launch.
 
 | Category | Count | Description |
 | --- | --- | --- |
-| **Agents** | 49 | OpenCode subagents across design, programming, art, audio, narrative, QA, and production |
-| **Skills** | 74 | Workflow definitions, loaded by the model (`.opencode/skills/`) |
-| **Commands** | 74 | One slash command per skill (`/start`, `/design-system`, `/create-epics`, `/dev-story`, `/story-done`, …) |
+| **Agents** | 34 | OpenCode subagents across design, programming, art, audio, narrative, QA, and production |
+| **Skills** | 72 | Workflow definitions, loaded by the model (`.opencode/skills/`) |
+| **Commands** | 72 | One slash command per skill (`/start`, `/design-system`, `/create-epics`, `/dev-story`, `/story-done`, …) |
 | **Hooks** | 12 | Validation and session scripts, wired to OpenCode by one plugin (`.opencode/plugins/ccgs.ts`) |
-| **Rules** | 13 | Path-scoped coding standards, injected when an edit matches their globs |
+| **Rules** | 11 | Path-scoped coding standards, injected when an edit matches their globs |
 | **Templates** | 39 | Document templates for GDDs, UX specs, ADRs, sprint plans, HUD design, accessibility, and more |
 
 ### Studio Hierarchy
@@ -71,8 +74,9 @@ Tier 3 — Specialists
   live-ops-designer    community-manager
 ```
 
-Engine sets for **Godot 4**, **Unity**, and **Unreal Engine 5** are included.
-Use the set matching your project. The original template pinned some agents to
+This branch carries no engine dimension: the engine-specialist agents, the
+`/setup-engine` skill, the `docs/engine-reference/` snapshots and every
+per-engine branch are removed. The original template pinned some agents to
 Opus and Sonnet; the port sets no model, so every agent inherits your session
 model. Add `model: <provider>/<modelID>` to an agent file to pin one —
 `PORTING.md` lists the original tiers.
@@ -106,7 +110,6 @@ cd my-game
    to a skill:
 
    - `/brainstorm` — explore game ideas from scratch
-   - `/setup-engine godot 4.6` — configure your engine if you already know
    - `/project-stage-detect` — analyze an existing project
 
 ---
@@ -114,7 +117,7 @@ cd my-game
 ## Configuration
 
 `project.yaml` at the repo root is the single source of truth for how the studio
-behaves on your project — engine, naming conventions, and a `modes` block that
+behaves on your project — naming conventions, and a `modes` block that
 controls how much process every skill enforces. `/start` writes it for you.
 
 The one question that matters most is **`modes.rigor`** — `minimal`, `standard`,
@@ -122,7 +125,7 @@ or `full`. It is a single front door over six separate knobs (`workflow`,
 `docs.density`, `qa.level`, `story_granularity`, `review_mode`, `team.size`):
 
 - **`minimal`** (default) — jam-game speed. No GDDs required, terse docs,
-  minimal QA evidence, solo review. `/start` → `/setup-engine` → `/brainstorm`
+  minimal QA evidence, solo review. `/start` → `/brainstorm`
   (a one-page brief) → `/create-stories` → `/dev-story` ↔ `/story-done`.
 - **`standard`** — 5 required GDD sections, balanced doc depth, lean review.
 - **`full`** — all 8 GDD sections, thorough docs, full QA evidence, full
@@ -179,7 +182,7 @@ The plugin `.opencode/plugins/ccgs.ts` wires the 12 scripts in
 ### Path-Scoped Rules
 
 `rules/*.md` carry `paths:` globs (full path: `.opencode/rules/`). When an edit matches one, the plugin injects
-the rule text into the model's next call — gameplay code, engine code, AI,
+the rule text into the model's next call — gameplay code, AI,
 network, UI, data files, shaders, tests, prototypes, design docs, narrative.
 Table: `.opencode/docs/rules-reference.md`.
 

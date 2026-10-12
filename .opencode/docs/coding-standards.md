@@ -14,8 +14,8 @@
   before marking work complete. Every implementation should have a way to prove it works.
 - **A parse check is not a run.** Every story that changes something
   player-observable is launched and observed before it closes, and the
-  observation is a retained screenshot in `production/qa/evidence/`. Procedure
-  per engine: `.opencode/docs/run-and-observe.md`. Not waived at
+  observation is a retained screenshot in `production/qa/evidence/`. Procedure:
+  `.opencode/docs/run-and-observe.md`. Not waived at
   `qa.level: minimal` — tests are, the look is not.
 
 # Design Document Standards
@@ -73,7 +73,7 @@ falling back to the defaults above when it is absent.
 
 ## Automated Test Rules
 
-- **Naming**: per engine — `.opencode/rules/test-standards.md`
+- **Naming**: `.opencode/rules/test-standards.md`
 - **Determinism**: Tests must produce the same result every run — no random seeds, no time-dependent assertions
 - **Isolation**: Each test sets up and tears down its own state; tests must not depend on execution order
 - **No hardcoded data**: Test fixtures use constant files or factory functions, not inline magic numbers
@@ -92,7 +92,3 @@ falling back to the defaults above when it is absent.
 - Automated test suite runs on every push to main and every PR
 - No merge if tests fail — tests are a blocking gate in CI
 - Never disable or skip failing tests to make CI pass — fix the underlying issue
-- Engine-specific CI commands:
-  - **Godot**: `godot --headless -s -d --remote-debug tcp://127.0.0.1:0 res://addons/gdUnit4/bin/GdUnitCmdTool.gd -a res://tests --ignoreHeadlessMode`
-  - **Unity**: `game-ci/unity-test-runner@v4` (GitHub Actions)
-  - **Unreal**: headless runner with `-nullrhi` flag

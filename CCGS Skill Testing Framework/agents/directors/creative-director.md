@@ -27,7 +27,7 @@ Verified by reading the agent's `.opencode/agents/creative-director.md` frontmat
 - [ ] Verdict is exactly one of APPROVE / CONCERNS / REJECT
 - [ ] Verdict token is formatted as `CD-PILLARS: APPROVE` (gate ID prefix, colon, verdict keyword)
 - [ ] Gives feedback on each of the three pillars by name against the gate's criteria (falsifiability, tension, differentiation from *Don't Starve*), not generic creative advice
-- [ ] Output stays within creative scope — does not comment on engine feasibility or sprint schedule
+- [ ] Output stays within creative scope — does not comment on technical feasibility or sprint schedule
 
 ### Case 2: Out-of-domain request — redirects or escalates
 **Scenario:** Developer asks creative-director to review a proposed PostgreSQL schema for storing player save data.

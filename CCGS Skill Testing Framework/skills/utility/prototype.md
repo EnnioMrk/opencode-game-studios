@@ -2,18 +2,18 @@
 
 ## Skill Summary
 
-`/prototype [concept] [--path html|engine|paper] [--review full|lean|solo]
+`/prototype [concept] [--path html|paper] [--review full|lean|solo]
 [--spike]` runs a throwaway concept prototype before GDDs are written. It first
 confirms intent with `question` (Prototype this concept / Skip — concept
 already proven / Mid-production spike), forms a falsifiable hypothesis ("If the
 player [does X], they will feel [Y] — we will know this is true if [Z]") and asks
-for the riskiest assumption. It picks an HTML, Engine or Paper path (genre table,
+for the riskiest assumption. It picks an HTML or Paper path (genre table,
 recommendation pre-stated), presents a 3–5 bullet plan, asks to record it as a
 checkpoint in `production/session-state/active.md`, then asks "May I create the prototype
 directory at `prototypes/[concept-name]-concept/` and begin implementation?".
 Every prototype file starts with a `PROTOTYPE - NOT FOR PRODUCTION` header in
-that file's own comment syntax (`#` in GDScript and Python, `//` in C#, C++ and
-JavaScript, `<!-- -->` in HTML and Markdown), and standards are intentionally
+that file's own comment syntax (`//` in TypeScript and JavaScript, `#` in Python
+and shell, `<!-- -->` in HTML and Markdown), and standards are intentionally
 relaxed.
 
 After a one-question-at-a-time debrief, it fills
@@ -66,11 +66,10 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
 ## Test Cases
 
-### Case 1: Happy Path — Engine Prototype, PROCEED
+### Case 1: Happy Path — HTML Prototype, PROCEED
 
 **Fixture:**
-- `design/gdd/game-concept.md` describes a 2D platformer; `project.yaml` has
-  `engine.name: Godot` and `engine.language: GDScript`
+- `design/gdd/game-concept.md` describes a 2D platformer
 - `prototypes/` has no `grapple-hook-concept/`
 - Review mode: `solo`
 - In the debrief the user reports the hypothesis CONFIRMED and answers PROCEED
@@ -81,14 +80,13 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 1. `question` confirms intent; user picks "Prototype this concept"
 2. Skill states a falsifiable hypothesis in the If / feel / know-if form and asks
    for the riskiest assumption
-3. Path widget pre-states an Engine recommendation (traversal feel is the
-   hypothesis)
+3. Path widget pre-states an HTML recommendation
 4. Plan is presented and confirmed, with the ask naming
    `production/session-state/active.md`; the checkpoint is written there
 5. Skill asks "May I create the prototype directory at
-   `prototypes/grapple-hook-concept/` and begin implementation?"; every GDScript
-   file it writes starts with `# PROTOTYPE - NOT FOR PRODUCTION` (GDScript
-   comments use `#`; a `//` header would not parse)
+   `prototypes/grapple-hook-concept/` and begin implementation?"; every file it
+   writes starts with a `PROTOTYPE - NOT FOR PRODUCTION` header in that file's
+   own comment syntax
 6. Debrief questions are asked one at a time; report drafted from
    `.opencode/docs/templates/prototype-report.md`; "May I write this report to
    `prototypes/grapple-hook-concept/REPORT.md` and add its row to
@@ -98,7 +96,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
 
 **Assertions:**
 - [ ] The hypothesis is falsifiable, with a measurable signal
-- [ ] Engine is recommended in the path prompt before the user chooses
+- [ ] The HTML path is recommended in the path prompt before the user chooses
 - [ ] The directory ask names `prototypes/grapple-hook-concept/` and comes before any prototype file is written
 - [ ] Every prototype script carries the `PROTOTYPE - NOT FOR PRODUCTION` header as a `#` comment, never `//`; no file is written under the code root
 - [ ] REPORT.md is written only after its ask, that ask also names `prototypes/index.md`, and the index gains a row with verdict PROCEED
@@ -269,8 +267,7 @@ Checked against the SKILL.md by `/skill-test spec` — no fixture needed.
   narrow it) is covered only by protocol compliance.
 - Reading a prior `PIVOT-NOTE.md` on the next run to seed the revised hypothesis
   is not tested.
-- The engine-path multi-turn fix loop and the 2-hour sunk-cost rule need a live
-  run to verify.
+- The 2-hour sunk-cost rule needs a live run to verify.
 - CD-PLAYTEST APPROVE (the recommendation stands), CONCERNS (the user decides:
   Revise / Accept / Discuss), REJECT on a PIVOT or KILL recommendation (it
   stands) and NOT ASSESSED (never an approval) are not separately tested.

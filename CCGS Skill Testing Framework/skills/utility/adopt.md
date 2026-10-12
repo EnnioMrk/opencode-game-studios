@@ -52,14 +52,12 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 ### Case 1: Happy Path — All GDDs compliant, no BLOCKING or HIGH gaps
 
 **Fixture:**
-- `project.yaml` sets `modes.rigor: full`, `project.stage`, and `engine.name`,
-  `engine.version`, `engine.language`, `engine.rendering`, `engine.physics`
+- `project.yaml` sets `modes.rigor: full` and `project.stage`
 - `design/gdd/` contains 3 GDD files; each has all 8 required sections with content
   and a valid `> **Status**:` field
 - `docs/architecture/adr-0001.md` exists with `## Status`, `## ADR Dependencies`,
-  `## Engine Compatibility`, `## GDD Requirements Addressed` and `## Performance Implications`
+  `## GDD Requirements Addressed` and `## Performance Implications`
 - `docs/architecture/tr-registry.yaml` and `docs/architecture/control-manifest.md` exist
-- `docs/engine-reference/[engine]/VERSION.md` exists
 
 **Input:** `/adopt`
 
@@ -69,7 +67,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 3. Phase 2 audit: `gdd-structure-check.sh` is run once per GDD path; all 3 GDDs
    have all 8 sections and a valid Status field
 4. ADR audit: all critical sections present
-5. Infrastructure audit: registry, manifest and engine reference all exist
+5. Infrastructure audit: registry and manifest exist
 6. Phase 3: zero BLOCKING and zero HIGH gaps — the project is reported
    template-compatible with only advisory improvements remaining (any MEDIUM/LOW
    item, e.g. a missing `sprint-status.yaml`, is listed as advisory)
@@ -95,7 +93,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 ### Case 2: Non-Compliant Documents — GDDs missing sections, BLOCKING and HIGH gaps
 
 **Fixture:**
-- `project.yaml` sets `modes.rigor: full` and configures the engine
+- `project.yaml` sets `modes.rigor: full`
 - `design/gdd/` contains 2 GDD files:
   - `combat.md` — missing `## Acceptance Criteria` and `## Formulas` sections
   - `movement.md` — all 8 sections present
@@ -136,7 +134,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 ### Case 3: Mixed State — Some docs compliant, some not, partial report
 
 **Fixture:**
-- `project.yaml` sets `modes.rigor: full` and configures engine, naming and performance
+- `project.yaml` sets `modes.rigor: full`, plus naming and performance settings
 - 4 GDD files: 2 fully compliant, 2 with gaps (one missing Tuning Knobs, one missing Formulas)
 - ADRs: 3 files — 2 compliant, 1 missing `## ADR Dependencies`
 - Stories: 5 files — 3 have TR-ID references, 2 do not
@@ -198,8 +196,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 ### Case 5: Director Gate Check — No gate; minimal tier scopes the audit to the brief
 
 **Fixture:**
-- `project.yaml` configures the engine and has no `modes` block (`workflow`
-  resolves to `minimal`)
+- `project.yaml` has no `modes` block (`workflow` resolves to `minimal`)
 - `design/game-brief.md` exists
 - `design/gdd/combat.md` exists and is missing `## Acceptance Criteria`
 
@@ -231,7 +228,7 @@ None. `/adopt` is a brownfield audit utility. No director gates apply.
 **Fixture:**
 - No `project.yaml` at the repo root
 - `production/stage.txt` reads `Production`; `.opencode/docs/technical-preferences.md`
-  has `- **Engine**: Godot 4.6` and a filled naming section
+  has a filled naming section
 - `design/gdd/` holds GDDs; no `production/migration-report.md`
 
 **Input:** `/adopt`

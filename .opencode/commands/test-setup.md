@@ -1,5 +1,5 @@
 ---
-description: "Scaffold the test framework and CI — tests/ directory, engine test runner, GitHub Actions workflow. Once, before the first sprint."
+description: "Scaffold the test framework and CI — tests/ directory, test runner, GitHub Actions workflow. Once, before the first sprint."
 ---
 !`bash ".opencode/hooks/yaml-helper.sh" resolve_config --keys automation,workflow,qa.level`
 

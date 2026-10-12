@@ -4,8 +4,8 @@
 
 Orchestrates the audio team through a four-step pipeline: audio direction
 (audio-director) → sound design + accessibility review in parallel (sound-designer
-+ accessibility-specialist) → technical implementation + engine validation in
-parallel (technical-artist + primary engine specialist) → code integration
++ accessibility-specialist) → technical implementation (technical-artist) →
+code integration
 (gameplay-programmer). Phase 0 resolves `review_mode`, `automation` and
 `team.size`, and the skill announces the active agent set in one line before
 Step 1 — at the default `team.size: individual` only sound-designer is spawned and
@@ -16,8 +16,7 @@ exception; the orchestrator compiles the audio design document itself and writes
 to `design/audio/audio-[feature].md` only after asking via `question`. Uses
 `question` at each step transition. Verdict is COMPLETE when the audio design
 document is produced, BLOCKED when an unresolved dependency stops the pipeline.
-Skips the engine specialist when no engine is configured and records
-`Engine validation: NOT ASSESSED`.
+Records `Specialist validation: NOT ASSESSED — no specialist applies` in the run output.
 
 ---
 
@@ -28,7 +27,7 @@ Skips the engine specialist when no engine is configured and records
 - [ ] Contains verdict keywords: COMPLETE, BLOCKED
 - [ ] Contains "File Write Protocol" section
 - [ ] Sub-agent writes are limited to the bounded exception — a path the orchestrator named, a new artifact under `production/`, `docs/` or `tests/`, in a step gated by `question`; no per-write prompt inside those bounds, a "May I write" ask outside them; implementation files (code, shaders, audio, assets) are outside it — each agent lists the files it will create or change, and the skill asks once for the set before any is written
-- [ ] Names a destination per agent under `production/audio/[feature]/`: `direction.md` (audio-director), `sfx-spec.md` (sound-designer), `accessibility.md` (accessibility-specialist), `integration-plan.md` (technical-artist), `engine-notes.md` (engine specialist)
+- [ ] Names a destination per agent under `production/audio/[feature]/`: `direction.md` (audio-director), `sfx-spec.md` (sound-designer), `accessibility.md` (accessibility-specialist), `integration-plan.md` (technical-artist)
 - [ ] Defines a phase gate as a decision point the pipeline itself lists, whatever the `automation` mode, and claims no director spawn at phase gates
 - [ ] The compiled audio design document is written by the orchestrator only after it asks via `question` "May I write the audio design to `design/audio/audio-[feature].md`?" (`design/` is outside the bounded exception)
 - [ ] Every agent prompt ends with the return contract: path written, ≤5-bullet summary, BLOCKED/CONCERNS items one line each
@@ -38,7 +37,7 @@ Skips the engine specialist when no engine is configured and records
 - [ ] Phase 0 resolves `review_mode`, `automation` and `team.size`, and requires a one-line active-set announcement before Step 1
 - [ ] Step 2 explicitly spawns sound-designer and accessibility-specialist in parallel, and How to Delegate lists `accessibility-specialist`
 - [ ] Step 2 labels a gameplay-critical audio event with no visual cue or subtitle BLOCKING, and Step 3 waits for the user to resolve or accept it
-- [ ] Step 3 explicitly spawns technical-artist and engine specialist in parallel (when engine is configured)
+- [ ] Step 3 explicitly spawns technical-artist; the run records `Specialist validation: NOT ASSESSED — no specialist applies`
 - [ ] Skill reads the sound bible at `design/audio/sound-bible.md` during context gathering if it exists; a sound bible still at `design/gdd/sound-bible.md` (the earlier location) is read, with a recommendation to move it
 - [ ] Output document is saved to `design/audio/audio-[feature].md`
 
@@ -50,7 +49,6 @@ Skips the engine specialist when no engine is configured and records
 
 **Fixture:**
 - Resolved config block: `team.size: studio`, `automation: collaborative`
-- `engine.name` in `project.yaml` is Godot
 - GDD for the target feature exists at `design/gdd/combat.md`
 - Sound bible exists at `design/audio/sound-bible.md`
 - Existing audio assets are listed in `assets/audio/`
@@ -65,7 +63,7 @@ Skips the engine specialist when no engine is configured and records
 4. `question` presents audio direction; user approves before Step 2 begins
 5. Step 2: sound-designer and accessibility-specialist are spawned in parallel; sound-designer produces SFX specifications, audio event list with trigger conditions, and mixing groups; accessibility-specialist identifies critical gameplay audio events and specifies visual fallback and subtitle requirements
 6. `question` presents SFX spec and accessibility requirements; user approves before Step 3 begins
-7. Step 3: technical-artist and `godot-specialist` (derived from `engine.name`) are spawned in parallel; technical-artist designs bus structure, middleware integration, memory budgets, and streaming strategy; engine specialist validates that the integration approach is idiomatic for the pinned engine
+7. Step 3: technical-artist is spawned; it designs bus structure, middleware integration, memory budgets, and streaming strategy; the run records `Specialist validation: NOT ASSESSED — no specialist applies`
 8. `question` presents technical plan; user approves before Step 4 begins
 9. Step 4: gameplay-programmer is spawned; first returns the code and test files it will create or change, the orchestrator asks once for that set, and only after the yes it wires up audio events to gameplay triggers, implements adaptive music, sets up occlusion zones and writes unit tests for audio event triggers
 10. For every step, the orchestrator checks that the path named in the agent's return contract exists before treating the step as done
@@ -80,7 +78,7 @@ Skips the engine specialist when no engine is configured and records
 - [ ] audio-director is spawned before sound-designer or accessibility-specialist
 - [ ] `question` appears after Step 1 output and before Step 2 launch
 - [ ] sound-designer and accessibility-specialist Agent calls are issued simultaneously in Step 2
-- [ ] technical-artist and `godot-specialist` Agent calls are issued simultaneously in Step 3
+- [ ] technical-artist is the only agent spawned in Step 3
 - [ ] gameplay-programmer is not launched until Step 3 `question` is approved
 - [ ] gameplay-programmer writes no code or test file before the one ask for its implementation set is answered yes
 - [ ] Audio design document is written to `design/audio/audio-combat.md` (not another path), by the orchestrator, only after its `question` approval
@@ -108,7 +106,7 @@ Skips the engine specialist when no engine is configured and records
    - Add a visual indicator for EnemyNearbyAlert (e.g., directional arrow on HUD) and continue
    - Add controller haptic feedback as the fallback and continue
    - Stop here and resolve all accessibility gaps before proceeding to Step 3
-5. Step 3 (technical-artist + engine specialist) is not launched until the user resolves or explicitly accepts the gap
+5. Step 3 (technical-artist) is not launched until the user resolves or explicitly accepts the gap
 6. If the user stops: a partial report of the Step 1–2 outputs is produced and the verdict is `BLOCKED — [reason]` naming the unresolved EnemyNearbyAlert gap
 7. If the user accepts the gap and continues: the gap is listed among the open questions in the final summary
 
@@ -148,7 +146,7 @@ Skips the engine specialist when no engine is configured and records
 - Resolved config block: `team.size: small`, `automation: collaborative`
 - GDD for the target feature exists at `design/gdd/main-menu.md`
 - No sound bible exists at `design/audio/sound-bible.md` or `design/gdd/sound-bible.md`
-- Engine is configured; other context files are present
+- Other context files are present
 
 **Input:** `/team-audio main menu`
 
@@ -170,11 +168,10 @@ Skips the engine specialist when no engine is configured and records
 
 ---
 
-### Case 5: Engine Not Configured — Engine specialist step skipped and recorded
+### Case 5: Validation Not Assessed — step skipped and recorded
 
 **Fixture:**
 - Resolved config block: `team.size: studio`, `automation: collaborative`
-- `engine.name` is unset in `project.yaml`, and `.opencode/docs/technical-preferences.md` has no Primary engine specialist (shows `[TO BE CONFIGURED]`)
 - GDD for the target feature exists
 - Sound bible may or may not exist
 
@@ -182,35 +179,35 @@ Skips the engine specialist when no engine is configured and records
 
 **Expected behavior:**
 1. Steps 1–2 proceed normally (audio-director, sound-designer, accessibility-specialist)
-2. Step 3: technical-artist is spawned normally; engine specialist spawn is SKIPPED
-3. The run output records: `Engine validation: NOT ASSESSED — no engine configured (engine.name unset in project.yaml)`
-4. Step 4: gameplay-programmer still runs — the missing engine is not treated as a blocker
-5. Verdict: `COMPLETE — engine validation NOT ASSESSED (no engine configured)` — the skip is graceful, not a blocker, and never a plain COMPLETE
+2. Step 3: technical-artist is spawned normally; no specialist validation runs
+3. The run output records: `Specialist validation: NOT ASSESSED — no specialist applies`
+4. Step 4: gameplay-programmer still runs — the skipped validation is not treated as a blocker
+5. Verdict: `COMPLETE — specialist validation NOT ASSESSED (no specialist applies)` — the skip is graceful, not a blocker, and never a plain COMPLETE
 
 **Assertions:**
-- [ ] Engine specialist is NOT spawned when no engine is configured
-- [ ] Skill does NOT error out due to the missing engine configuration
-- [ ] The run output contains `Engine validation: NOT ASSESSED — no engine configured` with the `engine.name` reason — the skip is not silently omitted
-- [ ] Engine integration is never described as validated or passed in this run
-- [ ] technical-artist is still spawned in Step 3 (skip applies only to the engine specialist)
+- [ ] No specialist validation is spawned
+- [ ] Skill does NOT error out due to the unassessed validation
+- [ ] The run output contains `Specialist validation: NOT ASSESSED — no specialist applies` — the skip is not silently omitted
+- [ ] The integration is never described as validated or passed in this run
+- [ ] technical-artist is still spawned in Step 3
 - [ ] gameplay-programmer still runs in Step 4
-- [ ] Verdict is `COMPLETE — engine validation NOT ASSESSED (…)`, never a plain COMPLETE (engine not configured is a graceful case, not a blocker)
+- [ ] Verdict is `COMPLETE — specialist validation NOT ASSESSED (…)`, never a plain COMPLETE (a skipped validation is a graceful case, not a blocker)
 
 ---
 
 ## Protocol Compliance
 
-- [ ] At the default `team.size: individual`, the run opens with `Active set (team.size: individual): sound-designer.` and a `Not spawned this run:` line naming audio-director, accessibility-specialist, technical-artist, the engine specialist and gameplay-programmer, consulted through sound-designer — before any agent is spawned
+- [ ] At the default `team.size: individual`, the run opens with `Active set (team.size: individual): sound-designer.` and a `Not spawned this run:` line naming audio-director, accessibility-specialist, technical-artist and gameplay-programmer, consulted through sound-designer — before any agent is spawned
 - [ ] Context gathering (GDDs, sound bible, asset list) runs before any agent is spawned
 - [ ] In `collaborative` mode, `question` is used after every step output before the next step launches
-- [ ] Parallel spawning: Step 2 (sound-designer + accessibility-specialist) and Step 3 (technical-artist + engine specialist) issue all Agent calls before waiting for results
+- [ ] Parallel spawning: Step 2 (sound-designer + accessibility-specialist) issues all Agent calls before waiting for results
 - [ ] Sub-agents write only to paths the orchestrator named; they skip the per-write prompt only inside the bounded exception (`production/`, `docs/`, `tests/`)
 - [ ] The orchestrator writes the compiled audio design document only after an explicit `question` approval
 - [ ] A step whose named artifact is missing on disk is treated as failed and the agent is resumed — not reported as done
 - [ ] BLOCKED status from any agent is surfaced immediately as "[AgentName]: BLOCKED — [reason]" — not silently skipped
 - [ ] A partial report is always produced when some agents complete and others block
 - [ ] Audio design document path follows the pattern `design/audio/audio-[feature].md`
-- [ ] Verdict is exactly COMPLETE (qualified `— engine validation NOT ASSESSED ([reason])` when that step was skipped) or BLOCKED — no other verdict values used
+- [ ] Verdict is exactly COMPLETE (qualified `— specialist validation NOT ASSESSED ([reason])` when that step was skipped) or BLOCKED — no other verdict values used
 - [ ] Next Steps handoff references `/dev-story` and `/asset-audit`
 
 ---
@@ -225,9 +222,9 @@ Skips the engine specialist when no engine is configured and records
 - The accessibility-specialist's subtitle and caption requirements (beyond visual fallbacks)
   are validated implicitly by Case 1. Case 2 focuses on the more severe case where a
   critical gameplay event has no fallback at all.
-- Engine specialist validation logic (idiomatic integration, version-specific changes) is
-  tested only for the configured and unconfigured states. The specific content of the
-  engine specialist's output is out of scope for this behavioral spec.
+- The validation step's logic is tested only for the skipped state (Case 5). The
+  specific content a specialist review would carry is out of scope for this
+  behavioral spec.
 - `guided` and `autonomous` automation modes (auto-advance, `log_decision`) are not given
   dedicated cases; the individual-size collapse is covered by the Protocol Compliance
   announcement check rather than a full run.

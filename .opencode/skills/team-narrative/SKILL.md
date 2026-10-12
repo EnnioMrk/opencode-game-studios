@@ -236,4 +236,4 @@ Verdict: **BLOCKED** — [reason]
 
 - Run `/design-review` on the narrative documents for consistency validation.
 - Run `/localize extract` to extract new strings for translation after dialogue is finalized.
-- Run `/dev-story` to implement dialogue triggers and narrative events in-engine.
+- Run `/dev-story` to implement dialogue triggers and narrative events in the game.

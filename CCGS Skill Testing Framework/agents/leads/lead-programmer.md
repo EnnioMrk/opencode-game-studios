@@ -1,7 +1,7 @@
 # Agent Test Spec: lead-programmer
 
 ## Agent Summary
-**Domain owned:** Code architecture decisions, LP-FEASIBILITY gate, LP-CODE-REVIEW gate, coding standards enforcement, tech stack decisions within the approved engine.
+**Domain owned:** Code architecture decisions, LP-FEASIBILITY gate, LP-CODE-REVIEW gate, coding standards enforcement, tech stack decisions within the approved architecture.
 **Does NOT own:** Game design decisions (game-designer), creative direction (creative-director), production scheduling (producer), visual art direction (art-director).
 **Gate IDs handled:** LP-FEASIBILITY, LP-CODE-REVIEW.
 

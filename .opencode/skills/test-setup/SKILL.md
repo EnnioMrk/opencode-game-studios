@@ -1,5 +1,5 @@
 ---
-description: "Scaffold the test framework and CI — tests/ directory, engine test runner, GitHub Actions workflow. Once, before the first sprint."
+description: "Scaffold the test framework and CI — tests/ directory, test runner, GitHub Actions workflow. Once, before the first sprint."
 name: test-setup
 ---
 
@@ -14,7 +14,7 @@ every file write follows `.opencode/docs/automation-modes.md`
 # Test Setup
 
 This skill scaffolds the automated testing infrastructure for the project.
-It detects the configured engine, generates the appropriate test runner
+It detects the project's test runner, generates the appropriate test runner
 configuration, creates the standard directory layout, and wires up CI/CD
 so tests run on every push.
 
@@ -26,7 +26,7 @@ A test framework installed at sprint four costs 3 sprints.
 
 ---
 
-## Phase 1: Detect Engine and Existing State
+## Phase 1: Detect Test Runner and Existing State
 
 **Read `references/1-detect.md` now and follow it** — this phase's steps are in that file, not here. Read it again if the conversation was compacted or resumed during this phase.
 
@@ -55,9 +55,7 @@ A test framework installed at sprint four costs 3 sprints.
 - **Never overwrite existing test files** — only create files that are missing.
   If a test runner file exists, leave it as-is.
 - **Always ask before creating files** — Phase 2 requires explicit approval.
-- **Engine detection is non-negotiable** — if the engine is not configured,
-  stop and redirect to `/setup-engine`. Do not guess.
+- **Test-command detection is non-negotiable** — if no test command is
+  configured, stop and ask for it. Do not guess a runner.
 - **`force` flag skips the "already exists" early-exit but never overwrites.**
   It means "create any missing files even if the directory already exists."
-- For Unity CI, note that the `UNITY_LICENSE` secret must be configured
-  manually. Do not attempt to automate license management.

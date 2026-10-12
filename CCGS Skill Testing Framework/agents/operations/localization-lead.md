@@ -18,8 +18,8 @@
 
 ## Test Cases
 
-### Case 1: In-domain request — string extraction pipeline for a Unity project
-**Input**: "Set up a string extraction pipeline for our Unity game. We need to get all localizable strings into a format translators can work with."
+### Case 1: In-domain request — string extraction pipeline
+**Input**: "Set up a string extraction pipeline for our game. We need to get all localizable strings into a format translators can work with."
 **Expected behavior**:
 - Lays out the workflow its String Extraction Workflow defines: strings enter through the localization API (never raw text), land in the base locale file with a context comment, extraction tooling collects new and modified strings, and they go to translators with context, screenshots, and character limits, then come back into the locale files
 - Scopes extraction to player-facing text from code, UI, and content — "Ensure no hardcoded strings reach production"

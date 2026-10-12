@@ -28,21 +28,8 @@ paths:
 
   minimal:
     label: "Minimal path"
-    description: "Engine, one-page brief, stories, then build — the brief's build order is the plan"
+    description: "One-page brief, stories, then build — the brief's build order is the plan"
     steps:
-      - id: engine-setup
-        name: "Engine Setup"
-        command: /setup-engine
-        required: true
-        # Same alternatives as concept.engine-setup — see the notes there.
-        artifact:
-          any_of:
-            - glob: "project.yaml"
-              pattern: 'name:[[:space:]]*"?(Godot|Unity|Unreal)'
-            - glob: ".opencode/docs/technical-preferences.md"
-              pattern: '\*\*Engine\*\*: [^[]'
-        description: "Configure the engine and pin its version"
-
       - id: game-brief
         name: "Game Brief"
         command: /brainstorm
@@ -87,27 +74,6 @@ phases:
         command: /brainstorm
         required: false
         description: "Explore the game concept using MDA, verb-first, and player psychology frameworks"
-
-      - id: engine-setup
-        name: "Engine Setup"
-        command: /setup-engine
-        required: true
-        # engine.name in project.yaml is the primary source; technical-
-        # preferences.md is the legacy fallback. Either one completes the step.
-        # /setup-engine writes the value quoted (`name: "Godot"`), so the quote
-        # is optional in the first alternative.
-        # Single-quoted so the `"` needs no escape — artifact-check.sh strips
-        # the outer quotes and does not unescape.
-        artifact:
-          any_of:
-            - glob: "project.yaml"
-              pattern: 'name:[[:space:]]*"?(Godot|Unity|Unreal)'
-            # technical-preferences.md writes "- **Engine**: Godot 4.6", so the
-            # pattern must clear the bold markers. The [^[] guard rejects the
-            # "[TO BE CONFIGURED]" placeholder.
-            - glob: ".opencode/docs/technical-preferences.md"
-              pattern: '\*\*Engine\*\*: [^[]'
-        description: "Configure engine, pin version, set naming conventions and performance budgets"
 
       - id: game-concept
         name: "Game Concept Document"
@@ -177,7 +143,7 @@ phases:
 
   technical-setup:
     label: "Technical Setup"
-    description: "Architecture decisions, visual identity specification, accessibility foundations, engine validation"
+    description: "Architecture decisions, visual identity specification, accessibility foundations"
     next_phase: pre-production
     steps:
       - id: create-architecture
@@ -204,7 +170,7 @@ phases:
         required: true
         artifact:
           glob: "docs/architecture/architecture-review-*.md"
-        description: "Validate completeness, dependency ordering, engine compatibility"
+        description: "Validate completeness and dependency ordering"
 
       - id: control-manifest
         name: "Control Manifest"
@@ -236,7 +202,7 @@ phases:
         required: true
         artifact:
           glob: ".github/workflows/tests.yml"
-        description: "Scaffold the test framework, the CI workflow and an example test. The Technical Setup → Pre-Production gate requires all three at `standard` and `full`. Leads to /test-helpers for fixture generation, /qa-plan per epic, and /smoke-check per sprint."
+        description: "Scaffold the test framework, the CI workflow and an example test. The Technical Setup → Pre-Production gate requires all three at `standard` and `full`. Leads to /qa-plan per epic and /smoke-check per sprint."
 
   pre-production:
     label: "Pre-Production"
@@ -357,7 +323,7 @@ phases:
         required: true
         repeatable: true
         artifact:
-          note: "Check the code root (src/, Assets/ or Source/ by engine) for active code and production/epics/**/*.md for In Progress stories"
+          note: "Check the code root (src/) for active code and production/epics/**/*.md for In Progress stories"
         description: "Pick the next ready story and implement it with /dev-story [story-path]. Routes to the correct programmer agent."
 
       - id: code-review

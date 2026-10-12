@@ -12,8 +12,8 @@ block → defaults in `.opencode/docs/config-resolution.md`.
 
 The Control Manifest is a flat, actionable rules sheet for programmers. It
 answers "what do I do?" and "what must I never do?" — organized by architectural
-layer, extracted from all Accepted ADRs, technical preferences, and engine
-reference docs. Where ADRs explain *why*, the manifest tells you *what*.
+layer, extracted from all Accepted ADRs and technical preferences. Where ADRs
+explain *why*, the manifest tells you *what*.
 
 **Output:** `docs/architecture/control-manifest.md`
 
@@ -54,29 +54,23 @@ Interpret against N:
 - Read approved libraries/addons and forbidden patterns from
   `.opencode/docs/technical-preferences.md` (not migrated to project.yaml)
 
-### Engine Reference
-- Read `docs/engine-reference/[engine]/VERSION.md` for engine + version
-- Read `docs/engine-reference/[engine]/deprecated-apis.md` — these become
-  forbidden API entries
-- Read `docs/engine-reference/[engine]/current-best-practices.md` if it exists
-
 ### Existing Artifacts
 - Glob `docs/architecture/control-manifest.md` (present → this run is a
   regeneration; Read it before the Phase 5 write, which overwrites it) and
   `production/epics/*/EPIC.md` (present → epics exist). Phase 6 picks its next
   step from both.
 
-Report: "Loaded [N] Accepted ADRs, engine: [name + version]."
+Report: "Loaded [N] Accepted ADRs."
 
 ---
 
 ## 2. Extract Rules from Each ADR
 
-Read **only these four sections** per Accepted ADR — not the whole file. Context,
+Read **only these three sections** per Accepted ADR — not the whole file. Context,
 Consequences, Migration Plan and Validation Criteria explain *why* a decision was
 made; the manifest records *what to do*, so they are not needed here:
 ```
-Grep pattern="^## (Decision|Alternatives Considered|Performance Implications|Engine Compatibility)" glob="docs/architecture/adr-*.md" output_mode="content" -A 30
+Grep pattern="^## (Decision|Alternatives Considered|Performance Implications)" glob="docs/architecture/adr-*.md" output_mode="content" -A 30
 ```
 Filter the results to the Accepted set **A** resolved above. If a section is
 absent for a given ADR, note it per ADR and continue; if a section is absent
@@ -105,14 +99,9 @@ For each Accepted ADR, extract:
 - Budget constraints: "max N ms per frame for this system"
 - Memory limits: "this system must not exceed N MB"
 
-### Engine API Constraints (from "Engine Compatibility" section)
-- Post-cutoff APIs that require verification
-- Verified behaviours that differ from default LLM assumptions
-- API fields or methods that behave differently in the pinned engine version
-
 ### Layer Classification
 Classify each rule by the architectural layer of the system it governs:
-- **Foundation**: Scene management, event architecture, save/load, engine init
+- **Foundation**: Scene management, event architecture, save/load
 - **Core**: Core gameplay loops, main player systems, physics/collision
 - **Feature**: Secondary systems, secondary mechanics, AI
 - **Presentation**: Rendering, audio, UI, VFX, shaders
@@ -123,26 +112,11 @@ If an ADR spans multiple layers, duplicate the rule into each relevant layer.
 
 ## 3. Add Global Rules
 
-Combine rules that apply to all layers. Each carries its source into the manifest, as a layer rule does — the `project.yaml` key, `technical-preferences.md`, or the engine-reference file:
+Combine rules that apply to all layers. Each carries its source into the manifest, as a layer rule does — the `project.yaml` key or `technical-preferences.md`:
 
 ### From project config (`project.yaml`, else `technical-preferences.md`):
 - Naming conventions — `naming.*`: classes, variables, signals/events, files, constants
 - Performance budgets — `performance.*`: target framerate, frame budget, draw call limits, memory ceiling
-
-### From deprecated-apis.md:
-- Deprecated APIs → Forbidden API entries, **filtered for relevance to this
-  project**. Do not copy the deprecation table wholesale.
-  > Each entry must apply to what this project actually builds. `deprecated-apis.md`
-  > mixes dimensions and subsystems: its `GodotPhysics3D → Jolt Physics 3D` row is
-  > **3D-only**, so emitting it unqualified gives a 2D project a global rule about
-  > a physics engine it never uses. If you cannot tell whether an entry applies —
-  > 2D vs 3D, a module the project does not include — either scope the rule
-  > ("when using 3D physics: ...") or omit it and note it as unresolved. A manifest
-  > of rules that do not apply is one nobody reads, and `/create-stories` consumes
-  > this file.
-
-### From current-best-practices.md (if available):
-- Engine-recommended patterns → Required entries
 
 ### From technical-preferences.md forbidden patterns:
 - Copy any "Forbidden Patterns" entries directly
@@ -155,7 +129,6 @@ Before writing the manifest, present a summary to the user:
 
 ```
 ## Control Manifest Preview
-Engine: [name + version]
 ADRs covered: [list ADR numbers]
 ADRs excluded: [ADR-NNNN ([status]), … — every ADR not in the Accepted set, or "None"]
 Total rules extracted:
@@ -185,7 +158,7 @@ Use `question`:
 
 Spawn `technical-director` via `Agent` using gate **TD-MANIFEST** (`.opencode/docs/director-gates/td-manifest.md`).
 
-Pass: the Control Manifest Preview from Phase 4 (rule counts per layer, full extracted rule list), the list of ADRs covered, engine version, and any rules sourced from technical-preferences.md or engine reference docs.
+Pass: the Control Manifest Preview from Phase 4 (rule counts per layer, full extracted rule list), the list of ADRs covered, and any rules sourced from technical-preferences.md.
 
 The technical-director reviews whether:
 - All mandatory ADR patterns are captured and accurately stated
@@ -215,7 +188,6 @@ Format:
 ```markdown
 # Control Manifest
 
-> **Engine**: [name + version]
 > **Last Updated**: [date]
 > **Manifest Version**: [date]
 > **ADRs Covered**: [ADR-NNNN, ADR-MMMM, ...]
@@ -226,15 +198,15 @@ this date when created. `/story-readiness` compares a story's embedded version
 to this field to detect stories written against stale rules. Always matches
 `Last Updated` — they are the same date, serving different consumers.
 
-This manifest is a programmer's quick-reference extracted from all Accepted ADRs,
-technical preferences, and engine reference docs. For the reasoning behind each
-rule, see the referenced ADR.
+This manifest is a programmer's quick-reference extracted from all Accepted ADRs
+and technical preferences. For the reasoning behind each rule, see the referenced
+ADR.
 
 ---
 
 ## Foundation Layer Rules
 
-*Applies to: scene management, event architecture, save/load, engine initialisation*
+*Applies to: scene management, event architecture, save/load*
 
 ### Required Patterns
 - **[rule]** — source: [ADR-NNNN]
@@ -309,13 +281,13 @@ rule, see the referenced ADR.
 ### Approved Libraries / Addons
 - [library] — approved for [purpose] — source: technical-preferences.md
 
-### Forbidden APIs ([engine version])
-These APIs are deprecated or unverified for [engine + version]:
-- `[api name]` — deprecated since [version] / unverified post-cutoff
-- Source: `docs/engine-reference/[engine]/deprecated-apis.md`
+### Forbidden APIs
+These APIs are forbidden for this project:
+- `[api name]` — [reason]
+- Source: `.opencode/docs/technical-preferences.md`
 
 ### Cross-Cutting Constraints
-- [constraint that applies everywhere, regardless of layer] — source: [ADR-NNNN, preference key or engine-reference file]
+- [constraint that applies everywhere, regardless of layer] — source: [ADR-NNNN or preference key]
 ```
 
 ---
@@ -340,7 +312,7 @@ describe what collaborative mode requires, not universal behavior.
 1. **Load silently** — read all inputs before presenting anything
 2. **Show the summary first** — let the user see the scope before writing
 3. **Ask before writing** — always confirm before creating or overwriting the manifest. On write: Verdict: **COMPLETE** — control manifest written. On decline: Verdict: **BLOCKED** — user declined write.
-4. **Source every rule** — never add a rule that doesn't trace to an ADR, a
-   technical preference, or an engine reference doc
+4. **Source every rule** — never add a rule that doesn't trace to an ADR or a
+   technical preference
 5. **No interpretation** — extract rules as stated in ADRs; do not paraphrase
    in ways that change meaning

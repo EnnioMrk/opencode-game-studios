@@ -1,5 +1,5 @@
 ---
-description: "Traceability matrix mapping GDD requirements to ADRs. Finds gaps, cross-ADR conflicts, engine compatibility. PASS/CONCERNS/NOT ASSESSED/FAIL."
+description: "Traceability matrix mapping GDD requirements to ADRs. Finds gaps, cross-ADR conflicts. PASS/CONCERNS/NOT ASSESSED/FAIL."
 ---
 !`bash ".opencode/hooks/yaml-helper.sh" resolve_config --keys automation,workflow`
 

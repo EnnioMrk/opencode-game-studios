@@ -174,8 +174,8 @@ fi
 
 # Code health quick check.
 #
-# Reads the ENGINE-SPECIFIC code root, not a literal `src/`. Hardcoding `src/`
-# made this line Godot-only: on a Unity or Unreal project the directory test
+# Reads the resolved code root, not a literal `src/`. Hardcoding `src/` made
+# this line fail on a project that keeps its code elsewhere: the directory test
 # failed, the banner printed no code-health line at all, and a clean project and
 # an unreadable one looked identical. See resolve_code_root in yaml-helper.sh.
 #
@@ -189,47 +189,19 @@ if command -v resolve_code_root >/dev/null 2>&1; then
 else
     CODE_ROOT=""
 fi
-# Source files only, binaries skipped. Unity's code root is Assets/, which also
-# holds every texture, model and audio file: an unfiltered grep read all of
-# them, twice, inside this hook's 10s budget -- ahead of the session-state
-# block below, so a timeout here lost the recovery too -- and counted each
-# "Binary file ... matches" line as a TODO.
+# Source files only, binaries skipped. An unfiltered grep walks every texture,
+# model and audio file under the code root too: twice, inside this hook's 10s
+# budget -- ahead of the session-state block below, so a timeout here lost the
+# recovery too -- and counts each "Binary file ... matches" line as a TODO.
 if [ -n "$CODE_ROOT" ] && [ -d "$CODE_ROOT" ]; then
-    _SS_SRC=(--include='*.gd' --include='*.cs' --include='*.cpp' --include='*.h' --include='*.hpp'
-             --include='*.c' --include='*.py' --include='*.rs' --include='*.lua')
+    _SS_SRC=(--include='*.ts' --include='*.tsx' --include='*.js' --include='*.jsx'
+             --include='*.mjs' --include='*.cjs')
     # tr: BSD wc (macOS) right-aligns its count, and these are printed as-is.
     TODO_COUNT=$(grep -rI "${_SS_SRC[@]}" "TODO" "$CODE_ROOT/" 2>/dev/null | wc -l | tr -d ' ')
     FIXME_COUNT=$(grep -rI "${_SS_SRC[@]}" "FIXME" "$CODE_ROOT/" 2>/dev/null | wc -l | tr -d ' ')
     if [ "$TODO_COUNT" -gt 0 ] || [ "$FIXME_COUNT" -gt 0 ]; then
         echo ""
         echo "Code health: ${TODO_COUNT} TODOs, ${FIXME_COUNT} FIXMEs in ${CODE_ROOT}/"
-    fi
-fi
-
-# --- engine reference vs configured engine -----------------------------------
-# /setup-engine is the only thing that rewrites AGENTS.md's ENGINE-REFERENCE-IMPORT
-# line. Edit engine.name in project.yaml by hand and the import keeps loading the
-# previous engine's reference as project instructions -- every session, silently.
-# An OBSERVATION, never an action (AGENTS.md): it reports, the user decides.
-# Printed BEFORE the session state: hook output past 10,000 characters is cut
-# to a preview, so a warning below a long checkpoint could be lost.
-if [ -f project.yaml ] && [ -f AGENTS.md ]; then
-    ERI=$(grep -m1 -E '^@docs/engine-reference/[a-z]+/VERSION\.md' AGENTS.md 2>/dev/null \
-          | sed -n 's|^@docs/engine-reference/\([a-z]*\)/VERSION\.md.*|\1|p')
-    # engine.name, not the first `name:` line: `project.name: Marrow` above the
-    # engine block read as engine "marrow" and warned on a correct project. The
-    # first word only, so "Unreal Engine 5" is the unreal reference folder.
-    CFG=$(awk '/^engine:/ { e = 1; next } e && /^[^[:space:]#]/ { exit }
-               e && /^[[:space:]]+name:/ { sub(/^[[:space:]]+name:[[:space:]]*/, ""); gsub(/["'"'"']/, "");
-                                           split($0, w, /[[:space:]#]/); print w[1]; exit }' \
-          project.yaml 2>/dev/null | tr '[:upper:]' '[:lower:]')
-    if [ -n "$ERI" ] && [ -n "$CFG" ] && [ "$ERI" != "$CFG" ]; then
-        echo ""
-        echo "!! ENGINE REFERENCE MISMATCH"
-        echo "   project.yaml engine.name : $CFG"
-        echo "   AGENTS.md imports        : docs/engine-reference/$ERI/VERSION.md"
-        echo "   Every session is loading the $ERI reference on a $CFG project."
-        echo "   Fix: re-run /setup-engine, or edit the ENGINE-REFERENCE-IMPORT line."
     fi
 fi
 

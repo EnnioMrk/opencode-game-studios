@@ -73,8 +73,8 @@ Full flow only (`workflow: standard` or `full`):
 3. Phase 2 presents 3 concepts, then a plain-list `question` (no tabs) to pick
 4. After pillars are locked, CD-PILLARS and AD-CONCEPT-VISUAL are spawned in
    parallel; their results are presented in a two-tab (Pillars / Visual anchor) `question`
-5. Phase 6 asks for platform and engine (the engine question always prompts);
-   TD-FEASIBILITY spawns after risks are identified, before scope tiers
+5. Phase 6 asks for platform; TD-FEASIBILITY spawns after risks are identified,
+   before scope tiers
 6. PR-SCOPE spawns after scope tiers are defined
 7. Skill asks "Game concept is ready. May I write it to `design/gdd/game-concept.md`?"
 8. Written after approval with a Visual Identity Anchor section; Path A next steps include `/map-systems`
@@ -146,8 +146,8 @@ Full flow only (`workflow: standard` or `full`):
 ### Case 4: Solo Default — Minimal tier runs the Lean Brief flow
 
 **Fixture:**
-- `project.yaml` has `engine.name` set and no `modes` block (`modes.rigor`
-  defaults to `minimal`: `workflow` → `minimal`, `review_mode` → `solo`)
+- `project.yaml` has no `modes` block (`modes.rigor` defaults to `minimal`:
+  `workflow` → `minimal`, `review_mode` → `solo`)
 - No `design/game-brief.md`, no `design/gdd/game-concept.md`
 
 **Input:** `/brainstorm roguelike`
@@ -159,15 +159,14 @@ Full flow only (`workflow: standard` or `full`):
    state, MVP, out of scope, build order) and presents the brief for one confirmation
 4. Asks "Brief is ready. May I write it to `design/game-brief.md`?" with
    `[A] Yes — write it` / `[B] Revise a field first`
-5. Next steps: `/create-stories`, then `/dev-story`; `/setup-engine` is NOT listed
-   because `engine.name` is set
+5. Next steps: `/create-stories`, then `/dev-story`
 6. Verdict is COMPLETE
 
 **Assertions:**
 - [ ] Output file is `design/game-brief.md`; `design/gdd/game-concept.md` is not written
 - [ ] 2–3 one-line concepts are proposed (not the full 9-field concept cards)
 - [ ] No director agent is spawned
-- [ ] Next steps list `/create-stories` and `/dev-story`, not `/map-systems` or `/setup-engine`
+- [ ] Next steps list `/create-stories` and `/dev-story`, not `/map-systems`
 - [ ] Verdict is COMPLETE
 
 ---

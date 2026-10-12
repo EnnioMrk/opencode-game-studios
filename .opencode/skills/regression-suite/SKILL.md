@@ -251,7 +251,7 @@ of which tests should always pass before a release:
 
 ## How to run
 
-[Engine-specific command to run all regression tests]
+`bun test`
 
 ## Registered Regression Tests
 
@@ -293,7 +293,7 @@ For `report` mode: do not write anything.
 After writing (if approved):
 
 - For each HIGH priority gap: "Consider creating the missing regression test
-  before the next sprint. Run `/test-helpers` to scaffold the test file."
+  before the next sprint."
 - If bug regression gaps > 0: "These bugs can silently return without regression
   tests. The next sprint should include a story to write the missing tests."
 - If coverage drift detected: "Regression suite may be drifting. Consider

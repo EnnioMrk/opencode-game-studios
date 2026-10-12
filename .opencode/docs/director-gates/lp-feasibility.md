@@ -14,10 +14,10 @@ Phase 7b), or when a new architectural pattern is proposed
 
 **Prompt**:
 > "Review this architecture for implementation feasibility. Flag: (a) any decisions
-> that would be difficult or impossible to implement with the stated engine and
+> that would be difficult or impossible to implement with the stated stack and
 > language, (b) any missing interface definitions that programmers would need to
-> invent themselves, (c) any patterns that create avoidable technical debt or
-> that contradict standard [engine] idioms. Return FEASIBLE, CONCERNS [list], or
-> INFEASIBLE [blockers that make this architecture unimplementable as written]."
+> invent themselves, (c) any patterns that create avoidable technical debt.
+> Return FEASIBLE, CONCERNS [list], or INFEASIBLE [blockers that make this
+> architecture unimplementable as written]."
 
 **Verdicts**: FEASIBLE / CONCERNS / INFEASIBLE
